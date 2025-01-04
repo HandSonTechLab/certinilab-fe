@@ -1,0 +1,25 @@
+<div class="sidebar-container" [class.collapsed]="isCollapsed">
+  <!-- Top menu -->
+  <div class="top-menu d-flex align-items-center justify-content-between">
+      <i class="bi" [ngClass]="{'bi-list': isCollapsed, 'bi-x': !isCollapsed}" (click)="toggleSidebar()"
+      style="cursor: pointer"></i>
+  </div>
+
+  <!-- Left menu -->
+  <ul class="side-menu list-unstyled">
+    <li
+      *ngFor="let item of menuItems"
+      (click)="selectMenuItem(item)"
+      [class.active]="item === selectedItem">
+      <i [class]="item.icon"></i>
+      <span *ngIf="!isCollapsed">{{ item.name }}</span>
+    </li>
+  </ul>
+</div>
+
+<div class="content-container">
+  <ng-container *ngIf="selectedItem">
+    <h2>{{ selectedItem.name }}</h2>
+    <p>Contenuto dinamico per "{{ selectedItem.name }}"</p>
+  </ng-container>
+</div>
