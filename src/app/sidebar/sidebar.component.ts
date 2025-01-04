@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import {NgClass, NgForOf, NgIf} from '@angular/common';
+import {MENU_ITEMS} from '../menu-items';
 
 @Component({
   selector: 'app-sidebar',
@@ -15,12 +16,7 @@ export class SidebarComponent {
   isCollapsed = false;
 
   // Menu items
-  menuItems = [
-    { name: 'Clienti', icon: 'bi bi-people'},
-    { name: 'Fornitori', icon: 'bi bi-truck'},
-    { name: 'Vendita al banco', icon: 'bi bi-shop'},
-    { name: 'Report', icon: 'bi bi-clipboard2-data'}
-  ];
+  menuItems = MENU_ITEMS;
 
   selectedItem = this.menuItems[0];
 
