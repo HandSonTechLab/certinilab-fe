@@ -9,17 +9,17 @@
   <ul class="side-menu list-unstyled">
     <li
       *ngFor="let item of menuItems"
+      routerLink = "{{item.route}}"
       (click)="selectMenuItem(item)"
       [class.active]="item === selectedItem">
-      <i [class]="item.icon"></i>
+      <i [class]="item.icon" style="cursor: pointer"></i>
       <span *ngIf="!isCollapsed">{{ item.name }}</span>
     </li>
   </ul>
 </div>
 
 <div class="content-container">
-  <ng-container *ngIf="selectedItem">
-    <h2>{{ selectedItem.name }}</h2>
-    <p>Contenuto dinamico per "{{ selectedItem.name }}"</p>
+  <ng-container>
+    <router-outlet />
   </ng-container>
 </div>

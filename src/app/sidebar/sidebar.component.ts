@@ -1,13 +1,16 @@
 import { Component } from '@angular/core';
 import {NgClass, NgForOf, NgIf} from '@angular/common';
 import {MENU_ITEMS} from '../menu-items';
+import {RouterLink, RouterOutlet} from '@angular/router';
 
 @Component({
   selector: 'app-sidebar',
   imports: [
     NgClass,
     NgIf,
-    NgForOf
+    NgForOf,
+    RouterLink,
+    RouterOutlet
   ],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css'
