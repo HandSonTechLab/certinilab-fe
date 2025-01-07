@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import {NgClass, NgForOf, NgIf} from '@angular/common';
 import {MENU_ITEMS} from '../menu-items';
-import {RouterLink, RouterOutlet} from '@angular/router';
+import {RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-sidebar',
@@ -10,7 +10,6 @@ import {RouterLink, RouterOutlet} from '@angular/router';
     NgIf,
     NgForOf,
     RouterLink,
-    RouterOutlet
   ],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css'

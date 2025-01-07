@@ -11,3 +11,11 @@ body {
   padding: 0;
   height: 100%;
 }
+
+.custom-margin-top {
+  margin-top: 2rem;
+}
+
+.pointer {
+  cursor: pointer;
+}
