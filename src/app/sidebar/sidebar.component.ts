@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {NgClass, NgForOf, NgIf} from '@angular/common';
 import {MENU_ITEMS} from '../menu-items';
 import {RouterLink} from '@angular/router';
@@ -15,18 +15,16 @@ import {RouterLink} from '@angular/router';
   styleUrl: './sidebar.component.css'
 })
 export class SidebarComponent {
-  isCollapsed = false;
-
   // Menu items
   menuItems = MENU_ITEMS;
-
-  selectedItem = this.menuItems[0];
+  isCollapsed = signal(false);
+  selectedItem = signal(this.menuItems[0]);
 
   toggleSidebar() {
-    this.isCollapsed = !this.isCollapsed;
+    this.isCollapsed.set(!this.isCollapsed());
   }
 
-  selectMenuItem(item: any) {
-    this.selectedItem = item;
+  selectMenuItem(item: { name: string, icon: string, route: string }) {
+    this.selectedItem.set(item);
   }
 }

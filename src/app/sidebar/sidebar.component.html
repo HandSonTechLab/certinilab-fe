@@ -1,7 +1,7 @@
-<div class="sidebar-container" [class.collapsed]="isCollapsed">
+<div class="sidebar-container" [class.collapsed]="isCollapsed()">
   <!-- Top menu -->
   <div class="top-menu d-flex align-items-center justify-content-between">
-      <i class="bi" [ngClass]="{'bi-list': isCollapsed, 'bi-x': !isCollapsed}" (click)="toggleSidebar()"
+      <i class="bi" [ngClass]="{'bi-list': isCollapsed(), 'bi-x': !isCollapsed()}" (click)="toggleSidebar()"
       style="cursor: pointer"></i>
   </div>
 
@@ -11,9 +11,9 @@
       *ngFor="let item of menuItems"
       routerLink = "{{item.route}}"
       (click)="selectMenuItem(item)"
-      [class.active]="item === selectedItem">
+      [class.active]="item === selectedItem()">
       <i [class]="item.icon" style="cursor: pointer"></i>
-      <span *ngIf="!isCollapsed">{{ item.name }}</span>
+      <span *ngIf="!isCollapsed()">{{ item.name }}</span>
     </li>
   </ul>
 </div>
