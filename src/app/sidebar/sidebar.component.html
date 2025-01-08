@@ -1,11 +1,4 @@
-<div class="sidebar-container" [class.collapsed]="isCollapsed()">
-  <!-- Top menu -->
-  <div class="top-menu d-flex align-items-center justify-content-between">
-      <i class="bi" [ngClass]="{'bi-list': isCollapsed(), 'bi-x': !isCollapsed()}" (click)="toggleSidebar()"
-      style="cursor: pointer"></i>
-  </div>
-
-  <!-- Left menu -->
+<div class="sidebar-container">
   <ul class="side-menu list-unstyled">
     <li
       *ngFor="let item of menuItems"

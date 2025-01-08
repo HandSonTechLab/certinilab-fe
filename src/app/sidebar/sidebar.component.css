@@ -6,19 +6,6 @@
   flex-direction: column;
   transition: width 0.3s;
 
-  &.collapsed {
-    width: 80px;
-  }
-
-  .top-menu {
-    height: 60px;
-    padding: 0 10px;
-    background-color: #212529;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
   .side-menu {
     flex-grow: 1;
     padding: 0;

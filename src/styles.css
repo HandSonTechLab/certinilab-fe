@@ -19,3 +19,8 @@ body {
 .pointer {
   cursor: pointer;
 }
+
+.user {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}

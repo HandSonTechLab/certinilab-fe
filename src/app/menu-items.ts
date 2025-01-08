@@ -3,5 +3,4 @@ export const MENU_ITEMS = [
   { name: 'Fornitori', icon: 'bi bi-truck', route: 'suppliers' },
   { name: 'Vendita al banco', icon: 'bi bi-shop', route: 'sale' },
   { name: 'Report', icon: 'bi bi-clipboard2-data', route: 'report' },
-  { name: 'Logout', icon: 'bi bi-box-arrow-right', route: 'logout' },
 ]
