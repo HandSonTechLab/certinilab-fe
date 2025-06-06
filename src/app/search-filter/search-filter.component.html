@@ -1,0 +1,50 @@
+<!-- search-filter.component.html -->
+<div class="card shadow rounded-4 p-4 my-4">
+  <form (ngSubmit)="onSearch()" class="row gy-3 gx-3 align-items-end">
+    <!-- Nome -->
+    <div class="col-12 col-md-4">
+      <label for="nome" class="form-label">Nome</label>
+      <input
+        type="text"
+        id="nome"
+        class="form-control"
+        placeholder="Mario"
+        [(ngModel)]="filters.nome"
+        name="nome"
+      />
+    </div>
+
+    <!-- Cognome -->
+    <div class="col-12 col-md-4">
+      <label for="cognome" class="form-label">Cognome</label>
+      <input
+        type="text"
+        id="cognome"
+        class="form-control"
+        placeholder="Rossi"
+        [(ngModel)]="filters.cognome"
+        name="cognome"
+      />
+    </div>
+
+    <!-- Indirizzo -->
+    <div class="col-12 col-md-4">
+      <label for="indirizzo" class="form-label">Indirizzo</label>
+      <input
+        type="text"
+        id="indirizzo"
+        class="form-control"
+        placeholder="Via Roma 123"
+        [(ngModel)]="filters.indirizzo"
+        name="indirizzo"
+      />
+    </div>
+
+    <!-- Pulsante Cerca -->
+    <div class="col-12 text-end">
+      <button class="btn btn-primary px-4" type="submit">
+        <i class="bi bi-search me-2"></i> Cerca
+      </button>
+    </div>
+  </form>
+</div>

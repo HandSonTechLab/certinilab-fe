@@ -1,12 +1,49 @@
-<div class="sidebar-container">
-  <ul class="side-menu list-unstyled">
-    <li
-      *ngFor="let item of menuItems"
-      routerLink = "{{item.route}}"
-      (click)="selectMenuItem(item)"
-      [class.active]="item === selectedItem()">
-      <i [class]="item.icon" style="cursor: pointer"></i>
-      <span *ngIf="!isCollapsed()">{{ item.name }}</span>
-    </li>
-  </ul>
+<div class="d-flex" id="wrapper">
+  <nav
+  class="background sidebar p-3 d-flex flex-column justify-content-between"
+  [ngClass]="{ 'collapsed': isCollapsed() }"
+  id="sidebar"
+  >
+    <div>
+      <h5 class="text-white d-flex align-items-center gap-2">
+        <i class="bi bi-house-heart"></i>
+        Certini Lab
+      </h5>
+      <ul class="nav flex-column mt-4">
+        <li class="nav-item"
+            *ngFor="let item of menuItems"
+            (click)="selectMenuItem(item)"
+            routerLink="{{item.route}}"
+        >
+          <a
+            class="nav-link text-white"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
+            <i class="{{item.icon}}"></i>
+            <span class="m-2">{{item.name}}</span>
+          </a>
+      </ul>
+    </div>
+    <!-- Bottom: Logout -->
+    <div class="mt-auto">
+      <button class="btn btn-outline-light w-100 d-flex align-items-center justify-content-center gap-2" (click)="logout()">
+        <i class="bi bi-box-arrow-right"></i>
+        <span>Logout</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Contenuto principale -->
+  <div class="flex-grow-1 p-4 content">
+    <!-- Pulsante toggle sidebar (visibile solo su mobile) -->
+    <button
+      class="btn btn-outline-secondary d-md-none mb-3"
+      (click)="toggleSidebar()"
+    >
+      <i class="bi bi-list"></i> Menu
+    </button>
+
+    <router-outlet></router-outlet>
+  </div>
 </div>

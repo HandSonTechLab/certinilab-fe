@@ -1,0 +1,30 @@
+<nav class="navbar navbar-expand-lg navbar-dark custom-navbar">
+  <div class="container-fluid">
+    <!-- Logo o Brand -->
+    <a class="navbar-brand" href="#">Certini Lab</a>
+
+    <!-- Bottone per mobile -->
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Voci di Menu -->
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto"> <!-- 'me-auto' allinea a sinistra -->
+        <li class="nav-item" *ngFor="let item of menuItems"
+            (click)="selectMenuItem(item)"
+            routerLink="{{item.route}}">
+          <a class="nav-link " [class.active]="item === selectedItem()">{{ item.name }}</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
