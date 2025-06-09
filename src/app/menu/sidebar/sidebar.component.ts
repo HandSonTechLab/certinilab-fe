@@ -1,5 +1,5 @@
 import {Component, signal} from '@angular/core';
-import {MENU_ITEMS} from '../menu-items';
+import {MENU_ITEMS} from '../../menu-items';
 import {RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
 import {NgClass, NgForOf} from '@angular/common';
 

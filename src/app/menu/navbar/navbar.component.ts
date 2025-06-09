@@ -1,6 +1,6 @@
 import {Component, signal} from '@angular/core';
 import {RouterLink} from '@angular/router';
-import {MENU_ITEMS} from '../menu-items';
+import {MENU_ITEMS} from '../../menu-items';
 import {NgForOf} from '@angular/common';
 
 @Component({

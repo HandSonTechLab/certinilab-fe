@@ -1,23 +1,23 @@
 import { Routes } from '@angular/router';
-import {ClientsComponent} from './clients/clients.component';
-import {SuppliersComponent} from './suppliers/suppliers.component';
-import {ReportComponent} from './report/report.component';
-import {SaleComponent} from './sale/sale.component';
-import {LogoutComponent} from './logout/logout.component';
-import {CreateClientComponent} from './create-client/create-client.component';
+import {ClientsGroupComponent} from './pages/clients/clients-group/clients-group.component';
+import {SuppliersGroupComponent} from './pages/suppliers/suppliers-group/suppliers-group.component';
+import {ReportComponent} from './pages/reports/report/report.component';
+import {SaleComponent} from './pages/counter-sale/sale/sale.component';
+import {LogoutComponent} from './menu/logout/logout.component';
+import {CreateClientComponent} from './pages/clients/create-client/create-client.component';
 
 export const routes: Routes = [
   {
-    path: 'clients', // <your-domain>/path
-    component: ClientsComponent,
+    path: 'clients-group', // <your-domain>/path
+    component: ClientsGroupComponent,
   },
   {
-    path: 'clients/new-client',
+    path: 'clients-group/new-client',
     component: CreateClientComponent
   },
   {
-    path: 'suppliers', // <your-domain>/path
-    component: SuppliersComponent,
+    path: 'suppliers-group', // <your-domain>/path
+    component: SuppliersGroupComponent,
   },
   {
     path: 'report', // <your-domain>/path
@@ -32,7 +32,7 @@ export const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: '/clients',
+    redirectTo: '/clients-group',
     pathMatch: 'full',
   },
 ];
