@@ -1,0 +1,118 @@
+<div class="container mt-3">
+  <div class="row">
+    <div class="col-12 d-flex justify-content-center">
+      <h2>
+        Nuovo Cliente
+      </h2>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <nav class="mb-4" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/clients">Clienti</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Nuovo Cliente</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<div class="container mt-3 justify-content-center">
+  <div class="row">
+    <div class="col-12">
+      <form [formGroup]="clienteForm" (ngSubmit)="onSubmit()" class="needs-validation" novalidate>
+        <div class="row">
+          <div class="col-12">
+            <label class="form-label">Nome *</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+              <input type="text" class="form-control" formControlName="nome" [ngClass]="{'is-invalid': isInvalid('nome')}">
+              <div class="invalid-feedback">Inserisci il nome.</div>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-12">
+            <label class="form-label">Cognome *</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+              <input type="text" class="form-control" formControlName="cognome" [ngClass]="{'is-invalid': isInvalid('cognome')}">
+              <div class="invalid-feedback">Inserisci il cognome.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-3">
+          <div class="col-12">
+            <label class="form-label">Cellulare *</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-phone-fill"></i></span>
+              <input type="tel" class="form-control" formControlName="cellulare" [ngClass]="{'is-invalid': isInvalid('cellulare')}">
+              <div class="invalid-feedback">Inserisci il numero di cellulare.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-3">
+          <div class="col-12">
+            <label class="form-label">Data di nascita</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-calendar-event-fill"></i></span>
+              <input type="date" class="form-control" formControlName="dataNascita">
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-3">
+          <div class="col-12">
+            <label class="form-label">Codice Fiscale</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-credit-card-2-front-fill"></i></span>
+              <input type="text" class="form-control" formControlName="codiceFiscale">
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-3">
+          <div class="col-12">
+            <label class="form-label">Provincia *</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-building"></i></span>
+              <input type="text" class="form-control" formControlName="provincia" [ngClass]="{'is-invalid': isInvalid('provincia')}">
+              <div class="invalid-feedback">Inserisci la provincia.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-3">
+          <div class="col-12">
+            <label class="form-label">Comune *</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-house-fill"></i></span>
+              <input type="text" class="form-control" formControlName="comune" [ngClass]="{'is-invalid': isInvalid('comune')}">
+              <div class="invalid-feedback">Inserisci il comune.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-3">
+          <div class="col-12">
+            <label class="form-label">Indirizzo *</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-geo-alt-fill"></i></span>
+              <input type="text" class="form-control" formControlName="indirizzo" [ngClass]="{'is-invalid': isInvalid('indirizzo')}">
+              <div class="invalid-feedback">Inserisci l'indirizzo.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-grid mt-5">
+          <button type="submit" class="btn btn-primary btn-lg">
+            <i class="bi bi-save me-2"></i>Salva Cliente
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
