@@ -56,26 +56,6 @@
 
         <div class="row mt-3">
           <div class="col-12">
-            <label class="form-label">Data di nascita</label>
-            <div class="input-group">
-              <span class="input-group-text"><i class="bi bi-calendar-event-fill"></i></span>
-              <input type="date" class="form-control" formControlName="dataNascita">
-            </div>
-          </div>
-        </div>
-
-        <div class="row mt-3">
-          <div class="col-12">
-            <label class="form-label">Codice Fiscale</label>
-            <div class="input-group">
-              <span class="input-group-text"><i class="bi bi-credit-card-2-front-fill"></i></span>
-              <input type="text" class="form-control" formControlName="codiceFiscale">
-            </div>
-          </div>
-        </div>
-
-        <div class="row mt-3">
-          <div class="col-12">
             <label class="form-label">Provincia *</label>
             <div class="input-group">
               <span class="input-group-text"><i class="bi bi-building"></i></span>
@@ -103,6 +83,26 @@
               <span class="input-group-text"><i class="bi bi-geo-alt-fill"></i></span>
               <input type="text" class="form-control" formControlName="indirizzo" [ngClass]="{'is-invalid': isInvalid('indirizzo')}">
               <div class="invalid-feedback">Inserisci l'indirizzo.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-3">
+          <div class="col-12">
+            <label class="form-label">Data di nascita</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-calendar-event-fill"></i></span>
+              <input type="date" class="form-control" formControlName="dataNascita">
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-3">
+          <div class="col-12">
+            <label class="form-label">Codice Fiscale</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-credit-card-2-front-fill"></i></span>
+              <input type="text" class="form-control" formControlName="codiceFiscale">
             </div>
           </div>
         </div>
