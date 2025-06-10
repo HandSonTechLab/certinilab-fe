@@ -1,9 +1,11 @@
-import {Component, DestroyRef, inject, OnDestroy, OnInit} from '@angular/core';
+import {Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {NgClass} from '@angular/common';
 import {ClientsService} from '../../services/clients.service';
 import {ClientModel} from '../../model/client.model';
 import {Subscription} from 'rxjs';
+import {Router} from '@angular/router';
+import {CONSTANTS} from '../../shared/constants';
 
 @Component({
   selector: 'app-create-client',
@@ -20,6 +22,8 @@ export class CreateClientComponent implements OnInit, OnDestroy {
   private clientService = inject(ClientsService);
   private subscriptions: Subscription[] = [];
   private fb: FormBuilder = new FormBuilder();
+
+  constructor(private router: Router) {}
 
   ngOnInit() {
 
@@ -57,12 +61,13 @@ export class CreateClientComponent implements OnInit, OnDestroy {
 
       const subscription = this.clientService.createClient(newClient).subscribe({
         next: (response) => {
-          console.log('Response {}', response);
-          console.log('Response status {]', response.status);
+          console.debug('Response {}', response);
         },
+        complete: () => {
+          this.subscriptions.push(subscription);
+          this.router.navigateByUrl('/clients', { state: { title: CONSTANTS.create_client_success} });
+        }
       });
-
-      this.subscriptions.push(subscription);
 
     } else {
       this.clienteForm.markAllAsTouched();

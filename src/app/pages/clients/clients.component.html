@@ -1,3 +1,13 @@
+<div class="container mt-3">
+  @if (showNotifications) {
+    <div class="row d-flex justify-content-center mb-3">
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>{{notification?.title}}!</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    </div>
+  }
+</div>
 <div class="container-fluid custom-margin-top-1rem">
   <div class="row d-flex justify-content-end mb-3">
     <app-search-filter></app-search-filter>
