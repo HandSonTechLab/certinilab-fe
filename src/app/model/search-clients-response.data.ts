@@ -1,7 +1,7 @@
+import {ClientDtoModel} from './client-dto.model';
+import {PageInfoModel} from './page-info.model';
+
 export interface SearchClientsResponse {
-  id: number;
-  nome: string;
-  cognome: string;
-  indirizzo: string;
-  cellular: string;
+  ricercaClientiDtoList: Array<ClientDtoModel>,
+  pageInfo: PageInfoModel
 }

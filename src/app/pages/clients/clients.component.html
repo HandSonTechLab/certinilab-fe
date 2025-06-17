@@ -14,132 +14,57 @@
   </div>
   <div class="row mt-1">
     <div class="col-12">
-      <table class="table table-hover border">
-        <thead class="table-dark">
-        <tr>
-          <th scope="col">Nome</th>
-          <th scope="col">Cognome</th>
-          <th scope="col">Indirizzo</th>
-          <th scope="col" style="width: 9em"></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-          <td>Mark</td>
-          <td>Otto</td>
-          <td>395 9th Ave, New York, NY 10001, Stati Uniti</td>
-          <td>
-              <i class="bi bi-pencil-square p-2 pointer"></i>
-              <i class="bi bi-trash3 p-2 pointer" style="color: red"></i>
-              <i class="bi bi-eye p-2 pointer" style="color: #0d6efd"></i>
-          </td>
-        </tr>
-        <tr>
-          <td>Jacob</td>
-          <td>Thornton</td>
-          <td>395 9th Ave, New York, NY 10001, Stati Uniti </td>
-          <td>
-            <i class="bi bi-pencil-square p-2 pointer" style="cursor: pointer"></i>
-            <i class="bi bi-trash3 p-2 pointer" style="color: red"></i>
-            <i class="bi bi-eye p-2 pointer" style="color: #0d6efd"></i>
-          </td>
-        </tr>
-        <tr>
-          <td>Larry</td>
-          <td>Pearson</td>
-          <td>395 9th Ave, New York, NY 10001, Stati Uniti</td>
-          <td>
-            <i class="bi bi-pencil-square p-2 pointer" style="cursor: pointer"></i>
-            <i class="bi bi-trash3 p-2 pointer" style="color: red"></i>
-            <i class="bi bi-eye p-2 pointer" style="color: #0d6efd"></i>
-          </td>
-        </tr>
-        <tr>
-          <td>Larry the Bird - 2</td>
-          <td>Pearson</td>
-          <td>395 9th Ave, New York, NY 10001, Stati Uniti</td>
-          <td>
-            <i class="bi bi-pencil-square p-2 pointer" style="cursor: pointer"></i>
-            <i class="bi bi-trash3 p-2 pointer" style="color: red"></i>
-            <i class="bi bi-eye p-2 pointer" style="color: #0d6efd"></i>
-          </td>
-        </tr>
-        <tr>
-          <td>Larry the Bird</td>
-          <td>Surname</td>
-          <td>395 9th Ave, New York, NY 10001, Stati Uniti</td>
-          <td>
-            <i class="bi bi-pencil-square p-2 pointer" style="cursor: pointer"></i>
-            <i class="bi bi-trash3 p-2 pointer" style="color: red"></i>
-            <i class="bi bi-eye p-2 pointer" style="color: #0d6efd"></i>
-          </td>
-        </tr>
-        <tr>
-          <td>Larry</td>
-          <td>Surname</td>
-          <td>395 9th Ave, New York, NY 10001, Stati Uniti</td>
-          <td>
-            <i class="bi bi-pencil-square p-2 pointer" style="cursor: pointer"></i>
-            <i class="bi bi-trash3 p-2 pointer" style="color: red"></i>
-            <i class="bi bi-eye p-2 pointer" style="color: #0d6efd"></i>
-          </td>
-        </tr>
-        <tr>
-          <td>Larry</td>
-          <td>Surname</td>
-          <td>395 9th Ave, New York, NY 10001, Stati Uniti</td>
-          <td>
-            <i class="bi bi-pencil-square p-2 pointer" style="cursor: pointer"></i>
-            <i class="bi bi-trash3 p-2 pointer" style="color: red"></i>
-            <i class="bi bi-eye p-2 pointer" style="color: #0d6efd"></i>
-          </td>
-        </tr>
-        <tr>
-          <td>Larry</td>
-          <td>Surname</td>
-          <td>395 9th Ave, New York, NY 10001, Stati Uniti</td>
-          <td>
-            <i class="bi bi-pencil-square p-2 pointer" style="cursor: pointer"></i>
-            <i class="bi bi-trash3 p-2 pointer" style="color: red"></i>
-            <i class="bi bi-eye p-2 pointer" style="color: #0d6efd"></i>
-          </td>
-        </tr>
-        <tr>
-          <td>Jack</td>
-          <td>Pear</td>
-          <td>395 9th Ave, New York, NY 10001, Stati Uniti</td>
-          <td>
-            <i class="bi bi-pencil-square p-2 pointer" style="cursor: pointer"></i>
-            <i class="bi bi-trash3 p-2 pointer" style="color: red"></i>
-            <i class="bi bi-eye p-2 pointer" style="color: #0d6efd"></i>
-          </td>
-        </tr>
-        <tr>
-          <td>Mike</td>
-          <td>Buongiorno</td>
-          <td>395 9th Ave, New York, NY 10001, Stati Uniti</td>
-          <td>
-            <i class="bi bi-pencil-square p-2 pointer" style="cursor: pointer"></i>
-            <i class="bi bi-trash3 p-2 pointer" style="color: red"></i>
-            <i class="bi bi-eye p-2 pointer" style="color: #0d6efd"></i>
-          </td>
-        </tr>
-        </tbody>
-      </table>
+      @if (clients?.length == 0) {
+        <span>Nessun cliente</span>
+      } @else {
+        <table class="table table-hover border">
+          <thead class="table-dark">
+          <tr>
+            <th scope="col">Nome</th>
+            <th scope="col">Cognome</th>
+            <th scope="col">Indirizzo</th>
+            <th scope="col" style="width: 9em"></th>
+          </tr>
+          </thead>
+          <tbody>
+            @for (client of clients; track client.id) {
+              <tr>
+                <td>{{client.nome}}</td>
+                <td>{{client.cognome}}</td>
+                <td>{{client.indirizzo}}</td>
+                <td>
+                  <i class="bi bi-pencil-square p-2 pointer"></i>
+                  <i class="bi bi-trash3 p-2 pointer" style="color: red"></i>
+                  <i class="bi bi-eye p-2 pointer" style="color: #0d6efd"></i>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
     </div>
   </div>
-  <div class="row d-flex justify-content-end">
-    <nav style="width: auto">
-      <ul class="pagination">
-        <li class="page-item"><a class="page-link" href="#">Precedente</a></li>
-        <li class="page-item"><a class="page-link" href="#">1</a></li>
-        <li class="page-item"><a class="page-link" href="#">2</a></li>
-        <li class="page-item"><a class="page-link" href="#">3</a></li>
-        <li class="page-item"><a class="page-link" href="#">...</a></li>
-        <li class="page-item"><a class="page-link" href="#">Successivo</a></li>
-      </ul>
-    </nav>
-  </div>
+  @if (isPagesExist()) {
+    <div class="row d-flex justify-content-end">
+      <nav style="width: auto">
+        <ul class="pagination">
+          <li class="page-item"><a class="page-link" href="#">Precedente</a></li>
+          <li class="page-item"><a class="page-link" href="#">{{getPreviousPage()}}</a></li>
+          <li class="page-item active"><a class="page-link" href="#">{{getCurrentPage()}}</a></li>+
+          @if (isCurrentPageTheLastOne()) {
+            <li class="page-item disabled"><a class="page-link" href="#">Successivo</a></li>
+          } @else {
+            <li class="page-item"><a class="page-link" href="#">{{getNextPage()}}</a></li>
+            @if (isNextPageTheLastOne()) {
+              <li class="page-item"><a class="page-link" href="#">...</a></li>
+            }
+            <li class="page-item"><a class="page-link" href="#">Successivo</a></li>
+          }
+        </ul>
+      </nav>
+    </div>
+  }
+
 </div>
 
 <a
