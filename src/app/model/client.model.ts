@@ -7,4 +7,5 @@ export interface ClientModel {
   indirizzo: String;
   provincia: String;
   comune: String;
+  codiceIdentificativoAsl: String;
 }

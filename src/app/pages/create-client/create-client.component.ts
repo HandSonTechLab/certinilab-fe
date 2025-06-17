@@ -33,6 +33,7 @@ export class CreateClientComponent implements OnInit, OnDestroy {
       cellulare: ['', Validators.required],
       dataNascita: [''],
       codiceFiscale: [''],
+      codiceIdentificativoAsl: [''],
       indirizzo: ['', Validators.required],
       provincia: ['', Validators.required],
       comune: ['', Validators.required],
@@ -57,6 +58,8 @@ export class CreateClientComponent implements OnInit, OnDestroy {
         indirizzo: this.clienteForm.get('indirizzo')?.value,
         provincia: this.clienteForm.get('provincia')?.value,
         comune: this.clienteForm.get('comune')?.value,
+        codiceIdentificativoAsl: this.clienteForm.get('codiceIdentificativoAsl')?.value,
+        dataNascita: this.clienteForm.get('dataNascita')?.value,
       };
 
       const subscription = this.clientService.createClient(newClient).subscribe({
