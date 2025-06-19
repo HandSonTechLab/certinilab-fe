@@ -35,7 +35,7 @@
                 <td>
                   <i class="bi bi-pencil-square p-2 pointer"></i>
                   <i class="bi bi-trash3 p-2 pointer" style="color: red"></i>
-                  <i class="bi bi-eye p-2 pointer" style="color: #0d6efd"></i>
+                  <i class="bi bi-eye p-2 pointer" style="color: #0d6efd" (click)="viewClient(client.id)"></i>
                 </td>
               </tr>
             }
@@ -60,7 +60,7 @@
           } @else {
             <li class="page-item"><button class="page-link" (click)="nextPage()">{{getNextPage()}}</button></li>
             @if (!isNextPageTheLastOne()) {
-              <li class="page-item"><a class="page-link" href="#">...</a></li>
+              <li class="page-item"><a class="page-link">...</a></li>
             }
             <li class="page-item"><button class="page-link" (click)="nextPage()">Successivo</button></li>
           }

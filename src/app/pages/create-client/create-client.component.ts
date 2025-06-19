@@ -7,6 +7,10 @@ import {Subscription} from 'rxjs';
 import {Router} from '@angular/router';
 import {CONSTANTS} from '../../shared/constants';
 
+export interface ViewUser {
+  userId: number;
+}
+
 @Component({
   selector: 'app-create-client',
   templateUrl: './create-client.component.html',
@@ -22,11 +26,50 @@ export class CreateClientComponent implements OnInit, OnDestroy {
   private clientService = inject(ClientsService);
   private subscriptions: Subscription[] = [];
   private fb: FormBuilder = new FormBuilder();
+  protected isViewMode: boolean = false;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) {
+    const currNav = this.router.getCurrentNavigation();
+    const viewUser = currNav?.extras.state as ViewUser
+    if (viewUser) {
+      this.isViewMode = true;
+      const subscription = this.clientService.findClientById(viewUser.userId).subscribe({
+        next: (response) => {
+          this.initForm(response.body);
+        },
+        error: (error) => {
+          this.subscriptions.push(subscription);
+        },
+        complete: () => {
+          this.subscriptions.push(subscription);
+        }
+      })
+    }
+  }
+
+  initForm(clientModel: ClientModel | null): void {
+    if (clientModel) {
+      this.clienteForm = this.fb.group({
+        nome: [{value: clientModel.nome, disabled: true}, Validators.required],
+        cognome: [{value: clientModel.cognome, disabled: true}, Validators.required],
+        cellulare: [{value: clientModel.cellulare, disabled: true}, Validators.required],
+        dataNascita: [{value: clientModel.dataNascita, disabled: true}],
+        codiceFiscale: [{value: clientModel.codiceFiscale, disabled: true}],
+        codiceIdentificativoAsl: [{value: clientModel.codiceIdentificativoAsl, disabled: true}],
+        indirizzo: [{value: clientModel.indirizzo, disabled: true}, Validators.required],
+        provincia: [{value: clientModel.provincia,disabled: true}, Validators.required],
+        comune: [{value: clientModel.comune,disabled: true}, Validators.required],
+      });
+    } else {
+      this.initEmptyForm()
+    }
+  }
 
   ngOnInit() {
+    this.initEmptyForm()
+  }
 
+  initEmptyForm() {
     this.clienteForm = this.fb.group({
       nome: ['', Validators.required],
       cognome: ['', Validators.required],

@@ -6,6 +6,7 @@ import {Subscription} from 'rxjs';
 import {SearchData} from '../../model/search-data.model';
 import {ClientDtoModel} from '../../model/client-dto.model';
 import {PageInfoModel} from '../../model/page-info.model';
+import {CONSTANTS} from '../../shared/constants';
 declare var bootstrap: any;
 
 export interface Notification {
@@ -144,6 +145,10 @@ export class ClientsComponent implements OnInit ,  OnDestroy, AfterViewInit {
         this.subscriptions.push(subscription);
       }
     })
+  }
+
+  viewClient(userId: number) {
+    this.router.navigateByUrl('/new-client', { state: { userId: userId} });
   }
 
 }
