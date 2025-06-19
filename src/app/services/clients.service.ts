@@ -29,7 +29,7 @@ export class ClientsService {
   }
 
   searchClients(searchData: SearchData, pageNumber: number, pageSize: number): Observable<HttpResponse<SearchClientsResponse>> {
-    return this.httpClient.post<SearchClientsResponse>(this.baseUrl + '/search', searchData, { observe: 'response', params: { page: pageNumber, pageSize: pageSize } })
+    return this.httpClient.post<SearchClientsResponse>(this.baseUrl + '/search', searchData, { observe: 'response', params: { pageNumber: pageNumber, pageSize: pageSize } })
       .pipe(catchError((error: HttpErrorResponse) => {
         console.log('an error occurred during search clients request -> {}', error);
         this.errorService.showError(CONSTANTS.search_clients_request_error_message.concat(': error code ', error.status.toString()))

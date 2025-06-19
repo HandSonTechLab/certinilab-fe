@@ -54,12 +54,12 @@ export class CreateClientComponent implements OnInit, OnDestroy {
         nome: this.clienteForm.get('nome')?.value,
         cognome: this.clienteForm.get('cognome')?.value,
         cellulare: this.clienteForm.get('cellulare')?.value,
-        codiceFiscale: this.clienteForm.get('codiceFiscale')?.value,
+        codiceFiscale: this.clienteForm.get('codiceFiscale')?.value == "" ? null : this.clienteForm.get('codiceFiscale')?.value,
         indirizzo: this.clienteForm.get('indirizzo')?.value,
         provincia: this.clienteForm.get('provincia')?.value,
         comune: this.clienteForm.get('comune')?.value,
-        codiceIdentificativoAsl: this.clienteForm.get('codiceIdentificativoAsl')?.value,
-        dataNascita: this.clienteForm.get('dataNascita')?.value,
+        codiceIdentificativoAsl: this.clienteForm.get('codiceIdentificativoAsl')?.value == "" ? null : this.clienteForm.get('codiceIdentificativoAsl')?.value,
+        dataNascita: this.clienteForm.get('dataNascita')?.value == "" ? null : this.clienteForm.get('dataNascita')?.value,
       };
 
       const subscription = this.clientService.createClient(newClient).subscribe({

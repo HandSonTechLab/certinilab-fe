@@ -4,8 +4,6 @@ import {Router} from '@angular/router';
 import {ClientsService} from '../../services/clients.service';
 import {Subscription} from 'rxjs';
 import {SearchData} from '../../model/search-data.model';
-import {SearchClientsResponse} from '../../model/search-clients-response.data';
-import {CONSTANTS} from '../../shared/constants';
 import {ClientDtoModel} from '../../model/client-dto.model';
 import {PageInfoModel} from '../../model/page-info.model';
 declare var bootstrap: any;
@@ -83,40 +81,69 @@ export class ClientsComponent implements OnInit ,  OnDestroy, AfterViewInit {
     const nextPage = this.pageInfo?.pageNumber
     if (nextPage != null) {
       return nextPage + 2 == this.pageInfo?.totalPages
+    } else {
+      return false;
     }
-    return false;
   }
 
   isCurrentPageTheLastOne(): boolean {
     const nextPage = this.pageInfo?.pageNumber
     if (nextPage != null) {
       return nextPage + 1 == this.pageInfo?.totalPages
+    } else {
+      return false;
     }
-    return false;
   }
 
   getPreviousPage(): number {
-    if (this.pageInfo?.pageNumber) {
-      return this.pageInfo?.pageNumber
-    } else return -1;
+    return this.pageInfo?.pageNumber!!
   }
 
   getNextPage(): number {
-    if (this.pageInfo?.pageNumber) {
-      return this.pageInfo?.pageNumber + 2
-    } else return -1;
+    return this.pageInfo?.pageNumber!! + 2
   }
 
   getCurrentPage(): number {
-    if (this.pageInfo?.pageNumber) {
-      return this.pageInfo?.pageNumber + 1
-    } else return -1;
+    return this.pageInfo?.pageNumber!! + 1
   }
 
 
   isPagesExist() : boolean {
-    if (this.pageInfo?.pageNumber) {
+    if (this.pageInfo) {
       return this.pageInfo?.totalPages > 1
-    } return false;
+    } else {
+      return false;
+    }
   }
+
+  nextPage() : void {
+    const subscription = this.clientService.searchClients({}, this.pageInfo?.pageNumber!! + 1, this.defaultPageSize).subscribe({
+      next: (response) => {
+        this.clients = response.body?.ricercaClientiDtoList;
+        this.pageInfo = response.body?.pageInfo;
+      },
+      error: (error) => {
+        this.subscriptions.push(subscription);
+      },
+      complete: () => {
+        this.subscriptions.push(subscription);
+      }
+    })
+  }
+
+  prevPage() : void {
+    const subscription = this.clientService.searchClients({}, this.pageInfo?.pageNumber!! - 1, this.defaultPageSize).subscribe({
+      next: (response) => {
+        this.clients = response.body?.ricercaClientiDtoList;
+        this.pageInfo = response.body?.pageInfo;
+      },
+      error: (error) => {
+        this.subscriptions.push(subscription);
+      },
+      complete: () => {
+        this.subscriptions.push(subscription);
+      }
+    })
+  }
+
 }

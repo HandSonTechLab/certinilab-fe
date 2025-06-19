@@ -48,17 +48,21 @@
     <div class="row d-flex justify-content-end">
       <nav style="width: auto">
         <ul class="pagination">
-          <li class="page-item"><a class="page-link" href="#">Precedente</a></li>
-          <li class="page-item"><a class="page-link" href="#">{{getPreviousPage()}}</a></li>
-          <li class="page-item active"><a class="page-link" href="#">{{getCurrentPage()}}</a></li>+
-          @if (isCurrentPageTheLastOne()) {
-            <li class="page-item disabled"><a class="page-link" href="#">Successivo</a></li>
+          @if (getCurrentPage() > 1) {
+            <li class="page-item"><button class="page-link" (click)="prevPage()">Precedente</button></li>
+            <li class="page-item"><button class="page-link" (click)="prevPage()">{{getPreviousPage()}}</button></li>
           } @else {
-            <li class="page-item"><a class="page-link" href="#">{{getNextPage()}}</a></li>
-            @if (isNextPageTheLastOne()) {
+            <li class="page-item disabled"><button class="page-link">Precedente</button></li>
+          }
+          <li class="page-item active"><button class="page-link">{{getCurrentPage()}}</button></li>
+          @if (isCurrentPageTheLastOne()) {
+            <li class="page-item disabled"><button class="page-link">Successivo</button></li>
+          } @else {
+            <li class="page-item"><button class="page-link" (click)="nextPage()">{{getNextPage()}}</button></li>
+            @if (!isNextPageTheLastOne()) {
               <li class="page-item"><a class="page-link" href="#">...</a></li>
             }
-            <li class="page-item"><a class="page-link" href="#">Successivo</a></li>
+            <li class="page-item"><button class="page-link" (click)="nextPage()">Successivo</button></li>
           }
         </ul>
       </nav>
