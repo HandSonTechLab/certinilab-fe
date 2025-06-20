@@ -1,47 +1,49 @@
 <!-- search-filter.component.html -->
 <div class="card shadow rounded-4 p-4 my-4">
   <form (ngSubmit)="onSearch()" class="row gy-3 gx-3 align-items-end">
-    <!-- Nome -->
+
     <div class="col-12 col-md-4">
-      <label for="nome" class="form-label">Nome</label>
+      <label for="firstInputLabal" class="form-label">{{firstInputLabel}}</label>
       <input
         type="text"
-        id="nome"
+        id="firstInputLabal"
         class="form-control"
         placeholder="Mario"
-        [(ngModel)]="filters.nome"
+        [(ngModel)]="firstInputValue"
         name="nome"
       />
     </div>
 
-    <!-- Cognome -->
     <div class="col-12 col-md-4">
-      <label for="cognome" class="form-label">Cognome</label>
+      <label for="secondInputLabal" class="form-label">{{secondInputLabel}}</label>
       <input
         type="text"
-        id="cognome"
+        id="secondInputLabal"
         class="form-control"
         placeholder="Rossi"
-        [(ngModel)]="filters.cognome"
+        [(ngModel)]="secondInputValue"
         name="cognome"
       />
     </div>
 
-    <!-- Indirizzo -->
     <div class="col-12 col-md-4">
-      <label for="indirizzo" class="form-label">Indirizzo</label>
+      <label for="thirdInputLabal" class="form-label">{{ thirdInputLabel }}</label>
       <input
         type="text"
-        id="indirizzo"
+        id="thirdInputLabal"
         class="form-control"
         placeholder="Via Roma 123"
-        [(ngModel)]="filters.indirizzo"
+        [(ngModel)]="thirdInputValue"
         name="indirizzo"
       />
     </div>
 
-    <!-- Pulsante Cerca -->
     <div class="col-12 text-end">
+      @if (isResetModeActive) {
+        <button class="btn btn-outline-secondary px-4 me-2" (click)="onReset()">
+          <i class="bi bi-x-circle me-2"></i> Reset
+        </button>
+      }
       <button class="btn btn-primary px-4" type="submit">
         <i class="bi bi-search me-2"></i> Cerca
       </button>

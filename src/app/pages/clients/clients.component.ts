@@ -1,12 +1,12 @@
 import {AfterViewInit, Component, inject, OnDestroy, OnInit} from '@angular/core';
-import {SearchFilterComponent} from '../search-filter/search-filter.component';
+import {SearchFilterComponent} from '../../shared/search-filter/search-filter.component';
 import {Router} from '@angular/router';
 import {ClientsService} from '../../services/clients.service';
 import {Subscription} from 'rxjs';
 import {SearchData} from '../../model/search-data.model';
 import {ClientDtoModel} from '../../model/client-dto.model';
 import {PageInfoModel} from '../../model/page-info.model';
-import {CONSTANTS} from '../../shared/constants';
+import {SearchValue} from '../../model/search-value.model';
 declare var bootstrap: any;
 
 export interface Notification {
@@ -21,7 +21,7 @@ export interface Notification {
   ],
   styleUrl: './clients.component.css'
 })
-export class ClientsComponent implements OnInit ,  OnDestroy, AfterViewInit {
+export class ClientsComponent implements OnInit , OnDestroy {
 
   protected notification?: Notification;
   protected showNotifications: boolean = false;
@@ -31,6 +31,7 @@ export class ClientsComponent implements OnInit ,  OnDestroy, AfterViewInit {
   protected pageInfo?: PageInfoModel | undefined;
   private defaultPageSize = 10;
   private defaultPageNumber = 0;
+  private searchData: SearchData = {};
 
   constructor(private router: Router) {
     const currNav = this.router.getCurrentNavigation();
@@ -38,22 +39,13 @@ export class ClientsComponent implements OnInit ,  OnDestroy, AfterViewInit {
     if (notification) {
       this.showNotification(notification);
     }
+
   }
 
   ngOnInit() {
-    const searchData: SearchData = {};
-    const subscription = this.clientService.searchClients(searchData, this.defaultPageNumber, this.defaultPageSize).subscribe({
-      next: (response) => {
-        this.clients = response.body?.ricercaClientiDtoList;
-        this.pageInfo = response.body?.pageInfo;
-      },
-      error: (error) => {
-        this.subscriptions.push(subscription);
-      },
-      complete: () => {
-        this.subscriptions.push(subscription);
-      }
-    })
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    tooltipTriggerList.forEach((el) => new bootstrap.Tooltip(el));
+    this.searchClients({}, this.defaultPageNumber, this.defaultPageSize);
   }
 
   ngOnDestroy(): void {
@@ -62,11 +54,6 @@ export class ClientsComponent implements OnInit ,  OnDestroy, AfterViewInit {
       console.log('I am unsubscribing subscription');
       subscription.unsubscribe()
     });
-  }
-
-  ngAfterViewInit(): void {
-    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-    tooltipTriggerList.forEach((el) => new bootstrap.Tooltip(el));
   }
 
   openNewClientPage() {
@@ -118,37 +105,40 @@ export class ClientsComponent implements OnInit ,  OnDestroy, AfterViewInit {
   }
 
   nextPage() : void {
-    const subscription = this.clientService.searchClients({}, this.pageInfo?.pageNumber!! + 1, this.defaultPageSize).subscribe({
-      next: (response) => {
-        this.clients = response.body?.ricercaClientiDtoList;
-        this.pageInfo = response.body?.pageInfo;
-      },
-      error: (error) => {
-        this.subscriptions.push(subscription);
-      },
-      complete: () => {
-        this.subscriptions.push(subscription);
-      }
-    })
+    this.searchClients(this.searchData, this.pageInfo?.pageNumber!! + 1, this.defaultPageSize)
   }
 
   prevPage() : void {
-    const subscription = this.clientService.searchClients({}, this.pageInfo?.pageNumber!! - 1, this.defaultPageSize).subscribe({
-      next: (response) => {
-        this.clients = response.body?.ricercaClientiDtoList;
-        this.pageInfo = response.body?.pageInfo;
-      },
-      error: (error) => {
-        this.subscriptions.push(subscription);
-      },
-      complete: () => {
-        this.subscriptions.push(subscription);
-      }
-    })
+    this.searchClients(this.searchData, this.pageInfo?.pageNumber!! - 1, this.defaultPageSize)
   }
 
   viewClient(userId: number) {
     this.router.navigateByUrl('/new-client', { state: { userId: userId} });
+  }
+
+  search(searchData: SearchValue) {
+    this.searchData = {nome: searchData.firstInputValue, cognome: searchData.secondInputValue, indirizzo: searchData.thirdInputValue};
+    this.searchClients(this.searchData, this.defaultPageNumber, this.defaultPageSize)
+  }
+
+  handleResetEvent() {
+    this.searchData = {};
+    this.searchClients(this.searchData, this.defaultPageNumber, this.defaultPageSize)
+  }
+
+  private searchClients(searchData: SearchData, pageNumber: number, pageSize: number) {
+    const subscription = this.clientService.searchClients(searchData, pageNumber, pageSize).subscribe({
+      next: (response) => {
+        this.clients = response.body?.ricercaClientiDtoList;
+        this.pageInfo = response.body?.pageInfo;
+      },
+      error: (error) => {
+        this.subscriptions.push(subscription);
+      },
+      complete: () => {
+        this.subscriptions.push(subscription);
+      }
+    })
   }
 
 }

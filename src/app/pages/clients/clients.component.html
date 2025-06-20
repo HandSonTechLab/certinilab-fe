@@ -10,7 +10,13 @@
 </div>
 <div class="container-fluid custom-margin-top-1rem">
   <div class="row d-flex justify-content-end mb-3">
-    <app-search-filter></app-search-filter>
+    <app-search-filter [firstInputLabel]="'Nome'"
+                       [secondInputLabel]="'Cognome'"
+                       [thirdInputLabel]="'Indirizzo'"
+                       (search)="search($event)"
+                       (reset)="handleResetEvent()"
+    >
+    </app-search-filter>
   </div>
   <div class="row mt-1">
     <div class="col-12">
