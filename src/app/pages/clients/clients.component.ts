@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, inject, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, Component, inject, OnDestroy, OnInit, signal, WritableSignal} from '@angular/core';
 import {SearchFilterComponent} from '../../shared/search-filter/search-filter.component';
 import {Router} from '@angular/router';
 import {ClientsService} from '../../services/clients.service';
@@ -32,6 +32,7 @@ export class ClientsComponent implements OnInit , OnDestroy {
   private defaultPageSize = 10;
   private defaultPageNumber = 0;
   private searchData: SearchData = {};
+  clientTheUserWantsToDelete: WritableSignal<ClientDtoModel | null> = signal(null);
 
   constructor(private router: Router) {
     const currNav = this.router.getCurrentNavigation();
@@ -114,6 +115,31 @@ export class ClientsComponent implements OnInit , OnDestroy {
 
   viewClient(userId: number) {
     this.router.navigateByUrl('/new-client', { state: { userId: userId} });
+  }
+
+  deleteClient() {
+    if (this.clientTheUserWantsToDelete() != null) {
+      const subscription = this.clientService.deleteClientById(this.clientTheUserWantsToDelete()!!.id).subscribe({
+        next: () => {
+          this.showNotification({title: 'Eliminazione avvenuta con successo'});
+          const myModalEl = document.getElementById('deleteModal')
+          const modal = bootstrap.Modal.getInstance(myModalEl) // Returns a Bootstrap modal instance
+          modal.hide()
+          this.searchClients({}, this.defaultPageNumber, this.defaultPageSize);
+        },
+        error: (error) => {
+          this.subscriptions.push(subscription);
+        },
+        complete: () => {
+          this.subscriptions.push(subscription);
+        }
+      })
+    }
+
+  }
+
+  showModalEvent(client: ClientDtoModel) {
+    this.clientTheUserWantsToDelete?.set(client);
   }
 
   search(searchData: SearchValue) {
