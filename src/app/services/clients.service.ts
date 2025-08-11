@@ -13,7 +13,8 @@ import {UpdateClientModel} from '../model/update-client.model';
   providedIn: 'root'
 })
 export class ClientsService {
-  private baseUrl = 'http://localhost:8080/clients';
+  private basePath = '/api/v1';
+  private baseUrl = `http://localhost:8080${this.basePath}/clients`;
   private httpClient = inject(HttpClient);
   private errorService = inject(ErrorService);
 
