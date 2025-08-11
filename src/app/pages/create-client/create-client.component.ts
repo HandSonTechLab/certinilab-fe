@@ -6,9 +6,11 @@ import {ClientModel} from '../../model/client.model';
 import {Subscription} from 'rxjs';
 import {Router} from '@angular/router';
 import {CONSTANTS} from '../../shared/constants';
+import {UpdateClientModel} from '../../model/update-client.model';
 
-export interface ViewUser {
-  userId: number;
+export interface UserDetail {
+  userId?: number;
+  activeMode?: string;
 }
 
 @Component({
@@ -26,16 +28,16 @@ export class CreateClientComponent implements OnInit, OnDestroy {
   private clientService = inject(ClientsService);
   private subscriptions: Subscription[] = [];
   private fb: FormBuilder = new FormBuilder();
-  protected isViewMode: boolean = false;
+  protected userDetail: UserDetail = {};
 
   constructor(private router: Router) {
     const currNav = this.router.getCurrentNavigation();
-    const viewUser = currNav?.extras.state as ViewUser
-    if (viewUser) {
-      this.isViewMode = true;
-      const subscription = this.clientService.findClientById(viewUser.userId).subscribe({
+    const userDetailTemp = currNav?.extras.state as UserDetail
+    if (userDetailTemp && userDetailTemp.userId && userDetailTemp.activeMode) {
+      this.userDetail = userDetailTemp;
+      const subscription = this.clientService.findClientById(userDetailTemp.userId).subscribe({
         next: (response) => {
-          this.initForm(response.body);
+          this.initForm(response.body, this.userDetail.activeMode == 'view');
         },
         error: (error) => {
           this.subscriptions.push(subscription);
@@ -47,39 +49,21 @@ export class CreateClientComponent implements OnInit, OnDestroy {
     }
   }
 
-  initForm(clientModel: ClientModel | null): void {
-    if (clientModel) {
-      this.clienteForm = this.fb.group({
-        nome: [{value: clientModel.nome, disabled: true}, Validators.required],
-        cognome: [{value: clientModel.cognome, disabled: true}, Validators.required],
-        cellulare: [{value: clientModel.cellulare, disabled: true}, Validators.required],
-        dataNascita: [{value: clientModel.dataNascita, disabled: true}],
-        codiceFiscale: [{value: clientModel.codiceFiscale, disabled: true}],
-        codiceIdentificativoAsl: [{value: clientModel.codiceIdentificativoAsl, disabled: true}],
-        indirizzo: [{value: clientModel.indirizzo, disabled: true}, Validators.required],
-        provincia: [{value: clientModel.provincia,disabled: true}, Validators.required],
-        comune: [{value: clientModel.comune,disabled: true}, Validators.required],
-      });
-    } else {
-      this.initEmptyForm()
-    }
-  }
-
   ngOnInit() {
-    this.initEmptyForm()
+    this.initForm(null, this.userDetail ? this.userDetail.activeMode == 'view' : false);
   }
 
-  initEmptyForm() {
+  initForm(clientModel: ClientModel | null, disable: boolean): void {
     this.clienteForm = this.fb.group({
-      nome: ['', Validators.required],
-      cognome: ['', Validators.required],
-      cellulare: ['', Validators.required],
-      dataNascita: [''],
-      codiceFiscale: [''],
-      codiceIdentificativoAsl: [''],
-      indirizzo: ['', Validators.required],
-      provincia: ['', Validators.required],
-      comune: ['', Validators.required],
+      nome: [{value: clientModel ? clientModel.nome : '', disabled: disable}, Validators.required],
+      cognome: [{value: clientModel ? clientModel.cognome : '', disabled: disable}, Validators.required],
+      cellulare: [{value: clientModel ? clientModel.cellulare : '', disabled: disable}, Validators.required],
+      dataNascita: [{value: clientModel ? clientModel.dataNascita : '', disabled: disable}],
+      codiceFiscale: [{value: clientModel ? clientModel.codiceFiscale : '', disabled: disable}],
+      codiceIdentificativoAsl: [{value: clientModel ? clientModel.codiceIdentificativoAsl : '', disabled: disable}],
+      indirizzo: [{value: clientModel ? clientModel.indirizzo : '', disabled: disable}, Validators.required],
+      provincia: [{value: clientModel ? clientModel.provincia : '', disabled: disable}, Validators.required],
+      comune: [{value: clientModel ? clientModel.comune : '', disabled: disable}, Validators.required],
     });
   }
 
@@ -93,31 +77,64 @@ export class CreateClientComponent implements OnInit, OnDestroy {
 
   onSubmit() {
     if (this.clienteForm.valid) {
-      const newClient: ClientModel =  {
-        nome: this.clienteForm.get('nome')?.value,
-        cognome: this.clienteForm.get('cognome')?.value,
-        cellulare: this.clienteForm.get('cellulare')?.value,
-        codiceFiscale: this.clienteForm.get('codiceFiscale')?.value == "" ? null : this.clienteForm.get('codiceFiscale')?.value,
-        indirizzo: this.clienteForm.get('indirizzo')?.value,
-        provincia: this.clienteForm.get('provincia')?.value,
-        comune: this.clienteForm.get('comune')?.value,
-        codiceIdentificativoAsl: this.clienteForm.get('codiceIdentificativoAsl')?.value == "" ? null : this.clienteForm.get('codiceIdentificativoAsl')?.value,
-        dataNascita: this.clienteForm.get('dataNascita')?.value == "" ? null : this.clienteForm.get('dataNascita')?.value,
-      };
 
-      const subscription = this.clientService.createClient(newClient).subscribe({
-        next: (response) => {
-          console.debug('Response {}', response.body);
-        },
-        complete: () => {
-          this.subscriptions.push(subscription);
-          this.router.navigateByUrl('/clients', { state: { title: CONSTANTS.create_client_success} });
-        }
-      });
-
+      if (this.userDetail && this.userDetail.activeMode == 'create') {
+        this.createClient();
+      } else if (this.userDetail && this.userDetail.activeMode == 'update') {
+        this.updateClient();
+      }
     } else {
       this.clienteForm.markAllAsTouched();
     }
+  }
+
+  private updateClient() {
+    const clientToBeUpdated: UpdateClientModel = {
+      id: this.userDetail.userId!!,
+      nome: this.clienteForm.get('nome')?.value,
+      cognome: this.clienteForm.get('cognome')?.value,
+      cellulare: this.clienteForm.get('cellulare')?.value,
+      codiceFiscale: this.clienteForm.get('codiceFiscale')?.value == "" ? null : this.clienteForm.get('codiceFiscale')?.value,
+      indirizzo: this.clienteForm.get('indirizzo')?.value,
+      provincia: this.clienteForm.get('provincia')?.value,
+      comune: this.clienteForm.get('comune')?.value,
+      codiceIdentificativoAsl: this.clienteForm.get('codiceIdentificativoAsl')?.value == "" ? null : this.clienteForm.get('codiceIdentificativoAsl')?.value,
+      dataNascita: this.clienteForm.get('dataNascita')?.value == "" ? null : this.clienteForm.get('dataNascita')?.value,
+    }
+
+    const subscription = this.clientService.updateClient(clientToBeUpdated).subscribe({
+      next: (response) => {
+        console.debug('Response {}', response.body);
+      },
+      complete: () => {
+        this.subscriptions.push(subscription);
+        this.router.navigateByUrl('/clients', {state: {title: CONSTANTS.update_client_success}});
+      }
+    });
+  }
+
+  private createClient() {
+    const newClient: ClientModel = {
+      nome: this.clienteForm.get('nome')?.value,
+      cognome: this.clienteForm.get('cognome')?.value,
+      cellulare: this.clienteForm.get('cellulare')?.value,
+      codiceFiscale: this.clienteForm.get('codiceFiscale')?.value == "" ? null : this.clienteForm.get('codiceFiscale')?.value,
+      indirizzo: this.clienteForm.get('indirizzo')?.value,
+      provincia: this.clienteForm.get('provincia')?.value,
+      comune: this.clienteForm.get('comune')?.value,
+      codiceIdentificativoAsl: this.clienteForm.get('codiceIdentificativoAsl')?.value == "" ? null : this.clienteForm.get('codiceIdentificativoAsl')?.value,
+      dataNascita: this.clienteForm.get('dataNascita')?.value == "" ? null : this.clienteForm.get('dataNascita')?.value,
+    };
+
+    const subscription = this.clientService.createClient(newClient).subscribe({
+      next: (response) => {
+        console.debug('Response {}', response.body);
+      },
+      complete: () => {
+        this.subscriptions.push(subscription);
+        this.router.navigateByUrl('/clients', {state: {title: CONSTANTS.create_client_success}});
+      }
+    });
   }
 
   isInvalid(controlName: string): boolean {

@@ -118,8 +118,8 @@
         </div>
 
         <div class="d-grid mt-5">
-          <button type="submit" class="btn btn-primary btn-lg" [ngClass]="{'disabled': isViewMode}">
-            <i></i>Salva Cliente
+          <button type="submit" class="btn btn-primary btn-lg" [ngClass]="{'disabled': this.userDetail.activeMode == 'view'}">
+            <i></i>Salva
           </button>
         </div>
       </form>

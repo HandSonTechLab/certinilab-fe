@@ -39,10 +39,10 @@
                 <td>{{client.cognome}}</td>
                 <td>{{client.indirizzo}}</td>
                 <td>
-                  <i class="bi bi-pencil-square p-2 pointer"></i>
+                  <i class="bi bi-pencil-square p-2 pointer" (click)="viewClient(client.id, 'update')"></i>
                   <!-- trigger modal to delete user -->
                   <i class="bi bi-trash3 p-2 pointer" style="color: red" data-bs-toggle="modal" data-bs-target="#deleteModal" (click)="showModalEvent(client)"></i>
-                  <i class="bi bi-eye p-2 pointer" style="color: #0d6efd" (click)="viewClient(client.id)"></i>
+                  <i class="bi bi-eye p-2 pointer" style="color: #0d6efd" (click)="viewClient(client.id, 'view')"></i>
                 </td>
               </tr>
             }
