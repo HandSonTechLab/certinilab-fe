@@ -155,7 +155,7 @@ export class ClientsComponent implements OnInit , OnDestroy {
   private searchClients(searchData: SearchData, pageNumber: number, pageSize: number) {
     const subscription = this.clientService.searchClients(searchData, pageNumber, pageSize).subscribe({
       next: (response) => {
-        this.clients = response.body?.ricercaClientiDtoList;
+        this.clients = response.body?.searchClientsDtoList;
         this.pageInfo = response.body?.pageInfo;
       },
       error: (error) => {

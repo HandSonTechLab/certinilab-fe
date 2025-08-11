@@ -107,7 +107,7 @@ export class CreateClientComponent implements OnInit, OnDestroy {
 
       const subscription = this.clientService.createClient(newClient).subscribe({
         next: (response) => {
-          console.debug('Response {}', response);
+          console.debug('Response {}', response.body);
         },
         complete: () => {
           this.subscriptions.push(subscription);

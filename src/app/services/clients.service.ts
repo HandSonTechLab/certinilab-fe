@@ -13,18 +13,18 @@ import {UpdateClientModel} from '../model/update-client.model';
   providedIn: 'root'
 })
 export class ClientsService {
-  private baseUrl = 'http://localhost:8080/clienti';
+  private baseUrl = 'http://localhost:8080/clients';
   private httpClient = inject(HttpClient);
   private errorService = inject(ErrorService);
 
   constructor() { }
 
-  createClient(client: ClientModel): Observable<HttpResponse<void>> {
-    return this.httpClient.post<void>(this.baseUrl, client, { observe: 'response' })
+  createClient(client: ClientModel): Observable<HttpResponse<ClientModel>> {
+    return this.httpClient.post<ClientModel>(this.baseUrl, client, { observe: 'response' })
       .pipe(catchError((error: HttpErrorResponse) => {
-        console.log('an error occurred during create client request -> {}', error);
-        this.errorService.showError(CONSTANTS.create_client_request_error_message.concat(': error code ', error.status.toString()))
-        return throwError(() => new Error(CONSTANTS.create_client_request_error_message));
+        console.log('an error occurred during create client request -> {}', error.headers.get('X-Error-Message'));
+        this.errorService.showError(CONSTANTS.create_client_request_error_message.concat(' \n messaggio di errore: ', error.headers.get('X-Error-Message') || 'N/A'))
+        return throwError(() => new Error(CONSTANTS.create_client_request_error_message.concat(' \n messaggio di errore: ', error.headers.get('X-Error-Message') || 'N/A')));
       }))
   }
 
@@ -55,7 +55,7 @@ export class ClientsService {
       }))
   }
 
-  updateClient(updateClientModel: UpdateClientModel, clientId: number): Observable<HttpResponse<ClientModel>> {
+  updateClient(updateClientModel: UpdateClientModel): Observable<HttpResponse<ClientModel>> {
     return this.httpClient.put<ClientModel>(this.baseUrl, updateClientModel, { observe: 'response' })
       .pipe(catchError((error: HttpErrorResponse) => {
         console.log('an error occurred during update client request -> {}', error);
