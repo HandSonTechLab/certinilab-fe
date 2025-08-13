@@ -13,4 +13,5 @@ export const CONSTANTS = {
   update_client_request_error_message: 'Eliminazione cliente fallita!',
   // find suppliers
   suppliers_request_error_message: 'Recupero fornitori fallito!',
+  find_supplier_byid_request_error_message: 'Ricerca cliente fallita!',
 }
