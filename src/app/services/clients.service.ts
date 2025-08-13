@@ -1,24 +1,22 @@
-import {inject, Injectable} from '@angular/core';
-import {HttpClient, HttpErrorResponse, HttpResponse} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {HttpErrorResponse, HttpResponse} from '@angular/common/http';
 import {ClientModel} from '../model/client.model';
 import {catchError, Observable, throwError} from 'rxjs';
-import {ErrorService} from '../shared/error.service';
 import {CONSTANTS} from '../shared/constants';
 import {SearchData} from '../model/search-data.model';
 import {SearchClientsResponse} from '../model/search-clients-response.data';
 import {UpdateClientModel} from '../model/update-client.model';
+import {BaseService} from './base-service';
 
 @Injectable({
   // where in the application it can be injected. Root means that it can be used throughout the app.
   providedIn: 'root'
 })
-export class ClientsService {
-  private basePath = '/api/v1';
-  private baseUrl = `http://localhost:8080${this.basePath}/clients`;
-  private httpClient = inject(HttpClient);
-  private errorService = inject(ErrorService);
+export class ClientsService extends BaseService {
 
-  constructor() { }
+  constructor() {
+    super("clients");
+  }
 
   createClient(client: ClientModel): Observable<HttpResponse<ClientModel>> {
     return this.httpClient.post<ClientModel>(this.baseUrl, client, { observe: 'response' })

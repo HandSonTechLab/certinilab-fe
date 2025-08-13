@@ -1,7 +1,97 @@
-<div class="container-fluid custom-margin-top">
-  <div class="row">
+<div class="container mt-3">
+  @if (showNotifications) {
+    <div class="row d-flex justify-content-center mb-3">
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>{{ notification?.title }}!</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    </div>
+  }
+</div>
+<div class="container-fluid custom-margin-top-1rem">
+  <div class="row mt-1">
     <div class="col-12">
-      <p>Lavori in corso: fornitori</p>
+      @if (suppliers?.length == 0) {
+        <span>Nessun fornitore</span>
+      } @else {
+        <table class="table table-hover border">
+          <thead class="table-dark">
+          <tr>
+            <th scope="col">Codice Provenienza</th>
+            <th scope="col">Partita IVA</th>
+            <th scope="col">Telefono</th>
+            <th scope="col">Indirizzo</th>
+            <th scope="col" style="width: 9em"></th>
+          </tr>
+          </thead>
+          <tbody>
+            @for (supplier of suppliers; track supplier.codiceProvenienza) {
+              <tr>
+                <td>{{ supplier.codiceProvenienza }}</td>
+                <td>{{ supplier.partitaIva }}</td>
+                <td>{{ supplier.telefono }}</td>
+                <td>{{ supplier.indirizzo }}</td>
+                <td>
+                  <i class="bi bi-pencil-square p-2 pointer"
+                     (click)="viewSupplier('update', supplier.codiceProvenienza)"></i>
+                  <i class="bi bi-eye p-2 pointer" style="color: #0d6efd"
+                     (click)="viewSupplier( 'view', supplier.codiceProvenienza)"></i>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
     </div>
   </div>
+  @if (isPagesExist()) {
+    <div class="row d-flex justify-content-end">
+      <nav style="width: auto">
+        <ul class="pagination">
+          @if (getCurrentPage() > 1) {
+            <li class="page-item">
+              <button class="page-link" (click)="prevPage()">Precedente</button>
+            </li>
+            <li class="page-item">
+              <button class="page-link" (click)="prevPage()">{{ getPreviousPage() }}</button>
+            </li>
+          } @else {
+            <li class="page-item disabled">
+              <button class="page-link">Precedente</button>
+            </li>
+          }
+          <li class="page-item active">
+            <button class="page-link">{{ getCurrentPage() }}</button>
+          </li>
+          @if (isCurrentPageTheLastOne()) {
+            <li class="page-item disabled">
+              <button class="page-link">Successivo</button>
+            </li>
+          } @else {
+            <li class="page-item">
+              <button class="page-link" (click)="nextPage()">{{ getNextPage() }}</button>
+            </li>
+            @if (!isNextPageTheLastOne()) {
+              <li class="page-item"><a class="page-link">...</a></li>
+            }
+            <li class="page-item">
+              <button class="page-link" (click)="nextPage()">Successivo</button>
+            </li>
+          }
+        </ul>
+      </nav>
+    </div>
+  }
+
 </div>
+
+<a
+  class="btn btn-primary rounded-circle shadow-lg fab"
+  aria-label="Crea nuovo fornitore"
+  data-bs-toggle="tooltip"
+  title="Crea nuovo fornitore"
+  (click)="viewSupplier( 'create', undefined)"
+>
+  <i class="bi bi-plus-lg"></i>
+</a>
+

@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, inject, OnDestroy, OnInit, signal, WritableSignal} from '@angular/core';
+import {Component, inject, OnDestroy, OnInit, signal, WritableSignal} from '@angular/core';
 import {SearchFilterComponent} from '../../shared/search-filter/search-filter.component';
 import {Router} from '@angular/router';
 import {ClientsService} from '../../services/clients.service';
@@ -7,11 +7,10 @@ import {SearchData} from '../../model/search-data.model';
 import {ClientDtoModel} from '../../model/client-dto.model';
 import {PageInfoModel} from '../../model/page-info.model';
 import {SearchValue} from '../../model/search-value.model';
+import {NotificationModel} from '../../model/notification.model';
+
 declare var bootstrap: any;
 
-export interface Notification {
-  title: string;
-}
 
 @Component({
   selector: 'app-clients',
@@ -23,7 +22,7 @@ export interface Notification {
 })
 export class ClientsComponent implements OnInit , OnDestroy {
 
-  protected notification?: Notification;
+  protected notification?: NotificationModel;
   protected showNotifications: boolean = false;
   private clientService = inject(ClientsService);
   private subscriptions: Subscription[] = [];
@@ -61,7 +60,7 @@ export class ClientsComponent implements OnInit , OnDestroy {
     this.router.navigate(['/new-client', { state: { userId: null, activeMode: 'create'} }]);
   }
 
-  showNotification(notification: Notification) {
+  showNotification(notification: NotificationModel) {
     this.showNotifications = true;
     this.notification = notification;
   }
