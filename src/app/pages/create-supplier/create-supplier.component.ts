@@ -1,9 +1,11 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Subscription} from 'rxjs';
 import {SupplierService} from '../../services/supplier.service';
 import {Router} from '@angular/router';
 import {SupplierModel} from '../../model/supplier.model';
+import {CONSTANTS} from '../../shared/constants';
+import {NgClass} from '@angular/common';
 
 export interface SupplierDetail {
   codiceProvenienza?: string;
@@ -14,12 +16,13 @@ export interface SupplierDetail {
 @Component({
   selector: 'app-create-supplier',
   imports: [
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgClass
   ],
   templateUrl: './create-supplier.component.html',
   styleUrl: './create-supplier.component.css'
 })
-export class CreateSupplierComponent {
+export class CreateSupplierComponent implements OnInit, OnDestroy {
   protected supplierForm: FormGroup = new FormGroup({})
   private supplierService = inject(SupplierService);
   private subscriptions: Subscription[] = [];
@@ -45,7 +48,6 @@ export class CreateSupplierComponent {
     }
   }
 
-
   ngOnInit() {
     this.initForm(null, this.supplierDetail ? this.supplierDetail.activeMode == 'view' : false);
   }
@@ -60,5 +62,69 @@ export class CreateSupplierComponent {
       telefono: [{value: supplierModel ? supplierModel.telefono : '', disabled: disable}],
       indirizzo: [{value: supplierModel ? supplierModel.indirizzo : '', disabled: disable}],
     });
+  }
+
+  ngOnDestroy(): void {
+    console.log('ngOnDestroy');
+    this.subscriptions.forEach(subscription => {
+      console.log('I am unsubscribing subscription');
+      subscription.unsubscribe()
+    });
+  }
+
+  onSubmit() {
+    if (this.supplierForm.valid) {
+
+      if (this.supplierDetail && this.supplierDetail.activeMode == 'create') {
+        this.createClient();
+      } else if (this.supplierDetail && this.supplierDetail.activeMode == 'update') {
+        this.updateClient();
+      }
+    } else {
+      this.supplierForm.markAllAsTouched();
+    }
+  }
+
+  private updateClient() {
+    const supplierModel: SupplierModel = {
+      codiceProvenienza: this.supplierDetail.codiceProvenienza!!,
+      partitaIva: this.supplierForm.get('partitaIva')?.value,
+      telefono: this.supplierForm.get('telefono')?.value,
+      indirizzo: this.supplierForm.get('indirizzo')?.value == "" ? null : this.supplierForm.get('indirizzo')?.value,
+    }
+
+    const subscription = this.supplierService.updateSupplier(supplierModel).subscribe({
+      next: (response) => {
+        console.debug('Response {}', response.body);
+      },
+      complete: () => {
+        this.subscriptions.push(subscription);
+        this.router.navigateByUrl('/suppliers', {state: {title: CONSTANTS.update_supplier_success}});
+      }
+    });
+  }
+
+  private createClient() {
+    const supplierModel: SupplierModel = {
+      codiceProvenienza: this.supplierForm.get('codiceProvenienza')?.value,
+      partitaIva: this.supplierForm.get('partitaIva')?.value,
+      telefono: this.supplierForm.get('telefono')?.value,
+      indirizzo: this.supplierForm.get('indirizzo')?.value == "" ? null : this.supplierForm.get('indirizzo')?.value,
+    };
+
+    const subscription = this.supplierService.createSupplier(supplierModel).subscribe({
+      next: (response) => {
+        console.debug('Response {}', response.body);
+      },
+      complete: () => {
+        this.subscriptions.push(subscription);
+        this.router.navigateByUrl('/suppliers', {state: {title: CONSTANTS.create_supplier_success}});
+      }
+    });
+  }
+
+  isInvalid(controlName: string): boolean {
+    const control = this.supplierForm.get(controlName);
+    return !!(control && control.invalid && control.touched);
   }
 }

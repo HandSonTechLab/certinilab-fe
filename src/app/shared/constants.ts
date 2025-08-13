@@ -10,8 +10,14 @@ export const CONSTANTS = {
   // delete client
   delete_client_request_error_message: 'Eliminazione cliente fallita!',
   // update client
-  update_client_request_error_message: 'Eliminazione cliente fallita!',
+  update_client_request_error_message: 'Aggiornamento cliente fallita!',
   // find suppliers
   suppliers_request_error_message: 'Recupero fornitori fallito!',
   find_supplier_byid_request_error_message: 'Ricerca cliente fallita!',
+  // create supplier
+  create_supplier_request_error_message: 'Creazione fornitore fallita!',
+  create_supplier_success: 'Cliente creato con successo',
+  // update supplier
+  update_supplier_request_error_message: 'Aggiornamento fornitore fallita!',
+  update_supplier_success: 'Cliente aggiornato con successo',
 }
