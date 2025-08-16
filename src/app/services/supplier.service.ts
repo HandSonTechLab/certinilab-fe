@@ -45,8 +45,8 @@ export class SupplierService extends BaseService {
       }))
   }
 
-  findSupplierById(codiceProvenienza: string): Observable<HttpResponse<SupplierModel>> {
-    return this.httpClient.get<SupplierModel>(this.baseUrl + '/' + codiceProvenienza, {observe: 'response'})
+  findSupplierById(id: number): Observable<HttpResponse<SupplierModel>> {
+    return this.httpClient.get<SupplierModel>(this.baseUrl + '/' + id, {observe: 'response'})
       .pipe(catchError((error: HttpErrorResponse) => {
         console.log('an error occurred during search supplier by id request -> {}', error);
         this.errorService.showError(CONSTANTS.find_supplier_byid_request_error_message.concat(': error code ', error.status.toString()))

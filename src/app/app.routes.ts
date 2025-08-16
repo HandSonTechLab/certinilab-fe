@@ -21,7 +21,7 @@ export const routes: Routes = [
     component: SuppliersComponent,
   },
   {
-    path: 'new-supplier', // <your-domain>/path
+    path: 'new-suppliers', // <your-domain>/path
     component: CreateSupplierComponent,
   },
   {

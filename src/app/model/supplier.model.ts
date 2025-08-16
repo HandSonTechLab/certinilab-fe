@@ -1,6 +1,7 @@
 export interface SupplierModel {
-  codiceProvenienza: String;
-  partitaIva: String;
-  telefono?: String;
-  indirizzo?: String;
+  id?: number;
+  codiceProvenienza: string;
+  partitaIva: string;
+  telefono?: string;
+  indirizzo?: string;
 }

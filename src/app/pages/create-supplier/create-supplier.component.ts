@@ -8,7 +8,7 @@ import {CONSTANTS} from '../../shared/constants';
 import {NgClass} from '@angular/common';
 
 export interface SupplierDetail {
-  codiceProvenienza?: string;
+  id?: number;
   activeMode?: string;
 }
 
@@ -31,10 +31,10 @@ export class CreateSupplierComponent implements OnInit, OnDestroy {
 
   constructor(private router: Router) {
     const currNav = this.router.getCurrentNavigation();
-    const supplierDetailTemp = currNav?.extras.state as SupplierDetail
-    if (supplierDetailTemp && supplierDetailTemp.codiceProvenienza && supplierDetailTemp.activeMode) {
-      this.supplierDetail = supplierDetailTemp;
-      const subscription = this.supplierService.findSupplierById(supplierDetailTemp.codiceProvenienza).subscribe({
+    const supplierDetailTemp = currNav?.extras.state as SupplierDetail;
+    this.supplierDetail = supplierDetailTemp;
+    if (supplierDetailTemp && supplierDetailTemp.id && supplierDetailTemp.activeMode) {
+      const subscription = this.supplierService.findSupplierById(supplierDetailTemp.id).subscribe({
         next: (response) => {
           this.initForm(response.body, this.supplierDetail.activeMode == 'view');
         },
@@ -76,18 +76,19 @@ export class CreateSupplierComponent implements OnInit, OnDestroy {
     if (this.supplierForm.valid) {
 
       if (this.supplierDetail && this.supplierDetail.activeMode == 'create') {
-        this.createClient();
+        this.createSupplier();
       } else if (this.supplierDetail && this.supplierDetail.activeMode == 'update') {
-        this.updateClient();
+        this.updateSupplier();
       }
     } else {
       this.supplierForm.markAllAsTouched();
     }
   }
 
-  private updateClient() {
+  private updateSupplier() {
     const supplierModel: SupplierModel = {
-      codiceProvenienza: this.supplierDetail.codiceProvenienza!!,
+      id: this.supplierDetail.id,
+      codiceProvenienza: this.supplierForm.get('codiceProvenienza')?.value,
       partitaIva: this.supplierForm.get('partitaIva')?.value,
       telefono: this.supplierForm.get('telefono')?.value,
       indirizzo: this.supplierForm.get('indirizzo')?.value == "" ? null : this.supplierForm.get('indirizzo')?.value,
@@ -104,7 +105,7 @@ export class CreateSupplierComponent implements OnInit, OnDestroy {
     });
   }
 
-  private createClient() {
+  private createSupplier() {
     const supplierModel: SupplierModel = {
       codiceProvenienza: this.supplierForm.get('codiceProvenienza')?.value,
       partitaIva: this.supplierForm.get('partitaIva')?.value,

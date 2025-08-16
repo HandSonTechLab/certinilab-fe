@@ -1,3 +1,4 @@
+
 input.form-control::placeholder {
   font-style: italic;
   color: #ccc;
@@ -6,5 +7,23 @@ input.form-control::placeholder {
 button.btn-primary:hover {
   background-color: #f8f9fa;
   color: #343a40;
+}
+
+.fab {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+  transition: background-color 0.3s ease;
+}
+
+.fab:hover {
+  background-color: #0b5ed7; /* colore hover leggermente più scuro */
 }
 

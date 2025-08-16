@@ -20,7 +20,6 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav me-auto"> <!-- 'me-auto' allinea a sinistra -->
         <li class="nav-item" *ngFor="let item of menuItems"
-            (click)="selectMenuItem(item)"
             routerLink="{{item.route}}">
           <a class="nav-link " [class.active]="item === selectedItem()">{{ item.name }}</a>
         </li>
