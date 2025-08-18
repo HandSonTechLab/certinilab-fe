@@ -90,7 +90,7 @@ export class CreateSupplierComponent implements OnInit, OnDestroy {
       id: this.supplierDetail.id,
       codiceProvenienza: this.supplierForm.get('codiceProvenienza')?.value,
       partitaIva: this.supplierForm.get('partitaIva')?.value,
-      telefono: this.supplierForm.get('telefono')?.value,
+      telefono: this.supplierForm.get('telefono')?.value == "" ? null : this.supplierForm.get('telefono')?.value,
       indirizzo: this.supplierForm.get('indirizzo')?.value == "" ? null : this.supplierForm.get('indirizzo')?.value,
     }
 
@@ -109,7 +109,7 @@ export class CreateSupplierComponent implements OnInit, OnDestroy {
     const supplierModel: SupplierModel = {
       codiceProvenienza: this.supplierForm.get('codiceProvenienza')?.value,
       partitaIva: this.supplierForm.get('partitaIva')?.value,
-      telefono: this.supplierForm.get('telefono')?.value,
+      telefono: this.supplierForm.get('telefono')?.value == "" ? null : this.supplierForm.get('telefono')?.value,
       indirizzo: this.supplierForm.get('indirizzo')?.value == "" ? null : this.supplierForm.get('indirizzo')?.value,
     };
 

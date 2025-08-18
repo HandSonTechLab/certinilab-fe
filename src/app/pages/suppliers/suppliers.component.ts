@@ -101,10 +101,10 @@ export class SuppliersComponent implements OnInit, OnDestroy {
     this.getSuppliers(this.pageInfo?.pageNumber!! - 1, this.defaultPageSize)
   }
 
-  viewSupplier(activeMode: string, codiceProvenienza?: string) {
+  viewSupplier(activeMode: string, id?: number) {
     this.router.navigateByUrl('/new-suppliers', {
       state: {
-        codiceProvenienza: codiceProvenienza,
+        id: id,
         activeMode: activeMode
       }
     });
