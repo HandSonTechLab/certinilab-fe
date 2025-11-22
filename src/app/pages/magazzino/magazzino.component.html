@@ -1,0 +1,53 @@
+<div class="container p-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Situazione Magazzino (Locali)</h2>
+    <button class="btn btn-success" (click)="goToNuovo()">
+      + Nuova Allocazione
+    </button>
+  </div>
+
+  @if (isLoading()) {
+    <div class="alert alert-info">Caricamento dati...</div>
+  }
+
+  <div class="row">
+    @for (gruppo of allocamentiRaggruppati(); track gruppo.nomeLocale) {
+      <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card h-100 shadow-sm">
+
+          <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h5 class="m-0">{{ gruppo.nomeLocale }}</h5>
+            <span class="badge bg-light text-dark">Tot: {{ gruppo.totaleCapi }}</span>
+          </div>
+
+          <div class="card-body">
+            <ul class="list-group list-group-flush">
+              @for (animale of gruppo.animali; track $index) {
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  <div>
+                    <strong>{{ animale.razza }}</strong>
+                    <div class="text-muted small">Prezzo: €{{ animale.prezzo }}</div>
+                  </div>
+                  <span class="badge bg-secondary rounded-pill" style="font-size: 1em;">
+                        {{ animale.quantita }}
+                      </span>
+                </li>
+              }
+            </ul>
+
+            @if (gruppo.animali.length === 0) {
+              <p class="text-muted text-center mt-3">Nessun animale presente.</p>
+            }
+          </div>
+
+        </div>
+      </div>
+    } @empty {
+      @if (!isLoading()) {
+        <div class="col-12">
+          <div class="alert alert-warning">Nessuna allocazione trovata.</div>
+        </div>
+      }
+    }
+  </div>
+</div>
