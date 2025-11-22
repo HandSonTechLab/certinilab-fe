@@ -1,6 +1,7 @@
 import {Component, computed, inject} from '@angular/core';
 import {toSignal} from '@angular/core/rxjs-interop';
 import {MagazzinoService} from '../../services/magazzino.service';
+import {Router} from '@angular/router';
 
 // (Dentro il file del component o separato)
 export interface LocaleGroup {
@@ -21,6 +22,7 @@ export interface LocaleGroup {
 })
 export class MagazzinoComponent {
   private service = inject(MagazzinoService);
+  private router = inject(Router);
 
   // Trasformiamo l'Observable in Signal automaticamente
   // InitialValue è [] per evitare errori prima del caricamento
@@ -64,5 +66,10 @@ export class MagazzinoComponent {
   goToNuovo() {
     // Qui inserisci il router.navigate(['/allocamenti/nuovo'])
     console.log("Naviga a nuovo...");
+  }
+
+  goToModifica(id: number, event: Event) {
+    event.stopPropagation(); // Evita click indesiderati se la card fosse cliccabile
+    this.router.navigate(['/allocamenti/modifica', id]);
   }
 }
