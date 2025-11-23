@@ -1,57 +1,61 @@
 <div class="container p-4">
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>Situazione Magazzino (Locali)</h2>
-    <button class="btn btn-success" (click)="goToNuovo()">
-      + Nuova Allocazione
+    <h2>Magazzino</h2>
+    <button class="btn btn-success d-flex align-items-center gap-2" (click)="goToNuovo()">
+      <i class="bi bi-plus-lg" style="font-style: normal;">+</i> Nuova Allocazione
     </button>
   </div>
 
-  @if (isLoading()) {
-    <div class="alert alert-info">Caricamento dati...</div>
+  @if (!dashboardList()) {
+    <div class="text-center p-5">
+      <div class="spinner-border text-primary" role="status"></div>
+    </div>
   } @else {
     <div class="row">
-      @for (gruppo of allocamentiRaggruppati(); track gruppo.nomeLocale) {
+      @for (gruppo of dashboardList(); track gruppo.localeId) {
         <div class="col-md-6 col-lg-4 mb-4">
           <div class="card h-100 shadow-sm">
-
             <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
               <h5 class="m-0">{{ gruppo.nomeLocale }}</h5>
-              <span class="badge bg-light text-dark">Tot: {{ gruppo.totaleCapi }}</span>
+              <span class="badge bg-light text-dark">Tot: {{ gruppo.totale }}</span>
             </div>
 
-            <div class="card-body">
-              <ul class="list-group list-group-flush">
-                @for (animale of gruppo.animali; track $index) {
-                  <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <div>
-                      <strong>{{ animale.razza }}</strong>
-                    </div>
+            @if (gruppo.allocazioni.length === 0) {
+              <div class="p-3 text-center text-muted small">
+                Nessun animale in questo locale
+              </div>
+            } @else {
+              <div class="card-body">
+                <ul class="list-group list-group-flush">
+                  @for (allocazioni of gruppo.allocazioni; track $index) {
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                      <div>
+                        <strong>{{ allocazioni.nomeRazza }}</strong>
+                      </div>
 
-                    <div class="d-flex align-items-center gap-2">
-                      <span class="badge bg-secondary rounded-pill">{{ animale.quantita }}</span>
+                      <div class="d-flex align-items-center gap-2">
+                        <span class="badge bg-secondary rounded-pill">{{ allocazioni.quantita }}</span>
 
-                      <button class="btn btn-sm btn-outline-primary"
-                              (click)="goToModifica(animale.id, $event)">
-                        Modifica
-                      </button>
-                    </div>
-                  </li>
-                }
-              </ul>
-
-              @if (gruppo.animali.length === 0) {
-                <p class="text-muted text-center mt-3">Nessun animale presente.</p>
-              }
-            </div>
+                        <button class="btn btn-sm btn-outline-primary"
+                                (click)="goToModifica(allocazioni.id, $event)">
+                          Modifica
+                        </button>
+                      </div>
+                    </li>
+                  }
+                </ul>
+              </div>
+            }
           </div>
         </div>
       } @empty {
-        @if (!isLoading()) {
-          <div class="col-12">
-            <div class="alert alert-warning">Nessuna allocazione trovata.</div>
+        <div class="col-12 text-center mt-5">
+          <div class="alert alert-light border">
+            Nessuna allocazione trovata. Clicca su "Nuova Allocazione" per iniziare.
           </div>
-        }
+        </div>
       }
     </div>
   }
+
 </div>

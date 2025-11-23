@@ -2,6 +2,7 @@ import {HttpClient} from '@angular/common/http';
 import {inject, Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {Allocamento} from '../model/allocamento.model';
+import {LocaleDashboard} from '../model/dashboard.model';
 
 @Injectable({
   providedIn: 'root' // Rende il service disponibile in tutta l'app (Singleton)
@@ -19,6 +20,10 @@ export class MagazzinoService {
    */
   findAll(): Observable<Allocamento[]> {
     return this.http.get<Allocamento[]>(this.apiUrl);
+  }
+
+  getDashboardData(): Observable<LocaleDashboard[]> {
+    return this.http.get<LocaleDashboard[]>(`${this.apiUrl}/dashboard`);
   }
 
   /**
