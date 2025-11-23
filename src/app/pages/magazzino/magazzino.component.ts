@@ -3,17 +3,6 @@ import {toSignal} from '@angular/core/rxjs-interop';
 import {MagazzinoService} from '../../services/magazzino.service';
 import {Router} from '@angular/router';
 
-// (Dentro il file del component o separato)
-export interface LocaleGroup {
-  nomeLocale: string;
-  totaleCapi: number; // Somma totale per locale (utile!)
-  animali: {
-    razza: string;
-    quantita: number;
-    prezzo: number; // Opzionale
-  }[];
-}
-
 @Component({
   selector: 'app-magazzino',
   imports: [],
