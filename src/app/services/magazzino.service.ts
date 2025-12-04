@@ -1,7 +1,7 @@
 import {HttpClient} from '@angular/common/http';
 import {inject, Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {Allocamento} from '../model/allocamento.model';
+import {Lotto} from '../model/lotto.model';
 import {LocaleDashboard} from '../model/dashboard.model';
 
 @Injectable({
@@ -18,8 +18,8 @@ export class MagazzinoService {
   /**
    * GET ALL: Recupera la lista di tutte le allocazioni
    */
-  findAll(): Observable<Allocamento[]> {
-    return this.http.get<Allocamento[]>(this.apiUrl);
+  findAll(): Observable<Lotto[]> {
+    return this.http.get<Lotto[]>(this.apiUrl);
   }
 
   getDashboardData(): Observable<LocaleDashboard[]> {
@@ -29,22 +29,22 @@ export class MagazzinoService {
   /**
    * GET BY ID: Recupera una singola allocazione per la modifica
    */
-  getById(id: number): Observable<Allocamento> {
-    return this.http.get<Allocamento>(`${this.apiUrl}/${id}`);
+  getById(id: number): Observable<Lotto> {
+    return this.http.get<Lotto>(`${this.apiUrl}/${id}`);
   }
 
   /**
    * POST: Crea una nuova allocazione
    */
-  create(allocamento: Allocamento): Observable<Allocamento> {
-    return this.http.post<Allocamento>(this.apiUrl, allocamento);
+  create(allocamento: Lotto): Observable<Lotto> {
+    return this.http.post<Lotto>(this.apiUrl, allocamento);
   }
 
   /**
    * PUT: Aggiorna un'allocazione esistente
    */
-  update(id: number, allocamento: Allocamento): Observable<Allocamento> {
-    return this.http.put<Allocamento>(`${this.apiUrl}/${id}`, allocamento);
+  update(id: number, allocamento: Lotto): Observable<Lotto> {
+    return this.http.put<Lotto>(`${this.apiUrl}/${id}`, allocamento);
   }
 
   /**

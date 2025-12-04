@@ -2,42 +2,42 @@
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h2>Magazzino</h2>
     <button class="btn btn-success d-flex align-items-center gap-2" (click)="goToNuovo()">
-      <i class="bi bi-plus-lg" style="font-style: normal;">+</i> Nuova Allocazione
+      <i class="bi bi-plus-lg" style="font-style: normal;"></i> Nuova Allocazione
     </button>
   </div>
 
-  @if (!dashboardList()) {
+  @if (!dashboard()) {
     <div class="text-center p-5">
       <div class="spinner-border text-primary" role="status"></div>
     </div>
   } @else {
     <div class="row">
-      @for (gruppo of dashboardList(); track gruppo.localeId) {
-        <div class="col-md-6 col-lg-4 mb-4">
+      @for (dashboard of dashboard(); track dashboard.tipoAnimaleId) {
+        <div class="col-md-6 mt-5">
           <div class="card h-100 shadow-sm">
             <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-              <h5 class="m-0">{{ gruppo.nomeLocale }}</h5>
-              <span class="badge bg-light text-dark">Tot: {{ gruppo.totale }}</span>
+              <h5 class="m-0">{{ dashboard.locale }}</h5>
+              <span class="badge bg-light text-dark">Tot: {{ dashboard.totaleAnimali }}</span>
             </div>
 
-            @if (gruppo.allocazioni.length === 0) {
+            @if (dashboard.lotti.length === 0) {
               <div class="p-3 text-center text-muted small">
                 Nessun animale in questo locale
               </div>
             } @else {
               <div class="card-body">
                 <ul class="list-group list-group-flush">
-                  @for (allocazioni of gruppo.allocazioni; track $index) {
+                  @for (lotto of dashboard.lotti; track $index) {
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                       <div>
-                        <strong>{{ allocazioni.nomeRazza }}</strong>
+                        <strong>{{ lotto.razza }}</strong>
                       </div>
 
                       <div class="d-flex align-items-center gap-2">
-                        <span class="badge bg-secondary rounded-pill">{{ allocazioni.quantita }}</span>
+                        <span class="badge bg-secondary rounded-pill">{{ lotto.quantita }}</span>
 
                         <button class="btn btn-sm btn-outline-primary"
-                                (click)="goToModifica(allocazioni.id, $event)">
+                                (click)="goToModifica(lotto.id, $event)">
                           Modifica
                         </button>
                       </div>

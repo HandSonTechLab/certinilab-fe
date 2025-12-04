@@ -6,6 +6,7 @@ import {SaleComponent} from './pages/sale/sale.component';
 import {LogoutComponent} from './menu/logout/logout.component';
 import {CreateClientComponent} from './pages/create-client/create-client.component';
 import {CreateSupplierComponent} from './pages/create-supplier/create-supplier.component';
+import {MagazzinoComponent} from './pages/magazzino/magazzino.component';
 
 export const routes: Routes = [
   {
@@ -32,12 +33,16 @@ export const routes: Routes = [
     path: 'sale', // <your-domain>/path
     component: SaleComponent,
   },
+  {
+    path: 'magazzino', // <your-domain>/path
+    component: MagazzinoComponent,
+  },
   { path: 'logout',
     component: LogoutComponent
   },
   {
     path: '',
-    redirectTo: '/clients',
+    redirectTo: '/magazzino',
     pathMatch: 'full',
   },
 ];

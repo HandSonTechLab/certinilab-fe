@@ -1,8 +1,8 @@
-import {Allocamento} from './allocamento.model';
+import {Lotto} from './lotto.model';
 
 export interface LocaleDashboard {
   localeId: number;
   nomeLocale: string;
   totale: number;
-  allocazioni: Allocamento[];
+  allocazioni: Lotto[];
 }
