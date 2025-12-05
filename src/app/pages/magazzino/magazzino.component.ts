@@ -72,9 +72,9 @@ export const MOCK_DETTAGLIO_LOCALE: DettaglioLocali[] = [
 ];
 
 export const MOCK_DASHBOARD_DATA: DashboardData = {
-  totaleMagazzino: 950,
-  totaleVivi: 900,
-  totaleMorti: 50,
+  totaleMagazzino: 949,
+  totaleVivi: 949,
+  totaleMorti: 1,
   dettaglioLocali: MOCK_DETTAGLIO_LOCALE
 }
 
