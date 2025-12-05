@@ -1,8 +1,51 @@
-<div class="container p-4">
+<div class="container-fluid p-4 bg-light">
+
+  <!-- HEADER DASHBOARD: I 3 KPI -->
+  <div class="row mb-5 g-4">
+    <!-- Box 1: Totale Magazzino (Vivi + Morti o Storico) -->
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm overflow-hidden h-100">
+        <div
+          class="card-body d-flex align-items-center justify-content-between p-4 bg-white border-start border-5 border-primary">
+          <div>
+            <h6 class="text-muted text-uppercase fw-bold mb-1">Totale Movimentato</h6>
+            <h2 class="display-6 fw-bold mb-0 text-primary">{{ dashboard().totaleMagazzino }}</h2>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Box 2: Totale Animali (Vivi) -->
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm overflow-hidden h-100">
+        <div
+          class="card-body d-flex align-items-center justify-content-between p-4 bg-white border-start border-5 border-success">
+          <div>
+            <h6 class="text-muted text-uppercase fw-bold mb-1">Animali Presenti</h6>
+            <h2 class="display-6 fw-bold mb-0 text-success">{{ dashboard().totaleVivi }}</h2>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Box 3: Totale Morti -->
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm overflow-hidden h-100">
+        <div
+          class="card-body d-flex align-items-center justify-content-between p-4 bg-white border-start border-5 border-danger">
+          <div>
+            <h6 class="text-muted text-uppercase fw-bold mb-1">Decessi Totali</h6>
+            <h2 class="display-6 fw-bold mb-0 text-danger">{{ dashboard().totaleMorti }}</h2>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TITOLO SEZIONE + BOTTONE -->
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>Magazzino</h2>
-    <button class="btn btn-success d-flex align-items-center gap-2" (click)="goToNuovo()">
-      <i class="bi bi-plus-lg" style="font-style: normal;"></i> Nuova Allocazione
+    <h3 class="fw-bold text-dark">Dettaglio Locali</h3>
+    <button class="btn btn-primary btn-lg shadow-sm" (click)="goToNuovo()">Nuova Allocazione
     </button>
   </div>
 
@@ -11,41 +54,72 @@
       <div class="spinner-border text-primary" role="status"></div>
     </div>
   } @else {
-    <div class="row">
-      @for (dashboard of dashboard(); track dashboard.tipoAnimaleId) {
-        <div class="col-md-6 mt-5">
-          <div class="card h-100 shadow-sm">
-            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-              <h5 class="m-0">{{ dashboard.locale }}</h5>
-              <span class="badge bg-light text-dark">Tot: {{ dashboard.totaleAnimali }}</span>
+    <div class="row g-4">
+      @for (locale of dashboard().dettaglioLocali; track locale.localeId) {
+        <div class="col-md-6"> <!-- 2 colonne per riga -->
+          <div class="card h-100 shadow border-0 rounded-3 overflow-hidden">
+            <!-- TESTATA CARD -->
+            <div class="card-header bg-white p-4 border-bottom-0 d-flex justify-content-between align-items-start">
+              <div>
+                <h4 class="fw-bold mb-1">{{ locale.locale }}</h4>
+                <span class="text-muted small">Capienza: {{ locale.totaleAnimali }} / {{ locale.capienzaMax }}</span>
+              </div>
+              @if (locale.totaleAnimali >= locale.capienzaMax) {
+                <span class="badge bg-danger rounded-pill px-3 py-2">PIENO 100%</span>
+              } @else {
+                <span class="badge bg-success rounded-pill px-3 py-2">DISPONIBILE</span>
+              }
             </div>
 
-            @if (dashboard.lotti.length === 0) {
-              <div class="p-3 text-center text-muted small">
-                Nessun animale in questo locale
+            <!-- CORPO VISUALE (Barra Distribuzione) -->
+            <div class="px-4 pb-2">
+              <div class="progress" style="height: 25px; border-radius: 12px;">
+                @for (lotto of locale.lotti; track lotto.id) {
+                  <div class="progress-bar"
+                       [style.width.%]="(lotto.quantita / locale.capienzaMax) * 100"
+                       [ngClass]="getColorClass(lotto.razza)"
+                       title="{{ lotto.razza }} {{ lotto.quantita }}">
+                  </div>
+                }
               </div>
-            } @else {
-              <div class="card-body">
-                <ul class="list-group list-group-flush">
-                  @for (lotto of dashboard.lotti; track $index) {
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                      <div>
-                        <strong>{{ lotto.razza }}</strong>
-                      </div>
-
-                      <div class="d-flex align-items-center gap-2">
-                        <span class="badge bg-secondary rounded-pill">{{ lotto.quantita }}</span>
-
-                        <button class="btn btn-sm btn-outline-primary"
-                                (click)="goToModifica(lotto.id, $event)">
-                          Modifica
-                        </button>
-                      </div>
-                    </li>
-                  }
-                </ul>
+              <div class="d-flex justify-content-between mt-1">
+                <small class="text-muted">0</small>
+                <small class="text-muted">Distribuzione Razze</small>
+                <small class="text-muted">{{ locale.capienzaMax }}</small>
               </div>
-            }
+            </div>
+
+            <!-- LISTA DETTAGLIATA -->
+            <div class="card-body px-4 pt-2">
+              <div class="list-group list-group-flush">
+                @for (lotto of locale.lotti; track lotto.id) {
+                  <div class="list-group-item border-0 px-0 py-2 d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center gap-2">
+                      <!-- Pallino colorato legenda -->
+                      <span class="d-inline-block rounded-circle"
+                            style="width: 12px; height: 12px;"
+                            [ngClass]="getColorClassBg(lotto.razza)"></span>
+                      <span class="fw-semibold text-dark">{{ lotto.razza }}</span>
+                    </div>
+                    <div class="text-end">
+                      <div class="fw-bold">{{ lotto.quantita }}</div>
+                      @if (lotto.morti > 0) {
+                        <div class="text-danger small" style="font-size: 0.8rem;">
+                          {{ lotto.morti }} morti
+                        </div>
+                      }
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+
+            <!-- FOOTER AZIONI -->
+            <div class="card-footer p-3 bg-light border-top-0">
+              <button class="btn btn-outline-dark w-100 fw-semibold py-2"
+                      (click)="goToModifica(locale.localeId, $event)">Gestisci Locale
+              </button>
+            </div>
           </div>
         </div>
       } @empty {
