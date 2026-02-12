@@ -7,42 +7,56 @@ import {LogoutComponent} from './menu/logout/logout.component';
 import {CreateClientComponent} from './pages/create-client/create-client.component';
 import {CreateSupplierComponent} from './pages/create-supplier/create-supplier.component';
 import {MagazzinoComponent} from './pages/magazzino/magazzino.component';
+import {MsalGuard} from '@azure/msal-angular';
 
 export const routes: Routes = [
   {
-    path: 'clients', // <your-domain>/path
+    path: '',
+    component: MagazzinoComponent,
+    canActivate: [MsalGuard]
+  },
+  {
+    path: 'clients',
     component: ClientsComponent,
+    canActivate: [MsalGuard]
   },
   {
     path: 'new-client',
-    component: CreateClientComponent
+    component: CreateClientComponent,
+    canActivate: [MsalGuard]
   },
   {
-    path: 'suppliers', // <your-domain>/path
+    path: 'suppliers',
     component: SuppliersComponent,
+    canActivate: [MsalGuard]
   },
   {
-    path: 'new-suppliers', // <your-domain>/path
+    path: 'new-suppliers',
     component: CreateSupplierComponent,
+    canActivate: [MsalGuard]
   },
   {
-    path: 'report', // <your-domain>/path
+    path: 'report',
     component: ReportComponent,
+    canActivate: [MsalGuard]
   },
   {
-    path: 'sale', // <your-domain>/path
+    path: 'sale',
     component: SaleComponent,
+    canActivate: [MsalGuard]
   },
   {
-    path: 'magazzino', // <your-domain>/path
+    path: 'magazzino',
     component: MagazzinoComponent,
+    canActivate: [MsalGuard]
   },
   { path: 'logout',
-    component: LogoutComponent
+    component: LogoutComponent,
+    canActivate: [MsalGuard]
   },
   {
-    path: '',
-    redirectTo: '/magazzino',
+    path: '**',
+    redirectTo: '',
     pathMatch: 'full',
   },
 ];
