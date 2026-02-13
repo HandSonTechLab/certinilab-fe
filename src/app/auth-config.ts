@@ -1,11 +1,11 @@
 // src/app/auth-config.ts
 import {InteractionType, type IPublicClientApplication, LogLevel, PublicClientApplication} from '@azure/msal-browser';
-import {MsalGuardConfiguration} from '@azure/msal-angular';
+import {MsalGuardConfiguration, MsalInterceptorConfiguration} from '@azure/msal-angular';
 
 export const msalConfig = {
   auth: {
-    clientId: '<CLIENT_ID_SPA>',
-    authority: 'https://<tenantSubdomain>.ciamlogin.com/<TENANT_ID>',
+    clientId: '36e90f61-63f5-46be-abc9-60edea3dba23',
+    authority: 'https://poultryfarmsaas.ciamlogin.com/ce8eef6a-5650-4ca9-89cd-92c5d99fb298',
     redirectUri: 'http://localhost:4200',
   },
   cache: {
@@ -36,5 +36,14 @@ export function MSALGuardConfigFactory(): MsalGuardConfiguration {
   return {
     interactionType: InteractionType.Redirect,
     authRequest: loginRequest
+  };
+}
+
+export function MSALInterceptorConfigFactory(): MsalInterceptorConfiguration {
+  return {
+    interactionType: InteractionType.Redirect,
+    protectedResourceMap: new Map<string, string[]>([
+      // da riempire quando userai APIM
+    ])
   };
 }

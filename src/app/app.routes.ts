@@ -3,7 +3,6 @@ import {ClientsComponent} from './pages/clients/clients.component';
 import {SuppliersComponent} from './pages/suppliers/suppliers.component';
 import {ReportComponent} from './pages/report/report.component';
 import {SaleComponent} from './pages/sale/sale.component';
-import {LogoutComponent} from './menu/logout/logout.component';
 import {CreateClientComponent} from './pages/create-client/create-client.component';
 import {CreateSupplierComponent} from './pages/create-supplier/create-supplier.component';
 import {MagazzinoComponent} from './pages/magazzino/magazzino.component';
@@ -50,13 +49,8 @@ export const routes: Routes = [
     component: MagazzinoComponent,
     canActivate: [MsalGuard]
   },
-  { path: 'logout',
-    component: LogoutComponent,
-    canActivate: [MsalGuard]
-  },
   {
     path: '**',
     redirectTo: '',
-    pathMatch: 'full',
   },
 ];
