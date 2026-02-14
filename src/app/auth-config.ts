@@ -9,6 +9,7 @@ export const msalConfig = {
     authority: 'https://poultryfarmsaas.ciamlogin.com/ce8eef6a-5650-4ca9-89cd-92c5d99fb298',
     // url di DEV utile per redirect dove Entra ID rimanda l'utente dopo la login. Questo URL deve essere registrato anche nell'APP Registration.
     redirectUri: 'http://localhost:4200',
+    postLogoutRedirectUri: 'http://localhost:4200', // oppure una pagina libera da MsalGuard /welcome
   },
   cache: {
     // dove MSAL memorizza i token. localStorage persiste anche dopo la chiusura del browser, sessionStorage invece no.
