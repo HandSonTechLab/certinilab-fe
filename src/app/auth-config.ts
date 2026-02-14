@@ -1,28 +1,40 @@
-// src/app/auth-config.ts
 import {InteractionType, type IPublicClientApplication, LogLevel, PublicClientApplication} from '@azure/msal-browser';
 import {MsalGuardConfiguration, MsalInterceptorConfiguration} from '@azure/msal-angular';
 
 export const msalConfig = {
   auth: {
+    // ID dell'applicazione registrata in Azure AD e dice ad Entra ID qual è il client che sta chiedendo i token.
     clientId: '36e90f61-63f5-46be-abc9-60edea3dba23',
+    // endpoint dell'external tenant e serve a MSAL per indirizzare l'utente alla login e da dove accettare i token.
     authority: 'https://poultryfarmsaas.ciamlogin.com/ce8eef6a-5650-4ca9-89cd-92c5d99fb298',
+    // url di DEV utile per redirect dove Entra ID rimanda l'utente dopo la login. Questo URL deve essere registrato anche nell'APP Registration.
     redirectUri: 'http://localhost:4200',
   },
   cache: {
+    // dove MSAL memorizza i token. localStorage persiste anche dopo la chiusura del browser, sessionStorage invece no.
     cacheLocation: 'localStorage' as const,
+    // se true MSAL memorizza anche lo stato dell'autenticazione nei cookie, utile per browser che non supportano localStorage o sessionStorage.
     storeAuthStateInCookie: false,
   },
   system: {
     loggerOptions: {
+      // callback chiamata da MSAL per loggare eventi
       loggerCallback: (level: LogLevel, message: string) => {
         console.log(message);
       },
       logLevel: LogLevel.Info,
+      // se true, MSAL logga anche informazioni personali come username o token, utile per debug ma da disabilitare in produzione.
       piiLoggingEnabled: false,
     },
   },
 };
 
+// loginRequest è l'oggeto che descrive cosa chiedere a Entra ID durante la login
+// oggetto usato da MSALGuardConfigFactory
+// In questo caso stiamo chiedendo:
+// - openid: per ottenere un ID token che identifica l'utente
+// - profile: per ottenere informazioni di base sull'utente come nome e cognome nel token
+// - email: per ottenere l'email dell'utente inclusa nei claim del token
 export const loginRequest = {
   scopes: ['openid', 'profile', 'email']
 };
@@ -32,18 +44,22 @@ export function MSALInstanceFactory(): IPublicClientApplication {
   return new PublicClientApplication(msalConfig);
 }
 
+// come MSAL si comporta quando blocca una rotta
 export function MSALGuardConfigFactory(): MsalGuardConfiguration {
   return {
+    // se utente non autenticato, allora MSAL deve fare redirect per la login
     interactionType: InteractionType.Redirect,
     authRequest: loginRequest
   };
 }
 
+// come MSAL si comporta quando intercetta una chiamata HTTP verso un API protetta
 export function MSALInterceptorConfigFactory(): MsalInterceptorConfiguration {
   return {
+    // Se per ottenere un token per una certa API manca il consenso, allora MSAL deve fare redirect per chiedere il consenso all'utente
     interactionType: InteractionType.Redirect,
+    // mappa URL -> SCOPEs, usata da MSAL per capire quali scope chiedere a Entra ID quando intercetta una chiamata HTTP verso un certo URL
     protectedResourceMap: new Map<string, string[]>([
-      // da riempire quando userai APIM
     ])
   };
 }

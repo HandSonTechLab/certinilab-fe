@@ -14,6 +14,7 @@ import {
 } from '@azure/msal-angular';
 import {MSALGuardConfigFactory, MSALInstanceFactory, MSALInterceptorConfigFactory} from './auth-config';
 
+// dependency injection container
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
