@@ -1,7 +1,7 @@
 export const MENU_ITEMS = [
-  { name: 'Clienti', icon: 'bi bi-people', route: 'clients' },
-  { name: 'Fornitori', icon: 'bi bi-truck', route: 'suppliers' },
-  {name: 'Magazzino', icon: 'bi bi-shop', route: 'magazzino'},
-  { name: 'Vendita al banco', icon: 'bi bi-shop', route: 'sale' },
+  {name: 'Clienti', icon: 'bi bi-people', route: 'clienti'},
+  {name: 'Fornitori', icon: 'bi bi-truck', route: 'fornitori'},
+  {name: 'Magazzino', icon: 'bi bi-shop', route: 'lotti'},
+  {name: 'Vendita al banco', icon: 'bi bi-shop', route: 'vendita-al-banco'},
   { name: 'Report', icon: 'bi bi-clipboard2-data', route: 'report' },
 ]

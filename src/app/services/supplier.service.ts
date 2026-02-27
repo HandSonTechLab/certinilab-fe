@@ -12,11 +12,11 @@ import {SupplierModel} from '../model/supplier.model';
 export class SupplierService extends BaseService {
 
   constructor() {
-    super("suppliers");
+    super("fornitori");
   }
 
   createSupplier(supplierModel: SupplierModel): Observable<HttpResponse<SupplierModel>> {
-    return this.httpClient.post<SupplierModel>(this.baseUrl, supplierModel, {observe: 'response'})
+    return this.httpClient.post<SupplierModel>(this.url, supplierModel, {observe: 'response'})
       .pipe(catchError((error: HttpErrorResponse) => {
         console.log('an error occurred when creating supplier request -> {}', error.headers.get('X-Error-Message'));
         this.errorService.showError(CONSTANTS.create_supplier_request_error_message.concat(' \n messaggio di errore: ', error.headers.get('X-Error-Message') || 'N/A'))
@@ -25,7 +25,7 @@ export class SupplierService extends BaseService {
   }
 
   updateSupplier(supplierModel: SupplierModel): Observable<HttpResponse<SupplierModel>> {
-    return this.httpClient.put<SupplierModel>(this.baseUrl, supplierModel, {observe: 'response'})
+    return this.httpClient.put<SupplierModel>(this.url, supplierModel, {observe: 'response'})
       .pipe(catchError((error: HttpErrorResponse) => {
         console.log('an error occurred when updating supplier request -> {}', error);
         this.errorService.showError(CONSTANTS.update_supplier_request_error_message.concat(': error code ', error.status.toString()))
@@ -34,7 +34,7 @@ export class SupplierService extends BaseService {
   }
 
   findSuppliers(pageNumber: number, pageSize: number): Observable<HttpResponse<SupplierResponse>> {
-    return this.httpClient.get<SupplierResponse>(this.baseUrl, {
+    return this.httpClient.get<SupplierResponse>(this.url, {
       observe: 'response',
       params: {pageNumber: pageNumber, pageSize: pageSize}
     })
@@ -46,7 +46,7 @@ export class SupplierService extends BaseService {
   }
 
   findSupplierById(id: number): Observable<HttpResponse<SupplierModel>> {
-    return this.httpClient.get<SupplierModel>(this.baseUrl + '/' + id, {observe: 'response'})
+    return this.httpClient.get<SupplierModel>(this.url + '/' + id, {observe: 'response'})
       .pipe(catchError((error: HttpErrorResponse) => {
         console.log('an error occurred during search supplier by id request -> {}', error);
         this.errorService.showError(CONSTANTS.find_supplier_byid_request_error_message.concat(': error code ', error.status.toString()))

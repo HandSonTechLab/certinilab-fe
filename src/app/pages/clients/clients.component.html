@@ -20,9 +20,6 @@
   </div>
   <div class="row mt-1">
     <div class="col-12">
-      @if (clients?.length == 0) {
-        <span>Nessun cliente</span>
-      } @else {
         <table class="table table-hover border">
           <thead class="table-dark">
           <tr>
@@ -48,7 +45,6 @@
             }
           </tbody>
         </table>
-      }
     </div>
   </div>
   @if (isPagesExist()) {

@@ -51,7 +51,7 @@ export class SuppliersComponent implements OnInit, OnDestroy {
   }
 
   openNewSupplierPage() {
-    this.router.navigate(['/new-supplier', {state: {supplierId: null, activeMode: 'create'}}]);
+    this.router.navigate(['/nuovi-fornitori', {state: {supplierId: null, activeMode: 'create'}}]);
   }
 
   isNextPageTheLastOne(): boolean {
@@ -102,7 +102,7 @@ export class SuppliersComponent implements OnInit, OnDestroy {
   }
 
   viewSupplier(activeMode: string, id?: number) {
-    this.router.navigateByUrl('/new-suppliers', {
+    this.router.navigateByUrl('/nuovi-fornitori', {
       state: {
         id: id,
         activeMode: activeMode

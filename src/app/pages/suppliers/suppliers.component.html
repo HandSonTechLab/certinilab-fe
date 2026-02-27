@@ -11,9 +11,6 @@
 <div class="container-fluid custom-margin-top-1rem">
   <div class="row mt-1">
     <div class="col-12">
-      @if (suppliers?.length == 0) {
-        <span>Nessun fornitore</span>
-      } @else {
         <table class="table table-hover border">
           <thead class="table-dark">
           <tr>
@@ -41,7 +38,6 @@
             }
           </tbody>
         </table>
-      }
     </div>
   </div>
   @if (isPagesExist()) {

@@ -100,7 +100,7 @@ export class CreateSupplierComponent implements OnInit, OnDestroy {
       },
       complete: () => {
         this.subscriptions.push(subscription);
-        this.router.navigateByUrl('/suppliers', {state: {title: CONSTANTS.update_supplier_success}});
+        this.router.navigateByUrl('/fornitori', {state: {title: CONSTANTS.update_supplier_success}});
       }
     });
   }
@@ -119,7 +119,7 @@ export class CreateSupplierComponent implements OnInit, OnDestroy {
       },
       complete: () => {
         this.subscriptions.push(subscription);
-        this.router.navigateByUrl('/suppliers', {state: {title: CONSTANTS.create_supplier_success}});
+        this.router.navigateByUrl('/fornitori', {state: {title: CONSTANTS.create_supplier_success}});
       }
     });
   }

@@ -3,54 +3,55 @@ import {inject, Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {Lotto} from '../model/lotto.model';
 import {LocaleDashboard} from '../model/dashboard.model';
+import {BaseService} from './base-service';
 
 @Injectable({
   providedIn: 'root' // Rende il service disponibile in tutta l'app (Singleton)
 })
-export class MagazzinoService {
+export class MagazzinoService extends BaseService {
 
   private http = inject(HttpClient);
 
-  // Idealmente questo URL dovrebbe stare in environment.ts,
-  // ma per ora lo hardcodiamo per semplicità
-  private apiUrl = 'http://localhost:8080/api/allocamenti';
+  public constructor() {
+    super('lotti');
+  }
 
   /**
    * GET ALL: Recupera la lista di tutte le allocazioni
    */
   findAll(): Observable<Lotto[]> {
-    return this.http.get<Lotto[]>(this.apiUrl);
+    return this.http.get<Lotto[]>(this.url);
   }
 
   getDashboardData(): Observable<LocaleDashboard[]> {
-    return this.http.get<LocaleDashboard[]>(`${this.apiUrl}/dashboard`);
+    return this.http.get<LocaleDashboard[]>(`${this.url}/dashboard`);
   }
 
   /**
    * GET BY ID: Recupera una singola allocazione per la modifica
    */
   getById(id: number): Observable<Lotto> {
-    return this.http.get<Lotto>(`${this.apiUrl}/${id}`);
+    return this.http.get<Lotto>(`${this.url}/${id}`);
   }
 
   /**
    * POST: Crea una nuova allocazione
    */
   create(allocamento: Lotto): Observable<Lotto> {
-    return this.http.post<Lotto>(this.apiUrl, allocamento);
+    return this.http.post<Lotto>(this.url, allocamento);
   }
 
   /**
    * PUT: Aggiorna un'allocazione esistente
    */
   update(id: number, allocamento: Lotto): Observable<Lotto> {
-    return this.http.put<Lotto>(`${this.apiUrl}/${id}`, allocamento);
+    return this.http.put<Lotto>(`${this.url}/${id}`, allocamento);
   }
 
   /**
    * DELETE: Elimina un'allocazione (Opzionale, ma utile averlo)
    */
   delete(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+    return this.http.delete<void>(`${this.url}/${id}`);
   }
 }

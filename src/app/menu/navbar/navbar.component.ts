@@ -21,16 +21,15 @@ export class NavbarComponent implements OnInit {
   constructor(private router: Router, private loginService: LoginService) {
   }
   protected readonly menuItems = MENU_ITEMS;
-  protected selectedItem = signal(this.menuItems[0]);
+  protected selectedItem = signal(this.menuItems[2]);
 
   ngOnInit() {
-
     // Aggiorna stato all'avvio e ad ogni navigazione
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
         const activeRoute = event.urlAfterRedirects.substring(1);
-        let menuItem = this.menuItems[0];
+        let menuItem = this.menuItems[2];
         this.menuItems.forEach(item => {
           if (activeRoute.includes(item.route)) {
             menuItem = item;

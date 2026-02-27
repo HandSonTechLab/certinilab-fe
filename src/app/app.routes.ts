@@ -6,48 +6,48 @@ import {SaleComponent} from './pages/sale/sale.component';
 import {CreateClientComponent} from './pages/create-client/create-client.component';
 import {CreateSupplierComponent} from './pages/create-supplier/create-supplier.component';
 import {MagazzinoComponent} from './pages/magazzino/magazzino.component';
-import {MsalGuard} from '@azure/msal-angular';
+// import {MsalGuard} from '@azure/msal-angular';
 
 export const routes: Routes = [
   {
     path: '',
     component: MagazzinoComponent,
-    canActivate: [MsalGuard]
+    //canActivate: [MsalGuard]
   },
   {
-    path: 'clients',
+    path: 'clienti',
     component: ClientsComponent,
-    canActivate: [MsalGuard]
+    //canActivate: [MsalGuard]
   },
   {
-    path: 'new-client',
+    path: 'nuovi-clienti',
     component: CreateClientComponent,
-    canActivate: [MsalGuard]
+    //canActivate: [MsalGuard]
   },
   {
-    path: 'suppliers',
+    path: 'fornitori',
     component: SuppliersComponent,
-    canActivate: [MsalGuard]
+    //canActivate: [MsalGuard]
   },
   {
-    path: 'new-suppliers',
+    path: 'nuovi-fornitori',
     component: CreateSupplierComponent,
-    canActivate: [MsalGuard]
+    //canActivate: [MsalGuard]
   },
   {
     path: 'report',
     component: ReportComponent,
-    canActivate: [MsalGuard]
+    //canActivate: [MsalGuard]
   },
   {
-    path: 'sale',
+    path: 'vendita-al-banco',
     component: SaleComponent,
-    canActivate: [MsalGuard]
+    //canActivate: [MsalGuard]
   },
   {
-    path: 'magazzino',
+    path: 'lotti',
     component: MagazzinoComponent,
-    canActivate: [MsalGuard]
+    //canActivate: [MsalGuard]
   },
   {
     path: '**',

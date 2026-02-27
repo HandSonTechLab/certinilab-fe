@@ -108,7 +108,7 @@ export class CreateClientComponent implements OnInit, OnDestroy {
       },
       complete: () => {
         this.subscriptions.push(subscription);
-        this.router.navigateByUrl('/clients', {state: {title: CONSTANTS.update_client_success}});
+        this.router.navigateByUrl('/clienti', {state: {title: CONSTANTS.update_client_success}});
       }
     });
   }
@@ -132,7 +132,7 @@ export class CreateClientComponent implements OnInit, OnDestroy {
       },
       complete: () => {
         this.subscriptions.push(subscription);
-        this.router.navigateByUrl('/clients', {state: {title: CONSTANTS.create_client_success}});
+        this.router.navigateByUrl('/clienti', {state: {title: CONSTANTS.create_client_success}});
       }
     });
   }

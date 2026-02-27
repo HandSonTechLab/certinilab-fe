@@ -15,11 +15,11 @@ import {BaseService} from './base-service';
 export class ClientsService extends BaseService {
 
   constructor() {
-    super("clients");
+    super("clienti");
   }
 
   createClient(client: ClientModel): Observable<HttpResponse<ClientModel>> {
-    return this.httpClient.post<ClientModel>(this.baseUrl, client, { observe: 'response' })
+    return this.httpClient.post<ClientModel>(this.url, client, {observe: 'response'})
       .pipe(catchError((error: HttpErrorResponse) => {
         console.log('an error occurred during create client request -> {}', error.headers.get('X-Error-Message'));
         this.errorService.showError(CONSTANTS.create_client_request_error_message.concat(' \n messaggio di errore: ', error.headers.get('X-Error-Message') || 'N/A'))
@@ -28,7 +28,10 @@ export class ClientsService extends BaseService {
   }
 
   searchClients(searchData: SearchData, pageNumber: number, pageSize: number): Observable<HttpResponse<SearchClientsResponse>> {
-    return this.httpClient.post<SearchClientsResponse>(this.baseUrl + '/search', searchData, { observe: 'response', params: { pageNumber: pageNumber, pageSize: pageSize } })
+    return this.httpClient.post<SearchClientsResponse>(this.url + '/ricerca', searchData, {
+      observe: 'response',
+      params: {pageNumber: pageNumber, pageSize: pageSize}
+    })
       .pipe(catchError((error: HttpErrorResponse) => {
         console.log('an error occurred during search clients request -> {}', error);
         this.errorService.showError(CONSTANTS.search_clients_request_error_message.concat(': error code ', error.status.toString()))
@@ -37,7 +40,7 @@ export class ClientsService extends BaseService {
   }
 
   findClientById(clientId: number): Observable<HttpResponse<ClientModel>> {
-    return this.httpClient.get<ClientModel>(this.baseUrl + '/' + clientId, { observe: 'response' })
+    return this.httpClient.get<ClientModel>(this.url + '/' + clientId, {observe: 'response'})
       .pipe(catchError((error: HttpErrorResponse) => {
         console.log('an error occurred during search client by id request -> {}', error);
         this.errorService.showError(CONSTANTS.search_client_request_error_message.concat(': error code ', error.status.toString()))
@@ -46,7 +49,7 @@ export class ClientsService extends BaseService {
   }
 
   deleteClientById(clientId: number): Observable<HttpResponse<void>> {
-    return this.httpClient.delete<void>(this.baseUrl + '/' + clientId, { observe: 'response' })
+    return this.httpClient.delete<void>(this.url + '/' + clientId, {observe: 'response'})
       .pipe(catchError((error: HttpErrorResponse) => {
         console.log('an error occurred during delete client by id request -> {}', error);
         this.errorService.showError(CONSTANTS.delete_client_request_error_message.concat(': error code ', error.status.toString()))
@@ -55,7 +58,7 @@ export class ClientsService extends BaseService {
   }
 
   updateClient(updateClientModel: UpdateClientModel): Observable<HttpResponse<ClientModel>> {
-    return this.httpClient.put<ClientModel>(this.baseUrl, updateClientModel, { observe: 'response' })
+    return this.httpClient.put<ClientModel>(this.url, updateClientModel, {observe: 'response'})
       .pipe(catchError((error: HttpErrorResponse) => {
         console.log('an error occurred during update client request -> {}', error);
         this.errorService.showError(CONSTANTS.update_client_request_error_message.concat(': error code ', error.status.toString()))

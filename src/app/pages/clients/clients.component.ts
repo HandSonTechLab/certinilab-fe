@@ -57,7 +57,7 @@ export class ClientsComponent implements OnInit , OnDestroy {
   }
 
   openNewClientPage() {
-    this.router.navigate(['/new-client', { state: { userId: null, activeMode: 'create'} }]);
+    this.router.navigate(['/nuovi-clienti', {state: {userId: null, activeMode: 'create'}}]);
   }
 
   showNotification(notification: NotificationModel) {
@@ -113,7 +113,7 @@ export class ClientsComponent implements OnInit , OnDestroy {
   }
 
   viewClient(userId: number, activeMode: string) {
-    this.router.navigateByUrl('/new-client', { state: { userId: userId, activeMode: activeMode} });
+    this.router.navigateByUrl('/nuovi-clienti', {state: {userId: userId, activeMode: activeMode}});
   }
 
   deleteClient() {
