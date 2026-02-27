@@ -44,7 +44,9 @@ export class ClientsComponent implements OnInit , OnDestroy {
 
   ngOnInit() {
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-    tooltipTriggerList.forEach((el) => new bootstrap.Tooltip(el));
+    tooltipTriggerList.forEach((el) => new bootstrap.Tooltip(el, {
+      trigger: 'hover'
+    }));
     this.searchClients({}, this.defaultPageNumber, this.defaultPageSize);
   }
 
@@ -56,7 +58,10 @@ export class ClientsComponent implements OnInit , OnDestroy {
     });
   }
 
-  openNewClientPage() {
+  openNewClientPage(event: MouseEvent) {
+    const target = event.currentTarget as HTMLElement;
+    const tooltipInstance = bootstrap.Tooltip.getInstance(target);
+    tooltipInstance?.hide();  // chiude il tooltip
     this.router.navigate(['/nuovi-clienti', {state: {userId: null, activeMode: 'create'}}]);
   }
 

@@ -30,9 +30,9 @@
                 <td>{{ supplier.indirizzo }}</td>
                 <td>
                   <i class="bi bi-pencil-square p-2 pointer"
-                     (click)="viewSupplier('update', supplier.id)"></i>
+                     (click)="viewSupplier($event, 'update', supplier.id)"></i>
                   <i class="bi bi-eye p-2 pointer" style="color: #0d6efd"
-                     (click)="viewSupplier( 'view', supplier.id)"></i>
+                     (click)="viewSupplier( $event, 'view', supplier.id)"></i>
                 </td>
               </tr>
             }
@@ -86,7 +86,7 @@
   aria-label="Crea nuovo fornitore"
   data-bs-toggle="tooltip"
   title="Crea nuovo fornitore"
-  (click)="viewSupplier( 'create', undefined)"
+  (click)="viewSupplier( $event, 'create', undefined)"
 >
   <i class="bi bi-plus-lg"></i>
 </a>

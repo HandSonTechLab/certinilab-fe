@@ -33,7 +33,9 @@ export class SuppliersComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-    tooltipTriggerList.forEach((el) => new bootstrap.Tooltip(el));
+    tooltipTriggerList.forEach((el) => new bootstrap.Tooltip(el, {
+      trigger: 'hover'
+    }));
     this.getSuppliers(this.defaultPageNumber, this.defaultPageSize);
   }
 
@@ -101,7 +103,10 @@ export class SuppliersComponent implements OnInit, OnDestroy {
     this.getSuppliers(this.pageInfo?.pageNumber!! - 1, this.defaultPageSize)
   }
 
-  viewSupplier(activeMode: string, id?: number) {
+  viewSupplier(event: MouseEvent, activeMode: string, id?: number) {
+    const target = event.currentTarget as HTMLElement;
+    const tooltipInstance = bootstrap.Tooltip.getInstance(target);
+    tooltipInstance?.hide();  // chiude il tooltip
     this.router.navigateByUrl('/nuovi-fornitori', {
       state: {
         id: id,
