@@ -7,6 +7,19 @@ export const CONSTANTS = {
   // search client
   search_clients_request_error_message: 'Ricerca clienti fallita!',
   search_client_request_error_message: 'Ricerca cliente fallita!',
+
+  // locali
+  search_locals_request_error_message: 'Ricerca locali fallita!',
+
+  // animali
+  search_animals_request_error_message: 'Ricerca animali fallita!',
+
+  // lotti
+  lotti_request_error_message: 'Ricerca lotti fallita!',
+  lotto_request_error_message: 'Ricerca lotto fallita!',
+  create_lotto_request_error_message: 'Creazione lotto fallita!',
+  update_lotto_request_error_message: 'Aggiornamento lotto fallita!'
+  ,
   // delete client
   delete_client_request_error_message: 'Eliminazione cliente fallita!',
   // update client

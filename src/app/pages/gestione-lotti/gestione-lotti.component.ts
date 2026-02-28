@@ -89,13 +89,13 @@ export class GestioneLottiComponent implements OnInit {
     this.lottiService.getById(id).subscribe({
       next: (lotto) => {
         this.form.patchValue({
-          animaleId: lotto.animaleId,
-          localeId: lotto.localeId,
-          fornitoreId: lotto.fornitoreId,
-          dataDiNascita: lotto.dataDiNascita,
-          quantitaIniziale: lotto.quantitaIniziale,
-          quantitaCorrente: lotto.quantitaCorrente,
-          prezzoUnitario: lotto.prezzoUnitario ?? null
+          animaleId: lotto.body?.animaleId,
+          localeId: lotto.body?.localeId,
+          fornitoreId: lotto.body?.fornitoreId,
+          dataDiNascita: lotto.body?.dataDiNascita,
+          quantitaIniziale: lotto.body?.quantitaIniziale,
+          quantitaCorrente: lotto.body?.quantitaCorrente,
+          prezzoUnitario: lotto.body?.prezzoUnitario ?? null
         });
       },
       error: () => {

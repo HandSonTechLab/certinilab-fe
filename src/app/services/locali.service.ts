@@ -17,9 +17,9 @@ export class LocaliService extends BaseService {
   getLocali(): Observable<HttpResponse<Locale[]>> {
     return this.httpClient.get<Locale[]>(this.url, {observe: 'response'})
       .pipe(catchError((error: HttpErrorResponse) => {
-        console.log('an error occurred during search client by id request -> {}', error);
-        this.errorService.showError(CONSTANTS.search_client_request_error_message.concat(': error code ', error.status.toString()))
-        return throwError(() => new Error(CONSTANTS.search_client_request_error_message));
+        console.log('an error occurred searching Locali -> {}', error);
+        this.errorService.showError(CONSTANTS.search_locals_request_error_message.concat(': error code ', error.status.toString()))
+        return throwError(() => new Error(CONSTANTS.search_locals_request_error_message));
       }));
   }
 }
