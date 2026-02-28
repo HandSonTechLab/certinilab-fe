@@ -1,3 +1,14 @@
+<div class="container mt-3">
+  @if (showNotifications) {
+    <div class="row d-flex justify-content-center mb-3">
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>{{ notification?.title }}!</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    </div>
+  }
+</div>
+
 <div class="container-fluid p-4 bg-light">
 
   <!-- HEADER DASHBOARD: I 3 KPI -->
@@ -9,7 +20,7 @@
           class="card-body d-flex align-items-center justify-content-between p-4 bg-white border-start border-5 border-primary">
           <div>
             <h6 class="text-muted text-uppercase fw-bold mb-1">Numero complessivo iniziale di animali</h6>
-            <h2 class="display-6 fw-bold mb-0 text-primary">{{ dashboard().totaleMagazzino }}</h2>
+            <h2 class="display-6 fw-bold mb-0 text-primary">{{ dashboard().body?.animaliTotali }}</h2>
           </div>
         </div>
       </div>
@@ -22,7 +33,7 @@
           class="card-body d-flex align-items-center justify-content-between p-4 bg-white border-start border-5 border-success">
           <div>
             <h6 class="text-muted text-uppercase fw-bold mb-1">Totale complessivo animali vivi</h6>
-            <h2 class="display-6 fw-bold mb-0 text-success">{{ dashboard().totaleVivi }}</h2>
+            <h2 class="display-6 fw-bold mb-0 text-success">{{ dashboard().body?.animaliViviTotali }}</h2>
           </div>
         </div>
       </div>
@@ -35,7 +46,7 @@
           class="card-body d-flex align-items-center justify-content-between p-4 bg-white border-start border-5 border-danger">
           <div>
             <h6 class="text-muted text-uppercase fw-bold mb-1">Totale complessivo animali morti</h6>
-            <h2 class="display-6 fw-bold mb-0 text-danger">{{ dashboard().totaleMorti }}</h2>
+            <h2 class="display-6 fw-bold mb-0 text-danger">{{ dashboard().body?.animaliMortiTotali }}</h2>
           </div>
         </div>
       </div>
@@ -55,20 +66,16 @@
     </div>
   } @else {
     <div class="row g-4">
-      @for (locale of dashboard().dettaglioLocali; track locale.localeId) {
+      @for (locale of dashboard().body?.dettagliLocali; track locale.localeId) {
         <div class="col-md-6"> <!-- 2 colonne per riga -->
           <div class="card h-100 shadow border-0 rounded-3 overflow-hidden">
             <!-- TESTATA CARD -->
             <div class="card-header bg-white p-4 border-bottom-0 d-flex justify-content-between align-items-start">
               <div>
                 <h4 class="fw-bold mb-1">{{ locale.locale }}</h4>
-                <span class="text-muted small">Capienza: {{ locale.totaleAnimali }} / {{ locale.capienzaMax }}</span>
+                <span class="text-muted small">Capienza: {{ locale.totaleAnimaliCorrenti }}
+                  / {{ locale.quantitaIniziale }}</span>
               </div>
-              @if (locale.totaleAnimali >= locale.capienzaMax) {
-                <span class="badge bg-danger rounded-pill px-3 py-2">PIENO 100%</span>
-              } @else {
-                <span class="badge bg-success rounded-pill px-3 py-2">DISPONIBILE</span>
-              }
             </div>
 
             <!-- CORPO VISUALE (Barra Distribuzione) -->
@@ -76,16 +83,16 @@
               <div class="progress" style="height: 25px; border-radius: 12px;">
                 @for (lotto of locale.lotti; track lotto.id) {
                   <div class="progress-bar"
-                       [style.width.%]="(lotto.quantita / locale.capienzaMax) * 100"
-                       [ngClass]="getColorClass(lotto.razza)"
-                       title="{{ lotto.razza }} {{ lotto.quantita }}">
+                       [style.width.%]="(lotto.quantitaCorrente / locale.quantitaIniziale) * 100"
+                       [ngClass]="getColorClass(lotto.colore)"
+                       title="{{ lotto.razza }} {{ lotto.quantitaCorrente }}">
                   </div>
                 }
               </div>
               <div class="d-flex justify-content-between mt-1">
                 <small class="text-muted">0</small>
                 <small class="text-muted">Distribuzione Razze</small>
-                <small class="text-muted">{{ locale.capienzaMax }}</small>
+                <small class="text-muted">{{ locale.quantitaIniziale }}</small>
               </div>
             </div>
 
@@ -102,24 +109,25 @@
                       <span class="fw-semibold text-dark">{{ lotto.razza }}</span>
                     </div>
                     <div class="text-end">
-                      <div class="fw-bold">{{ lotto.quantita }}</div>
-                      @if (lotto.morti > 0) {
+                      <div class="fw-bold">{{ lotto.quantitaCorrente }}</div>
+                      @if (lotto.numeroMorti > 0) {
                         <div class="text-danger small" style="font-size: 0.8rem;">
-                          {{ lotto.morti }} morti
+                          {{ lotto.numeroMorti }} morti
                         </div>
                       }
                     </div>
+                  </div>
+                  <!-- FOOTER AZIONI -->
+                  <div class="card-footer p-3 bg-light border-top-0">
+                    <button class="btn btn-outline-dark w-100 fw-semibold py-2"
+                            (click)="goToModifica(lotto.id)">Gestisci
+                    </button>
                   </div>
                 }
               </div>
             </div>
 
-            <!-- FOOTER AZIONI -->
-            <div class="card-footer p-3 bg-light border-top-0">
-              <button class="btn btn-outline-dark w-100 fw-semibold py-2"
-                      (click)="goToModifica(locale.localeId, $event)">Gestisci Locale
-              </button>
-            </div>
+
           </div>
         </div>
       } @empty {

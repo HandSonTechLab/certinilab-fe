@@ -1,8 +1,8 @@
-import {Lotto} from './lotto.model';
+import {DettaglioLocali} from './dettaglio-locali.model';
 
 export interface LocaleDashboard {
-  localeId: number;
-  nomeLocale: string;
-  totale: number;
-  allocazioni: Lotto[];
+  animaliTotali: number;
+  animaliViviTotali: number;
+  animaliMortiTotali: number;
+  dettagliLocali: DettaglioLocali[];
 }

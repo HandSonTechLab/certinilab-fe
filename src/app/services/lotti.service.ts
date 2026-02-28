@@ -21,8 +21,8 @@ export class LottiService extends BaseService {
   /**
    * GET Dashboard: Recupera i dati per la dashboard dei lotti
    */
-  getDashboardData(): Observable<HttpResponse<LocaleDashboard[]>> {
-    return this.http.get<LocaleDashboard[]>(`${this.url}/dashboard`, {observe: 'response',})
+  getDashboardData(): Observable<HttpResponse<LocaleDashboard>> {
+    return this.http.get<LocaleDashboard>(`${this.url}/dashboard`, {observe: 'response',})
       .pipe(catchError((error: HttpErrorResponse) => {
         console.log('an error occurred when getting dashboard data for Lotti -> {}', error);
         this.errorService.showError(CONSTANTS.suppliers_request_error_message.concat(': error code ', error.status.toString()))

@@ -10,6 +10,7 @@ import {Fornitore} from '../../model/fornitore.model';
 import {Locale} from '../../model/locale.model';
 import {SupplierService} from '../../services/supplier.service';
 import {LottoRequest} from '../../model/lotto-request.model';
+import {CONSTANTS} from '../../shared/constants';
 
 @Component({
   selector: 'app-gestione-lotti',
@@ -158,7 +159,7 @@ export class GestioneLottiComponent implements OnInit {
     request$.subscribe({
       next: () => {
         this.isSubmitting = false;
-        this.router.navigate(['/lotti']);
+        this.router.navigate(['/lotti', {state: {title: this.lottoId ? CONSTANTS.update_lotto_request_success : CONSTANTS.create_lotto_request_success_message}}]);
       },
       error: () => {
         this.isSubmitting = false;
