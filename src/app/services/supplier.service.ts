@@ -5,6 +5,7 @@ import {HttpErrorResponse, HttpResponse} from '@angular/common/http';
 import {CONSTANTS} from '../shared/constants';
 import {SupplierResponse} from '../model/supplier-response.data';
 import {SupplierModel} from '../model/supplier.model';
+import {Fornitore} from '../model/fornitore.model';
 
 @Injectable({
   providedIn: 'root'
@@ -33,13 +34,22 @@ export class SupplierService extends BaseService {
       }))
   }
 
-  findSuppliers(pageNumber: number, pageSize: number): Observable<HttpResponse<SupplierResponse>> {
-    return this.httpClient.get<SupplierResponse>(this.url, {
+  findSuppliersPaginated(pageNumber: number, pageSize: number): Observable<HttpResponse<SupplierResponse>> {
+    return this.httpClient.get<SupplierResponse>(this.url + '/paginated', {
       observe: 'response',
       params: {pageNumber: pageNumber, pageSize: pageSize}
     })
       .pipe(catchError((error: HttpErrorResponse) => {
         console.log('an error occurred when finding suppliers -> {}', error);
+        this.errorService.showError(CONSTANTS.suppliers_request_error_message.concat(': error code ', error.status.toString()))
+        return throwError(() => new Error(CONSTANTS.suppliers_request_error_message));
+      }))
+  }
+
+  recuperaFornitoriPerDropdown(): Observable<HttpResponse<Fornitore[]>> {
+    return this.httpClient.get<Fornitore[]>(this.url + '/dropdown', {observe: 'response',})
+      .pipe(catchError((error: HttpErrorResponse) => {
+        console.log('an error occurred when finding suppliers for dropdown -> {}', error);
         this.errorService.showError(CONSTANTS.suppliers_request_error_message.concat(': error code ', error.status.toString()))
         return throwError(() => new Error(CONSTANTS.suppliers_request_error_message));
       }))

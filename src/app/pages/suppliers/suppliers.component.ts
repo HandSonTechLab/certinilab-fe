@@ -116,7 +116,7 @@ export class SuppliersComponent implements OnInit, OnDestroy {
   }
 
   private getSuppliers(pageNumber: number, pageSize: number) {
-    const subscription = this.supplierService.findSuppliers(pageNumber, pageSize).subscribe({
+    const subscription = this.supplierService.findSuppliersPaginated(pageNumber, pageSize).subscribe({
       next: (response) => {
         this.suppliers = response.body?.supplierEntities;
         this.pageInfo = response.body?.pageInfo;

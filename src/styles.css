@@ -10,6 +10,14 @@ body {
   margin: 0;
   padding: 0;
   height: 100%;
+  --bs-bg-opacity: 1;
+  background-color: rgba(var(--bs-light-rgb), var(--bs-bg-opacity)) !important;
+}
+
+.page-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
 }
 
 .custom-margin-top-1rem {

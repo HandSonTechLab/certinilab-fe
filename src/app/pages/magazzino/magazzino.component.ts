@@ -1,6 +1,6 @@
 import {Component, inject, Signal} from '@angular/core';
 import {toSignal} from '@angular/core/rxjs-interop';
-import {MagazzinoService} from '../../services/magazzino.service';
+import {LottiService} from '../../services/lotti.service';
 import {Router} from '@angular/router';
 import {of} from 'rxjs';
 import {NgClass} from '@angular/common';
@@ -29,9 +29,9 @@ export interface DettaglioLocali {
   lotti: Lotto[];        // Lista iterata
 }
 
-
+export const MOCK_DETTAGLIO_LOCALE: DettaglioLocali[] = [];
 // I dati mock richiesti (4 Locali)
-export const MOCK_DETTAGLIO_LOCALE: DettaglioLocali[] = [
+/*export const MOCK_DETTAGLIO_LOCALE: DettaglioLocali[] = [
   {
     localeId: 1, // ID fittizio per il track
     locale: 'Locale S1',
@@ -69,12 +69,12 @@ export const MOCK_DETTAGLIO_LOCALE: DettaglioLocali[] = [
       {id: 105, razza: 'Razza Gialla', quantita: 100, morti: 0}
     ]
   }
-];
+];*/
 
 export const MOCK_DASHBOARD_DATA: DashboardData = {
-  totaleMagazzino: 949,
-  totaleVivi: 949,
-  totaleMorti: 1,
+  totaleMagazzino: 0,
+  totaleVivi: 0,
+  totaleMorti: 0,
   dettaglioLocali: MOCK_DETTAGLIO_LOCALE
 }
 
@@ -88,7 +88,7 @@ export const MOCK_DASHBOARD_DATA: DashboardData = {
   styleUrl: './magazzino.component.css'
 })
 export class MagazzinoComponent {
-  private service = inject(MagazzinoService);
+  private service = inject(LottiService);
   private router = inject(Router);
 
   // Recupera i dati raggruppati dal backend
@@ -103,13 +103,14 @@ export class MagazzinoComponent {
   });
 
   goToNuovo() {
-    // Qui inserisci il router.navigate(['/allocamenti/nuovo'])
-    console.log("Naviga a nuovo...");
+    this.router.navigate(['/gestione-lotti'])
   }
 
   goToModifica(id: number, event: Event) {
-    event.stopPropagation(); // Evita click indesiderati se la card fosse cliccabile
-    this.router.navigate(['/allocamenti/modifica', id]);
+    //event.stopPropagation(); // Evita click indesiderati se la card fosse cliccabile
+    //this.router.navigate(['/allocamenti/modifica', id]);
+    console.log("Naviga a modifica lotto...");
+
   }
 
   // Helper per colori (Semplice logica basata sulla stringa)

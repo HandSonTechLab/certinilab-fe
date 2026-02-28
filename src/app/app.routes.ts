@@ -6,6 +6,7 @@ import {SaleComponent} from './pages/sale/sale.component';
 import {CreateClientComponent} from './pages/create-client/create-client.component';
 import {CreateSupplierComponent} from './pages/create-supplier/create-supplier.component';
 import {MagazzinoComponent} from './pages/magazzino/magazzino.component';
+import {GestioneLottiComponent} from './pages/gestione-lotti/gestione-lotti.component';
 // import {MsalGuard} from '@azure/msal-angular';
 
 export const routes: Routes = [
@@ -32,6 +33,11 @@ export const routes: Routes = [
   {
     path: 'nuovi-fornitori',
     component: CreateSupplierComponent,
+    //canActivate: [MsalGuard]
+  },
+  {
+    path: 'gestione-lotti',
+    component: GestioneLottiComponent,
     //canActivate: [MsalGuard]
   },
   {

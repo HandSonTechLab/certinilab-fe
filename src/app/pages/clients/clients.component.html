@@ -8,8 +8,14 @@
     </div>
   }
 </div>
-<div class="container-fluid custom-margin-top-1rem">
-  <div class="row d-flex justify-content-end mb-3">
+<div class="container-fluid custom-margin-top-1rem bg-light">
+
+  <!-- TITOLO SEZIONE -->
+  <div class="d-flex justify-content-between align-items-center">
+    <h2 class="page-title">Clienti</h2>
+  </div>
+
+  <div class="row d-flex justify-content-end">
     <app-search-filter [firstInputLabel]="'Nome'"
                        [secondInputLabel]="'Cognome'"
                        [thirdInputLabel]="'Indirizzo'"
@@ -18,8 +24,16 @@
     >
     </app-search-filter>
   </div>
-  <div class="row mt-1">
-    <div class="col-12">
+
+  @if (clients?.length === 0 || !clients) {
+    <div class="col-12 text-center mt-5">
+      <div class="alert alert-light border">
+        Nessun cliente presente. Clicca sul pulsante "+" in basso a destra per iniziare.
+      </div>
+    </div>
+  } @else {
+    <div class="row mt-1">
+      <div class="col-12">
         <table class="table table-hover border">
           <thead class="table-dark">
           <tr>
@@ -45,8 +59,9 @@
             }
           </tbody>
         </table>
+      </div>
     </div>
-  </div>
+  }
   @if (isPagesExist()) {
     <div class="row d-flex justify-content-end">
       <nav style="width: auto">
@@ -72,8 +87,6 @@
     </div>
   }
 
-</div>
-
 <a
   class="btn btn-primary rounded-circle shadow-lg fab"
   aria-label="Crea nuovo cliente"
@@ -83,6 +96,8 @@
 >
   <i class="bi bi-plus-lg"></i>
 </a>
+
+</div>
 
 <!-- Modal -->
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
