@@ -7,5 +7,6 @@ export interface Lotto {
   dataDiNascita: string; // YYYY-MM-DD
   quantitaIniziale: number;
   quantitaCorrente: number;
+  numeroMorti: number;
   prezzoUnitario: number;
 }

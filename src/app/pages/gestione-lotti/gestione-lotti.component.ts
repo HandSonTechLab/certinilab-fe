@@ -52,6 +52,7 @@ export class GestioneLottiComponent implements OnInit {
       dataDiNascita: [null, Validators.required],
       quantitaIniziale: [null, [Validators.required, Validators.min(1)]],
       quantitaCorrente: [null, [Validators.required, Validators.min(0)]],
+      numeroMorti: [null],
       prezzoUnitario: [null] // opzionale
     });
   }
@@ -96,6 +97,7 @@ export class GestioneLottiComponent implements OnInit {
           dataDiNascita: lotto.body?.dataDiNascita,
           quantitaIniziale: lotto.body?.quantitaIniziale,
           quantitaCorrente: lotto.body?.quantitaCorrente,
+          numeroMorti: lotto.body?.numeroMorti,
           prezzoUnitario: lotto.body?.prezzoUnitario ?? null
         });
       },
@@ -146,6 +148,7 @@ export class GestioneLottiComponent implements OnInit {
       dataDiNascita: formValue.dataDiNascita, // input type="date" -> yyyy-MM-dd
       quantitaIniziale: formValue.quantitaIniziale,
       quantitaCorrente: formValue.quantitaCorrente,
+      numeroMorti: formValue.numeroMorti,
       prezzoUnitario:
         formValue.prezzoUnitario !== null && formValue.prezzoUnitario !== ''
           ? Number(formValue.prezzoUnitario)

@@ -5,5 +5,6 @@ export interface LottoRequest {
   dataDiNascita: string; // yyyy-MM-dd
   quantitaIniziale: number;
   quantitaCorrente: number;
+  numeroMorti: number;
   prezzoUnitario?: number | null;
 }
