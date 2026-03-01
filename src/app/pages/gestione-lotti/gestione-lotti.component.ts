@@ -52,7 +52,7 @@ export class GestioneLottiComponent implements OnInit {
       dataDiNascita: [null, Validators.required],
       quantitaIniziale: [null, [Validators.required, Validators.min(1)]],
       quantitaCorrente: [null, [Validators.required, Validators.min(0)]],
-      numeroMorti: [null],
+      numeroMorti: [null, Validators.min(0)],
       prezzoUnitario: [null] // opzionale
     });
   }
