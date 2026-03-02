@@ -142,4 +142,8 @@ export class CreateClientComponent implements OnInit, OnDestroy {
     return !!(control && control.invalid && control.touched);
   }
 
+  onCancel(): void {
+    this.router.navigate(['/clienti']);
+  }
+
 }

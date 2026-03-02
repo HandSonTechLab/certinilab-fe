@@ -1,52 +1,60 @@
-<!-- search-filter.component.html -->
-<div class="card shadow rounded-4 p-4 my-4">
-  <form (ngSubmit)="onSearch()" class="row gy-3 gx-3 align-items-end">
-
-    <div class="col-12 col-md-4">
-      <label for="firstInputLabal" class="form-label">{{firstInputLabel}}</label>
-      <input
-        type="text"
-        id="firstInputLabal"
-        class="form-control"
-        placeholder="Mario"
-        [(ngModel)]="firstInputValue"
-        name="nome"
-      />
+<div class="container-fluid p-0">
+  <div class="card mb-3">
+    <div class="card-header">
+      <span class="fw-semibold">Filtri Ricerca</span>
     </div>
 
-    <div class="col-12 col-md-4">
-      <label for="secondInputLabal" class="form-label">{{secondInputLabel}}</label>
-      <input
-        type="text"
-        id="secondInputLabal"
-        class="form-control"
-        placeholder="Rossi"
-        [(ngModel)]="secondInputValue"
-        name="cognome"
-      />
-    </div>
+    <div class="card-body p-3">
+      <form (ngSubmit)="onSearch()" class="row gy-3 gx-3 align-items-end">
 
-    <div class="col-12 col-md-4">
-      <label for="thirdInputLabal" class="form-label">{{ thirdInputLabel }}</label>
-      <input
-        type="text"
-        id="thirdInputLabal"
-        class="form-control"
-        placeholder="Via Roma 123"
-        [(ngModel)]="thirdInputValue"
-        name="indirizzo"
-      />
-    </div>
+        <div>
+          <label for="firstInputLabal" class="form-label">{{ firstInputLabel }}</label>
+          <input
+            type="text"
+            id="firstInputLabal"
+            class="form-control"
+            placeholder="Mario"
+            [(ngModel)]="firstInputValue"
+            name="nome"
+          />
+        </div>
 
-    <div class="col-12 text-end">
-      @if (isResetModeActive) {
-        <button class="btn btn-outline-secondary px-4 me-2" (click)="onReset()">
-          <i class="bi bi-x-circle me-2"></i> Reset
-        </button>
-      }
-      <button class="btn btn-primary px-4" type="submit">
-        <i class="bi bi-search me-2"></i> Cerca
-      </button>
+        <div>
+          <label for="secondInputLabal" class="form-label">{{ secondInputLabel }}</label>
+          <input
+            type="text"
+            id="secondInputLabal"
+            class="form-control"
+            placeholder="Rossi"
+            [(ngModel)]="secondInputValue"
+            name="cognome"
+          />
+        </div>
+
+        <div>
+          <label for="thirdInputLabal" class="form-label">{{ thirdInputLabel }}</label>
+          <input
+            type="text"
+            id="thirdInputLabal"
+            class="form-control"
+            placeholder="Via Roma 123"
+            [(ngModel)]="thirdInputValue"
+            name="indirizzo"
+          />
+        </div>
+
+        <div class="col-12 text-end">
+          @if (isResetModeActive) {
+            <button class="btn btn-outline-secondary px-4 me-2" (click)="onReset()">
+              <i class="bi bi-x-circle me-2"></i> Reset
+            </button>
+          }
+          <button class="btn btn-primary px-4" type="submit">
+            <i class="bi bi-search me-2"></i> Cerca
+          </button>
+        </div>
+      </form>
     </div>
-  </form>
+  </div>
+
 </div>

@@ -124,6 +124,10 @@ export class CreateSupplierComponent implements OnInit, OnDestroy {
     });
   }
 
+  onCancel(): void {
+    this.router.navigate(['/fornitori']);
+  }
+
   isInvalid(controlName: string): boolean {
     const control = this.supplierForm.get(controlName);
     return !!(control && control.invalid && control.touched);

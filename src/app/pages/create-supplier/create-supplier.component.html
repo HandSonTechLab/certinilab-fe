@@ -1,79 +1,75 @@
-<div class="container mt-3">
-  <div class="row">
-    <div class="col-12 d-flex justify-content-center">
-      <h2>
-        Nuovo Fornitore
-      </h2>
-    </div>
-  </div>
+<div class="container-fluid d-flex flex-column mt-3 p-3">
+  <!-- TITOLO SEZIONE -->
   <div class="row">
     <div class="col-12">
-      <nav class="mb-4" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="/fornitori">Fornitori</a></li>
-          <li class="breadcrumb-item active" aria-current="page">Nuovo Fornitore</li>
-        </ol>
-      </nav>
+      <h2 class="page-title">Gestione Cliente</h2>
     </div>
   </div>
-</div>
 
-<div class="container mt-3 justify-content-center">
-  <div class="row">
-    <div class="col-12">
-      <form [formGroup]="supplierForm" (ngSubmit)="onSubmit()" class="needs-validation" novalidate>
-        <div class="row">
-          <div class="col-12">
-            <label class="form-label">Codice provenienza *</label>
-            <div class="input-group">
-              <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
-              <input type="text" class="form-control" formControlName="codiceProvenienza"
-                     [ngClass]="{'is-invalid': isInvalid('codiceProvenienza')}">
-              <div class="invalid-feedback">Inserisci il codice provenienza</div>
+  <form [formGroup]="supplierForm" (ngSubmit)="onSubmit()" class="needs-validation" novalidate>
+    <div class="row">
+      <div class="col-12">
+        <label class="form-label">Codice provenienza *</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-person"></i></span>
+          <input type="text" class="form-control" formControlName="codiceProvenienza"
+                 [ngClass]="{'is-invalid': isInvalid('codiceProvenienza')}">
+          <div class="invalid-feedback">Inserisci il codice provenienza</div>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <label class="form-label">Partita iva *</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-person"></i></span>
+          <input type="text" class="form-control" formControlName="partitaIva"
+                 [ngClass]="{'is-invalid': isInvalid('partitaIva')}">
+          <div class="invalid-feedback">Inserisci la partita iva.</div>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <label class="form-label">Telefono</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-phone"></i></span>
+          <input type="tel" class="form-control" formControlName="telefono">
+          <div class="invalid-feedback">Inserisci il numero di telefono.</div>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <label class="form-label">Indirizzo</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-building"></i></span>
+          <input type="text" class="form-control" formControlName="indirizzo">
+          <div class="invalid-feedback">Inserisci l'indirizzo.</div>
+        </div>
+      </div>
+
+      <div class="mb-5"></div>
+
+      <div class="fixed-footer">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12 d-flex gap-2">
+              <button
+                type="button"
+                class="btn btn-outline-secondary flex-grow-1"
+                (click)="onCancel()"
+              >
+                Annulla
+              </button>
+
+              <button type="submit" class="btn btn-primary flex-grow-1"
+                      [ngClass]="{'disabled': this.supplierDetail.activeMode == 'view'}">
+                <i></i>Salva
+              </button>
             </div>
           </div>
         </div>
-        <div class="row mt-3">
-          <div class="col-12">
-            <label class="form-label">Partita iva *</label>
-            <div class="input-group">
-              <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
-              <input type="text" class="form-control" formControlName="partitaIva"
-                     [ngClass]="{'is-invalid': isInvalid('partitaIva')}">
-              <div class="invalid-feedback">Inserisci la partita iva.</div>
-            </div>
-          </div>
-        </div>
+      </div>
 
-        <div class="row mt-3">
-          <div class="col-12">
-            <label class="form-label">Telefono</label>
-            <div class="input-group">
-              <span class="input-group-text"><i class="bi bi-phone-fill"></i></span>
-              <input type="tel" class="form-control" formControlName="telefono">
-              <div class="invalid-feedback">Inserisci il numero di telefono.</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="row mt-3">
-          <div class="col-12">
-            <label class="form-label">Indirizzo</label>
-            <div class="input-group">
-              <span class="input-group-text"><i class="bi bi-building"></i></span>
-              <input type="text" class="form-control" formControlName="indirizzo">
-              <div class="invalid-feedback">Inserisci l'indirizzo.</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="d-grid mt-5">
-          <button type="submit" class="btn btn-primary btn-lg"
-                  [ngClass]="{'disabled': this.supplierDetail.activeMode == 'view'}">
-            <i></i>Salva
-          </button>
-        </div>
-      </form>
     </div>
-  </div>
+  </form>
 </div>
+
