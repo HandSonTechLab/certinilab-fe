@@ -1,4 +1,4 @@
 enum OrderType {
-  Prenotazione = 'Prenotazione',
-  Vendita = 'Vendita',
+  CONFERMATO,
+  VENDUTO
 }
