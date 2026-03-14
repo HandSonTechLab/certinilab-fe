@@ -10,6 +10,7 @@ import {debounceTime, distinctUntilChanged, of, Subscription, switchMap} from 'r
 import {ClientDtoModel} from '../../model/client-dto.model';
 import {HttpResponse} from '@angular/common/http';
 import {SearchClientsResponse} from '../../model/search-clients-response.data';
+import {LottiService} from '../../services/lotti.service';
 
 @Component({
   selector: 'app-registrazione-vendita',
@@ -23,13 +24,11 @@ export class RegistrazioneVenditaComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private clientService = inject(ClientsService);
+  private lottiService = inject(LottiService);
   private localiService = inject(LocaliService);
   protected readonly OrderType = OrderType;
   clienteSearch = new FormControl('');
   clienti: ClientDtoModel[] = [];
-
-  // in realtà li popolerai dai tuoi service esistenti
-  //clienti: Cliente[] = [];
   locali: Locale[] = [];
   animaliPerLocale: Record<number, AnimaleDisponibile[]> = {};
 
@@ -48,38 +47,30 @@ export class RegistrazioneVenditaComponent implements OnInit {
       this.totaleScatole()
   );
 
-  clientiStub: ClientDtoModel[] = [
-    {
-      id: 1,
-      nome: 'Mario',
-      cognome: 'Rossi',
-      indirizzo: 'Via Roma 10',
-      provincia: 'MI',
-      comune: 'Milano',
-      codiceIdentificativoAsl: 'ASL-MI-001'
-    },
-    {
-      id: 2,
-      nome: 'Luigi',
-      cognome: 'Bianchi',
-      indirizzo: 'Via Garibaldi 25',
-      provincia: 'BG',
-      comune: 'Bergamo',
-      codiceIdentificativoAsl: 'ASL-BG-002'
-    }
-  ];
+  /*  clientiStub: ClientDtoModel[] = [
+      {
+        id: 1,
+        nome: 'Mario',
+        cognome: 'Rossi',
+        indirizzo: 'Via Roma 10',
+        provincia: 'MI',
+        comune: 'Milano',
+        codiceIdentificativoAsl: 'ASL-MI-001'
+      },
+      {
+        id: 2,
+        nome: 'Luigi',
+        cognome: 'Bianchi',
+        indirizzo: 'Via Garibaldi 25',
+        provincia: 'BG',
+        comune: 'Bergamo',
+        codiceIdentificativoAsl: 'ASL-BG-002'
+      }
+    ];*/
 
 
   ngOnInit(): void {
     this.initForm();
-
-    // MOCK: seleziona automaticamente il primo cliente
-    this.form.get('idCliente')?.setValue(this.clienti[0]?.id);
-
-    // MOCK locali/animali
-    this.mockLocaliEAnimali();
-
-    // caricamento dropdown da tuoi service (placeholder)
     this.loadLocali();
     this.loadClienti();
 
@@ -93,126 +84,126 @@ export class RegistrazioneVenditaComponent implements OnInit {
     });
   }
 
-  private mockLocaliEAnimali(): void {
-    this.locali = [
-      {id: 1, nome: 'S1'},
-      {id: 2, nome: 'S2'},
-    ];
+  /*  private mockLocaliEAnimali(): void {
+      this.locali = [
+        {id: 1, nome: 'S1'},
+        {id: 2, nome: 'S2'},
+      ];
 
-    // Locale 1: polli e galline
-    this.animaliPerLocale[1] = [
-      {
+      // Locale 1: polli e galline
+      this.animaliPerLocale[1] = [
+        {
+          idLotto: 101,
+          dataDiNascita: '2024-01-15',
+          codiceProvenienza: 'AZ-001',
+          idAnimale: 1,
+          descrizione: 'Gallus Bianco'
+        },
+        {
+          idLotto: 102,
+          dataDiNascita: '2024-01-15',
+          codiceProvenienza: 'AZ-001',
+          idAnimale: 2,
+          descrizione: 'Gallus R9+R7'
+        },
+        {
+          idLotto: 103,
+          dataDiNascita: '2024-01-15',
+          codiceProvenienza: 'AZ-001',
+          idAnimale: 3,
+          descrizione: 'Gallus Giallo'
+        },
+        {
+          idLotto: 104,
+          dataDiNascita: '2024-01-15',
+          codiceProvenienza: 'AZ-001',
+          idAnimale: 4,
+          descrizione: 'Gallina R8+R1'
+        }
+      ];
+
+      // Locale 2: altri animali
+      this.animaliPerLocale[2] = [
+        {
+          idLotto: 201,
+          idAnimale: 6,
+          dataDiNascita: '2024-01-15',
+          codiceProvenienza: 'AZ-001',
+          descrizione: 'Gallus R5'
+        },
+        {
+          idLotto: 202,
+          idAnimale: 5,
+          dataDiNascita: '2024-01-15',
+          codiceProvenienza: 'AZ-001',
+          descrizione: 'Gallus R9 Giallo'
+        }
+      ];
+
+      // imposta una riga di esempio già piena
+      const primaRiga = this.dettagliAnimali.at(0) as FormGroup;
+      primaRiga.patchValue({
+        localeId: 1,
+        animaleId: 1,
         idLotto: 101,
-        dataDiNascita: '2024-01-15',
-        codiceProvenienza: 'AZ-001',
-        idAnimale: 1,
-        descrizione: 'Gallus Bianco'
-      },
-      {
+        tipoVendita: 'PER_UNITA',
+        quantita: 5,
+        prezzoUnitario: 7.5
+      });
+      this.ricalcolaTotaleRiga(0);
+
+      // aggiungo una seconda riga di esempio (vendita al kg)
+      this.addRigaAnimale();
+      const secondaRiga = this.dettagliAnimali.at(1) as FormGroup;
+      secondaRiga.patchValue({
+        localeId: 1,
+        animaleId: 2,
         idLotto: 102,
-        dataDiNascita: '2024-01-15',
-        codiceProvenienza: 'AZ-001',
-        idAnimale: 2,
-        descrizione: 'Gallus R9+R7'
-      },
-      {
-        idLotto: 103,
-        dataDiNascita: '2024-01-15',
-        codiceProvenienza: 'AZ-001',
-        idAnimale: 3,
-        descrizione: 'Gallus Giallo'
-      },
-      {
-        idLotto: 104,
-        dataDiNascita: '2024-01-15',
-        codiceProvenienza: 'AZ-001',
-        idAnimale: 4,
-        descrizione: 'Gallina R8+R1'
-      }
-    ];
+        tipoVendita: 'AL_KG',
+        quantita: 3,
+        peso: 12.5,
+        prezzoUnitario: 4.2
+      });
+      this.ricalcolaTotaleRiga(1);
 
-    // Locale 2: altri animali
-    this.animaliPerLocale[2] = [
-      {
-        idLotto: 201,
-        idAnimale: 6,
-        dataDiNascita: '2024-01-15',
-        codiceProvenienza: 'AZ-001',
-        descrizione: 'Gallus R5'
-      },
-      {
-        idLotto: 202,
-        idAnimale: 5,
-        dataDiNascita: '2024-01-15',
-        codiceProvenienza: 'AZ-001',
-        descrizione: 'Gallus R9 Giallo'
-      }
-    ];
+      // mock mangimi
+      this.addRigaMangime();
+      const m1 = this.mangimi.at(0) as FormGroup;
+      m1.patchValue({
+        descrizione: 'Mangime crescita',
+        prezzoAlKg: 0.55,
+        kg: 30
+      });
+      this.onValoriMangimeChange(0);
 
-    // imposta una riga di esempio già piena
-    const primaRiga = this.dettagliAnimali.at(0) as FormGroup;
-    primaRiga.patchValue({
-      localeId: 1,
-      animaleId: 1,
-      idLotto: 101,
-      tipoVendita: 'PER_UNITA',
-      quantita: 5,
-      prezzoUnitario: 7.5
-    });
-    this.ricalcolaTotaleRiga(0);
+      this.addRigaMangime();
+      const m2 = this.mangimi.at(1) as FormGroup;
+      m2.patchValue({
+        descrizione: 'Mangime finissaggio',
+        prezzoAlKg: 0.65,
+        kg: 20
+      });
+      this.onValoriMangimeChange(1);
 
-    // aggiungo una seconda riga di esempio (vendita al kg)
-    this.addRigaAnimale();
-    const secondaRiga = this.dettagliAnimali.at(1) as FormGroup;
-    secondaRiga.patchValue({
-      localeId: 1,
-      animaleId: 2,
-      idLotto: 102,
-      tipoVendita: 'AL_KG',
-      quantita: 3,
-      peso: 12.5,
-      prezzoUnitario: 4.2
-    });
-    this.ricalcolaTotaleRiga(1);
+      // mock scatole
+      this.addRigaScatola();
+      const s1 = this.scatole.at(0) as FormGroup;
+      s1.patchValue({
+        descrizione: 'Scatole cartone grandi',
+        prezzoUnitario: 0.8,
+        quantita: 40
+      });
+      this.onValoriScatolaChange(0);
 
-    // mock mangimi
-    this.addRigaMangime();
-    const m1 = this.mangimi.at(0) as FormGroup;
-    m1.patchValue({
-      descrizione: 'Mangime crescita',
-      prezzoAlKg: 0.55,
-      kg: 30
-    });
-    this.onValoriMangimeChange(0);
-
-    this.addRigaMangime();
-    const m2 = this.mangimi.at(1) as FormGroup;
-    m2.patchValue({
-      descrizione: 'Mangime finissaggio',
-      prezzoAlKg: 0.65,
-      kg: 20
-    });
-    this.onValoriMangimeChange(1);
-
-    // mock scatole
-    this.addRigaScatola();
-    const s1 = this.scatole.at(0) as FormGroup;
-    s1.patchValue({
-      descrizione: 'Scatole cartone grandi',
-      prezzoUnitario: 0.8,
-      quantita: 40
-    });
-    this.onValoriScatolaChange(0);
-
-    this.addRigaScatola();
-    const s2 = this.scatole.at(1) as FormGroup;
-    s2.patchValue({
-      descrizione: 'Scatole cartone piccole',
-      prezzoUnitario: 0.6,
-      quantita: 25
-    });
-    this.onValoriScatolaChange(1);
-  }
+      this.addRigaScatola();
+      const s2 = this.scatole.at(1) as FormGroup;
+      s2.patchValue({
+        descrizione: 'Scatole cartone piccole',
+        prezzoUnitario: 0.6,
+        quantita: 25
+      });
+      this.onValoriScatolaChange(1);
+    }*/
 
 
   private initForm(): void {
@@ -484,7 +475,28 @@ export class RegistrazioneVenditaComponent implements OnInit {
   }
 
   private loadAnimaliPerLocale(localeId: number): void {
-    // TODO: chiama il tuo servizio esistente e popola this.animaliPerLocale[localeId]
+    const sub = this.lottiService.getLottiByLocaleId(localeId).subscribe({
+      next: (response) => {
+        const animaliDisponibili: AnimaleDisponibile[] = [];
+        response.body?.forEach(element => {
+          const animale: AnimaleDisponibile = {
+            idLotto: element.idLotto,
+            idAnimale: element.idAnimale,
+            dataDiNascita: element.dataDiNascita,
+            codiceProvenienza: element.codiceProvenienza,
+            descrizione: `${element.razza} ${element.colore}`
+          }
+          animaliDisponibili.push(animale);
+        })
+        this.animaliPerLocale[localeId] = animaliDisponibili;
+      },
+      error: (err) => {
+        this.subscriptions.push(sub);
+      },
+      complete: () => {
+        this.subscriptions.push(sub);
+      }
+    })
   }
 
   private loadOrdine(id: number): void {

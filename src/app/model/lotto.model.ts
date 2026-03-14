@@ -10,3 +10,13 @@ export interface Lotto {
   numeroMorti: number;
   prezzoUnitario: number;
 }
+
+export interface LottiLocaleDTO {
+  idLotto: number;
+  idAnimale: number;
+  razza: string;
+  colore: string;
+  codiceProvenienza: string;
+  dataDiNascita: string;
+  prezzoUnitario: number;
+}

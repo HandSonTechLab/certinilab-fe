@@ -1,7 +1,7 @@
 import {HttpClient, HttpErrorResponse, HttpResponse} from '@angular/common/http';
 import {inject, Injectable} from '@angular/core';
 import {catchError, Observable, throwError} from 'rxjs';
-import {Lotto} from '../model/lotto.model';
+import {LottiLocaleDTO, Lotto} from '../model/lotto.model';
 import {LocaleDashboard} from '../model/dashboard.model';
 import {BaseService} from './base-service';
 import {LottoRequest} from '../model/lotto-request.model';
@@ -35,6 +35,18 @@ export class LottiService extends BaseService {
    */
   getById(id: number): Observable<HttpResponse<Lotto>> {
     return this.http.get<Lotto>(`${this.url}/${id}`, {observe: 'response',})
+      .pipe(catchError((error: HttpErrorResponse) => {
+        console.log('an error occurred when getting Lotto by ID -> {}', error);
+        this.errorService.showError(CONSTANTS.lotto_request_error_message.concat(': error code ', error.status.toString()))
+        return throwError(() => new Error(CONSTANTS.lotto_request_error_message));
+      }));
+  }
+
+  /**
+   * GET lotti by localeId: Recupera tutti i lotti associati a un locale specifico
+   */
+  getLottiByLocaleId(localeId: number): Observable<HttpResponse<LottiLocaleDTO[]>> {
+    return this.http.get<LottiLocaleDTO[]>(`${this.url}/locale/${localeId}`, {observe: 'response',})
       .pipe(catchError((error: HttpErrorResponse) => {
         console.log('an error occurred when getting Lotto by ID -> {}', error);
         this.errorService.showError(CONSTANTS.lotto_request_error_message.concat(': error code ', error.status.toString()))
