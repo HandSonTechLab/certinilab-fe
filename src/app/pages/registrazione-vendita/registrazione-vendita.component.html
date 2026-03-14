@@ -18,6 +18,16 @@
 
           <div class="mb-3">
             <label class="form-label">Cliente <span class="text-danger">*</span></label>
+
+            <!-- campo di ricerca -->
+            <input
+              type="text"
+              class="form-control mb-2"
+              placeholder="Cerca clienti per nome e cognome... (mario rossi)"
+              [formControl]="clienteSearch"
+            />
+
+            <!-- select risultati -->
             <select class="form-select" formControlName="idCliente">
               <option [ngValue]="null">Seleziona cliente...</option>
               <option *ngFor="let c of clienti" [ngValue]="c.id">
@@ -32,7 +42,7 @@
                 <div><strong>Indirizzo:</strong> {{ c.indirizzo }}</div>
                 <div><strong>Comune:</strong> {{ c.comune }}</div>
                 <div><strong>Provincia:</strong> {{ c.provincia }}</div>
-                <div><strong>Codice ASL:</strong> {{ c.codiceAsl }}</div>
+                <div><strong>Codice ASL:</strong> {{ c.codiceIdentificativoAsl }}</div>
               </ng-container>
             </ng-container>
           </div>
@@ -412,16 +422,16 @@
       <button
         type="button"
         class="btn btn-primary"
-        (click)="onGenera(false)"
+        (click)="handleOrdine(OrderType.Prenotazione)"
       >
-        Genera vendita
+        Prenota
       </button>
       <button
         type="button"
         class="btn btn-success"
-        (click)="onGenera(true)"
+        (click)="handleOrdine(OrderType.Vendita)"
       >
-        Genera vendita con scheda vaccinazione
+        Vendi
       </button>
     </div>
   </div>

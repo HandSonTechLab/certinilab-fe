@@ -30,7 +30,11 @@ export class ClientsService extends BaseService {
   searchClients(searchData: SearchData, pageNumber: number, pageSize: number): Observable<HttpResponse<SearchClientsResponse>> {
     return this.httpClient.post<SearchClientsResponse>(this.url + '/ricerca', searchData, {
       observe: 'response',
-      params: {pageNumber: pageNumber, pageSize: pageSize}
+      params: (pageNumber != -1 && pageSize != -1) ? {
+        pageNumber: pageNumber,
+        pageSize: pageSize,
+        isPaginated: true
+      } : {}
     })
       .pipe(catchError((error: HttpErrorResponse) => {
         console.log('an error occurred during search clients request -> {}', error);

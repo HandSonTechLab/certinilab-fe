@@ -22,17 +22,6 @@ export interface OrdineRequest {
   dettagli: DettaglioOrdineRequest[];
 }
 
-// opzionali, se ti servono per popolare dropdown
-export interface Cliente {
-  id: number;
-  nome: string;
-  cognome: string;
-  indirizzo: string;
-  provincia: string;
-  comune: string;
-  codiceAsl: string;
-}
-
 export interface Locale {
   id: number;
   nome: string;

@@ -1,9 +1,15 @@
 import {Component, computed, inject, OnInit} from '@angular/core';
-import {FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Locale} from '../../model/locale.model';
 import {CommonModule} from '@angular/common';
-import {AnimaleDisponibile, Cliente} from '../../model/ordine.model';
+import {AnimaleDisponibile} from '../../model/ordine.model';
+import {ClientsService} from '../../services/clients.service';
+import {LocaliService} from '../../services/locali.service';
+import {debounceTime, distinctUntilChanged, of, Subscription, switchMap} from 'rxjs';
+import {ClientDtoModel} from '../../model/client-dto.model';
+import {HttpResponse} from '@angular/common/http';
+import {SearchClientsResponse} from '../../model/search-clients-response.data';
 
 @Component({
   selector: 'app-registrazione-vendita',
@@ -12,10 +18,15 @@ import {AnimaleDisponibile, Cliente} from '../../model/ordine.model';
   styleUrl: './registrazione-vendita.component.css'
 })
 export class RegistrazioneVenditaComponent implements OnInit {
-
+  private subscriptions: Subscription[] = [];
   private fb = inject(FormBuilder);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private clientService = inject(ClientsService);
+  private localiService = inject(LocaliService);
+  protected readonly OrderType = OrderType;
+  clienteSearch = new FormControl('');
+  clienti: ClientDtoModel[] = [];
 
   // in realtà li popolerai dai tuoi service esistenti
   //clienti: Cliente[] = [];
@@ -37,7 +48,7 @@ export class RegistrazioneVenditaComponent implements OnInit {
       this.totaleScatole()
   );
 
-  clienti: Cliente[] = [
+  clientiStub: ClientDtoModel[] = [
     {
       id: 1,
       nome: 'Mario',
@@ -45,7 +56,7 @@ export class RegistrazioneVenditaComponent implements OnInit {
       indirizzo: 'Via Roma 10',
       provincia: 'MI',
       comune: 'Milano',
-      codiceAsl: 'ASL-MI-001'
+      codiceIdentificativoAsl: 'ASL-MI-001'
     },
     {
       id: 2,
@@ -54,7 +65,7 @@ export class RegistrazioneVenditaComponent implements OnInit {
       indirizzo: 'Via Garibaldi 25',
       provincia: 'BG',
       comune: 'Bergamo',
-      codiceAsl: 'ASL-BG-002'
+      codiceIdentificativoAsl: 'ASL-BG-002'
     }
   ];
 
@@ -69,8 +80,8 @@ export class RegistrazioneVenditaComponent implements OnInit {
     this.mockLocaliEAnimali();
 
     // caricamento dropdown da tuoi service (placeholder)
-    this.loadClienti();
     this.loadLocali();
+    this.loadClienti();
 
     this.route.queryParamMap.subscribe((params) => {
       const idParam = params.get('id');
@@ -413,7 +424,7 @@ export class RegistrazioneVenditaComponent implements OnInit {
     this.router.navigate(['']); // adatta tu la lista
   }
 
-  onGenera(conSchedaVaccinazione: boolean): void {
+  handleOrdine(orderType: OrderType): void {
 
   }
 
@@ -428,15 +439,48 @@ export class RegistrazioneVenditaComponent implements OnInit {
     return ''
   }
 
-
-  // --- caricamento dati (placeholder, sostituisci con i tuoi service) ---
-
   private loadClienti(): void {
-    // TODO: chiama il tuo ClientiService
+    this.clienteSearch.valueChanges.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap((termRaw) => {
+        const term = (termRaw || '').trim();
+
+        if (!term) {
+          return of([]);
+        }
+
+        const parts = term.split(/\s+/); // split su uno o più spazi
+        const nome = parts[0];
+        const cognome = parts.length > 1 ? parts.slice(1).join(' ') : '';
+
+        return this.clientService.searchClients({nome, cognome, indirizzo: undefined}, -1, -1);
+      })
+    ).subscribe({
+      next: (response) => {
+        const searchResponse = response as HttpResponse<SearchClientsResponse>;
+        this.clienti = searchResponse.body?.searchClientsDtoList || [];
+      },
+      error: (error) => {
+      },
+      complete: () => {
+      }
+    })
   }
 
   private loadLocali(): void {
-    // TODO: chiama il tuo LocaliService
+    const subscription = this.localiService.getLocali().subscribe({
+      next: (locali) => {
+        this.locali = locali.body || [];
+      },
+      error: (err) => {
+        console.error('Errore caricamento locali', err);
+        this.subscriptions.push(subscription);
+      },
+      complete: () => {
+        this.subscriptions.push(subscription);
+      }
+    })
   }
 
   private loadAnimaliPerLocale(localeId: number): void {
@@ -451,6 +495,5 @@ export class RegistrazioneVenditaComponent implements OnInit {
 
   private patchFormOrdine(ordine: any): void {
   }
-
 
 }

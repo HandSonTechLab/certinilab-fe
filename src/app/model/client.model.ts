@@ -9,3 +9,15 @@ export interface ClientModel {
   comune: String;
   codiceIdentificativoAsl: String;
 }
+
+
+// opzionali, se ti servono per popolare dropdown
+export interface ClientLiveSearchModel {
+  id: number;
+  nome: string;
+  cognome: string;
+  indirizzo: string;
+  provincia: string;
+  comune: string;
+  codiceAsl: string;
+}
