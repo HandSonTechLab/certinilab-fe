@@ -31,7 +31,7 @@
             <select class="form-select" formControlName="idCliente">
               <option [ngValue]="null">Seleziona cliente...</option>
               <option *ngFor="let c of clienti" [ngValue]="c.id">
-                {{ c.nome }} {{ c.cognome }}
+                {{ c.nome }} {{ c.cognome }} - {{ c.indirizzo }}
               </option>
             </select>
           </div>

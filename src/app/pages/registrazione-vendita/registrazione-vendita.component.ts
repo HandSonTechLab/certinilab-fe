@@ -377,7 +377,7 @@ export class RegistrazioneVenditaComponent implements OnInit {
 
         const parts = term.split(/\s+/); // split su uno o più spazi
         const nome = parts[0];
-        const cognome = parts.length > 1 ? parts.slice(1).join(' ') : '';
+        const cognome = parts.length > 1 ? parts.slice(1).join(' ') : undefined;
 
         return this.clientService.searchClients({nome, cognome, indirizzo: undefined}, -1, -1);
       })
