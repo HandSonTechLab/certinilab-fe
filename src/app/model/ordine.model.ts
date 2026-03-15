@@ -1,24 +1,22 @@
 export interface DettaglioOrdineRequest {
-  idLotto: number;        // nascosto all'utente
-  quantita: number;
-  peso?: number | null;   // valorizzato solo se vendita "al kg"
-  prezzoUnitario: number; // al kg o per unità
-  note?: string | null;   // es. "al kg", "per unità", "vivo/macellato"
+  id: number | null;
+  idLotto: number;
+  quantita: number | null;
+  peso: number | null;
+  prezzoUnitario: number;
+  note: string | null;
+  venditaType: 'AL_KG' | 'PER_UNITA';
 }
 
-export interface OrdineRequest {
-  id?: number;            // presente solo in edit
-  data: string;           // 'YYYY-MM-DD'
+export interface OrdineCreateRequest {
+  data: string;            // 'YYYY-MM-DD'
   idCliente: number;
-  stato: string;          // fisso "COMPLETATO"
-  noteOrdine?: string | null;
-
-  noteScatole?: string | null;
-  noteMangime?: string | null;
+  noteOrdine: string | null;
+  noteScatole: string | null;
+  noteMangime: string | null;
+  stato: OrderType;
   spesaScatole: number;
   spesaMangime: number;
-
-  totale: number;
   dettagli: DettaglioOrdineRequest[];
 }
 
@@ -34,3 +32,9 @@ export interface AnimaleDisponibile {
   codiceProvenienza: string;
   descrizione: string; // es. "Galline rosse"
 }
+
+export enum OrderType {
+  CONFERMATO,
+  VENDUTO
+}
+

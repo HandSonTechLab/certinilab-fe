@@ -62,7 +62,7 @@ export class ClientsComponent implements OnInit , OnDestroy {
     const target = event.currentTarget as HTMLElement;
     const tooltipInstance = bootstrap.Tooltip.getInstance(target);
     tooltipInstance?.hide();  // chiude il tooltip
-    this.router.navigate(['/nuovi-clienti', {state: {userId: null, activeMode: 'create'}}]);
+    this.router.navigate(['/nuovi-clienti'], {state: {userId: null, activeMode: 'create'}});
   }
 
   showNotification(notification: NotificationModel) {

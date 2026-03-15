@@ -30,4 +30,10 @@ export const CONSTANTS = {
   create_supplier_success: 'Fornitore creato con successo',
   update_supplier_request_error_message: 'Aggiornamento fornitore fallita!',
   update_supplier_success: 'Fornitore aggiornato con successo',
+
+
+  // ordini
+  create_order_request_error_message: 'Creazione ordine fallita!',
+  create_order_success: 'Ordine creato con successo',
+  update_order_success: 'Ordine aggiornato con successo',
 }

@@ -3,7 +3,7 @@ import {FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Val
 import {ActivatedRoute, Router} from '@angular/router';
 import {Locale} from '../../model/locale.model';
 import {CommonModule} from '@angular/common';
-import {AnimaleDisponibile} from '../../model/ordine.model';
+import {AnimaleDisponibile, DettaglioOrdineRequest, OrderType, OrdineCreateRequest} from '../../model/ordine.model';
 import {ClientsService} from '../../services/clients.service';
 import {LocaliService} from '../../services/locali.service';
 import {debounceTime, distinctUntilChanged, of, Subscription, switchMap} from 'rxjs';
@@ -11,6 +11,7 @@ import {ClientDtoModel} from '../../model/client-dto.model';
 import {HttpResponse} from '@angular/common/http';
 import {SearchClientsResponse} from '../../model/search-clients-response.data';
 import {LottiService} from '../../services/lotti.service';
+import {OrdiniService} from '../../services/ordini.service';
 
 @Component({
   selector: 'app-registrazione-vendita',
@@ -26,6 +27,7 @@ export class RegistrazioneVenditaComponent implements OnInit {
   private clientService = inject(ClientsService);
   private lottiService = inject(LottiService);
   private localiService = inject(LocaliService);
+  private ordineService = inject(OrdiniService);
   protected readonly OrderType = OrderType;
   clienteSearch = new FormControl('');
   clienti: ClientDtoModel[] = [];
@@ -47,28 +49,6 @@ export class RegistrazioneVenditaComponent implements OnInit {
       this.totaleScatole()
   );
 
-  /*  clientiStub: ClientDtoModel[] = [
-      {
-        id: 1,
-        nome: 'Mario',
-        cognome: 'Rossi',
-        indirizzo: 'Via Roma 10',
-        provincia: 'MI',
-        comune: 'Milano',
-        codiceIdentificativoAsl: 'ASL-MI-001'
-      },
-      {
-        id: 2,
-        nome: 'Luigi',
-        cognome: 'Bianchi',
-        indirizzo: 'Via Garibaldi 25',
-        provincia: 'BG',
-        comune: 'Bergamo',
-        codiceIdentificativoAsl: 'ASL-BG-002'
-      }
-    ];*/
-
-
   ngOnInit(): void {
     this.initForm();
     this.loadLocali();
@@ -83,128 +63,6 @@ export class RegistrazioneVenditaComponent implements OnInit {
       }
     });
   }
-
-  /*  private mockLocaliEAnimali(): void {
-      this.locali = [
-        {id: 1, nome: 'S1'},
-        {id: 2, nome: 'S2'},
-      ];
-
-      // Locale 1: polli e galline
-      this.animaliPerLocale[1] = [
-        {
-          idLotto: 101,
-          dataDiNascita: '2024-01-15',
-          codiceProvenienza: 'AZ-001',
-          idAnimale: 1,
-          descrizione: 'Gallus Bianco'
-        },
-        {
-          idLotto: 102,
-          dataDiNascita: '2024-01-15',
-          codiceProvenienza: 'AZ-001',
-          idAnimale: 2,
-          descrizione: 'Gallus R9+R7'
-        },
-        {
-          idLotto: 103,
-          dataDiNascita: '2024-01-15',
-          codiceProvenienza: 'AZ-001',
-          idAnimale: 3,
-          descrizione: 'Gallus Giallo'
-        },
-        {
-          idLotto: 104,
-          dataDiNascita: '2024-01-15',
-          codiceProvenienza: 'AZ-001',
-          idAnimale: 4,
-          descrizione: 'Gallina R8+R1'
-        }
-      ];
-
-      // Locale 2: altri animali
-      this.animaliPerLocale[2] = [
-        {
-          idLotto: 201,
-          idAnimale: 6,
-          dataDiNascita: '2024-01-15',
-          codiceProvenienza: 'AZ-001',
-          descrizione: 'Gallus R5'
-        },
-        {
-          idLotto: 202,
-          idAnimale: 5,
-          dataDiNascita: '2024-01-15',
-          codiceProvenienza: 'AZ-001',
-          descrizione: 'Gallus R9 Giallo'
-        }
-      ];
-
-      // imposta una riga di esempio già piena
-      const primaRiga = this.dettagliAnimali.at(0) as FormGroup;
-      primaRiga.patchValue({
-        localeId: 1,
-        animaleId: 1,
-        idLotto: 101,
-        tipoVendita: 'PER_UNITA',
-        quantita: 5,
-        prezzoUnitario: 7.5
-      });
-      this.ricalcolaTotaleRiga(0);
-
-      // aggiungo una seconda riga di esempio (vendita al kg)
-      this.addRigaAnimale();
-      const secondaRiga = this.dettagliAnimali.at(1) as FormGroup;
-      secondaRiga.patchValue({
-        localeId: 1,
-        animaleId: 2,
-        idLotto: 102,
-        tipoVendita: 'AL_KG',
-        quantita: 3,
-        peso: 12.5,
-        prezzoUnitario: 4.2
-      });
-      this.ricalcolaTotaleRiga(1);
-
-      // mock mangimi
-      this.addRigaMangime();
-      const m1 = this.mangimi.at(0) as FormGroup;
-      m1.patchValue({
-        descrizione: 'Mangime crescita',
-        prezzoAlKg: 0.55,
-        kg: 30
-      });
-      this.onValoriMangimeChange(0);
-
-      this.addRigaMangime();
-      const m2 = this.mangimi.at(1) as FormGroup;
-      m2.patchValue({
-        descrizione: 'Mangime finissaggio',
-        prezzoAlKg: 0.65,
-        kg: 20
-      });
-      this.onValoriMangimeChange(1);
-
-      // mock scatole
-      this.addRigaScatola();
-      const s1 = this.scatole.at(0) as FormGroup;
-      s1.patchValue({
-        descrizione: 'Scatole cartone grandi',
-        prezzoUnitario: 0.8,
-        quantita: 40
-      });
-      this.onValoriScatolaChange(0);
-
-      this.addRigaScatola();
-      const s2 = this.scatole.at(1) as FormGroup;
-      s2.patchValue({
-        descrizione: 'Scatole cartone piccole',
-        prezzoUnitario: 0.6,
-        quantita: 25
-      });
-      this.onValoriScatolaChange(1);
-    }*/
-
 
   private initForm(): void {
     this.form = this.fb.group({
@@ -416,18 +274,94 @@ export class RegistrazioneVenditaComponent implements OnInit {
   }
 
   handleOrdine(orderType: OrderType): void {
+    if (this.form.invalid || this.dettagliAnimali.length === 0) {
+      this.form.markAllAsTouched();
+      return;
+    }
 
+    const payload = this.buildOrdineCreateRequest(orderType);
+
+    this.ordineService.createOrdine(payload)
+      .subscribe({
+        next: (res) => {
+          this.router.navigate(['/']);
+        },
+        error: (err) => {
+          // gestione errore (alert ecc.)
+        }
+      });
   }
 
-  private buildRequestBody(): void {
+  private buildOrdineCreateRequest(orderType: OrderType): OrdineCreateRequest {
+    const raw = this.form.getRawValue();
+
+    // calcoli totali da FormArray
+    const spesaMangime = this.mangimi.controls.reduce((sum, ctrl) =>
+      sum + Number((ctrl as FormGroup).get('totaleRiga')?.value || 0), 0);
+
+    const spesaScatole = this.scatole.controls.reduce((sum, ctrl) =>
+      sum + Number((ctrl as FormGroup).get('totaleRiga')?.value || 0), 0);
+
+    const noteMangime = this.buildNoteMangime();
+    const noteScatole = this.buildNoteScatole();
+
+    const dettagli: DettaglioOrdineRequest[] = this.dettagliAnimali.controls.map(ctrl => {
+      const g = ctrl as FormGroup;
+      return {
+        id: null,
+        idLotto: g.get('idLotto')?.value,
+        quantita: g.get('quantita')?.value,
+        peso: g.get('peso')?.value,
+        prezzoUnitario: g.get('prezzoUnitario')?.value,
+        note: g.get('note')?.value || null,
+        venditaType: g.get('tipoVendita')?.value, // 'AL_KG' | 'PER_UNITA'
+      };
+    });
+
+    return {
+      data: raw.data,
+      idCliente: raw.idCliente,
+      noteOrdine: raw.noteOrdine || null,
+      noteScatole,
+      noteMangime,
+      stato: orderType,
+      spesaScatole,
+      spesaMangime,
+      dettagli,
+    } as OrdineCreateRequest;
   }
+
 
   private buildNoteMangime(): string {
-    return ''
+    if (this.mangimi.length === 0) return '';
+    const parts: string[] = [];
+
+    this.mangimi.controls.forEach((ctrl, idx) => {
+      const g = ctrl as FormGroup;
+      const desc = g.get('descrizione')?.value || `Mangime ${idx + 1}`;
+      const prezzo = g.get('prezzoAlKg')?.value;
+      const kg = g.get('kg')?.value;
+      const tot = g.get('totaleRiga')?.value;
+      parts.push(`${desc}: ${prezzo} €/kg x ${kg} kg = ${tot} €`);
+    });
+
+    return parts.join(' | ');
   }
 
   private buildNoteScatole(): string {
-    return ''
+    if (this.scatole.length === 0) return '';
+    const parts: string[] = [];
+
+    this.scatole.controls.forEach((ctrl, idx) => {
+      const g = ctrl as FormGroup;
+      const desc = g.get('descrizione')?.value || `Scatole ${idx + 1}`;
+      const prezzo = g.get('prezzoUnitario')?.value;
+      const qta = g.get('quantita')?.value;
+      const tot = g.get('totaleRiga')?.value;
+      parts.push(`${desc}: ${prezzo} € x ${qta} = ${tot} €`);
+    });
+
+    return parts.join(' | ');
   }
 
   private loadClienti(): void {
@@ -507,5 +441,4 @@ export class RegistrazioneVenditaComponent implements OnInit {
 
   private patchFormOrdine(ordine: any): void {
   }
-
 }

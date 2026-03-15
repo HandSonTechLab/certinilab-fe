@@ -33,8 +33,8 @@ export class CreateClientComponent implements OnInit, OnDestroy {
   constructor(private router: Router) {
     const currNav = this.router.getCurrentNavigation();
     const userDetailTemp = currNav?.extras.state as UserDetail
+    this.userDetail = userDetailTemp;
     if (userDetailTemp && userDetailTemp.userId && userDetailTemp.activeMode) {
-      this.userDetail = userDetailTemp;
       const subscription = this.clientService.findClientById(userDetailTemp.userId).subscribe({
         next: (response) => {
           this.initForm(response.body, this.userDetail.activeMode == 'view');

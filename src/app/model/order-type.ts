@@ -1,4 +1,0 @@
-enum OrderType {
-  CONFERMATO,
-  VENDUTO
-}
