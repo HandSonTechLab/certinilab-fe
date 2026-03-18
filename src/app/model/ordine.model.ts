@@ -36,7 +36,7 @@ export interface AnimaleDisponibile {
 }
 
 export enum OrderType {
-  CONFERMATO,
-  VENDUTO
+  CONFERMATO = 'CONFERMATO',
+  VENDUTO = 'VENDUTO',
 }
 
