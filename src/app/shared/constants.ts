@@ -33,7 +33,9 @@ export const CONSTANTS = {
 
 
   // ordini
-  create_order_request_error_message: 'Creazione ordine fallita!',
+  create_order_request_error_message: 'Creazione ordine fallita',
+  update_order_request_error_message: 'Aggiornamento ordine fallito',
+  get_order_request_error_message: 'Impossibile recuperare  l\'ordine richiesto',
   create_order_success: 'Ordine creato con successo',
   update_order_success: 'Ordine aggiornato con successo',
 }

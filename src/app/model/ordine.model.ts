@@ -1,13 +1,4 @@
-export interface DettaglioOrdineRequest {
-  id: number | null;
-  idLotto: number;
-  quantita: number | null;
-  peso: number | null;
-  prezzoUnitario: number;
-  note: string | null;
-  venditaType: 'AL_KG' | 'PER_UNITA';
-}
-
+// modelli usati per creare un ordine
 export interface OrdineCreateRequest {
   data: string;            // 'YYYY-MM-DD'
   idCliente: number;
@@ -19,12 +10,51 @@ export interface OrdineCreateRequest {
   spesaMangime: number;
   dettagli: DettaglioOrdineRequest[];
 }
-
-export interface Locale {
-  id: number;
-  nome: string;
+export interface DettaglioOrdineRequest {
+  id: number | null;
+  idLotto: number;
+  quantita: number | null;
+  peso: number | null;
+  prezzoUnitario: number;
+  note: string | null;
+  venditaType: 'AL_KG' | 'PER_UNITA';
 }
 
+// modelli usate dalla getById per mostrare i dettagli dell'ordine
+export interface InfoOrdineResponse {
+  id: number;
+  data: string; // 'YYYY-MM-DD'
+  idCliente: number;
+  clienteInfo: string; // es. "Mario Rossi - Via Roma 123"
+  noteOrdine: string | null;
+  noteScatole: string | null;
+  noteMangime: string | null;
+  stato: OrderType;
+  totaleScatole: number;
+  totaleMangime: number;
+  totaleAnimali: number;
+  totaleOrdine: number;
+  dettagli: DettaglioOrdineResponse[];
+}
+
+export interface DettaglioOrdineResponse {
+  id: number;
+  idLotto: number;
+  idLocale: number;
+  nomeLocale: string;
+  idAnimale: number;
+  idFornitore: number;
+  dataDiNascita: string; // 'YYYY-MM-DD'
+  codiceProvenienza: string;
+  descrizioneAnimale: string;
+  quantita: number;
+  peso: number | null;
+  prezzoUnitario: number;
+  note: string | null;
+  venditaType: 'AL_KG' | 'PER_UNITA';
+}
+
+// model usato per recupero animali in un locale
 export interface AnimaleDisponibile {
   idLotto: number;   // lotto interno
   idAnimale: number;

@@ -59,7 +59,7 @@ export class RegistrazioneVenditaComponent implements OnInit {
       if (idParam) {
         this.isEditMode = true;
         this.ordineId = +idParam;
-        //this.loadOrdine(this.ordineId);
+        this.loadOrdine(this.ordineId);
       }
     });
   }
@@ -447,11 +447,9 @@ export class RegistrazioneVenditaComponent implements OnInit {
   }
 
   private loadOrdine(id: number): void {
-    //this.venditeService.getOrdineById(id).subscribe((ordine) => {
-    //this.patchFormOrdine(ordine);
-    //});
+    this.ordineService.getOrdineById(id).subscribe((ordine) => {
+
+    });
   }
 
-  private patchFormOrdine(ordine: any): void {
-  }
 }
