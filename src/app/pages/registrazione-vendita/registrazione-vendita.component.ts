@@ -3,7 +3,14 @@ import {FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Val
 import {ActivatedRoute, Router} from '@angular/router';
 import {Locale} from '../../model/locale.model';
 import {CommonModule} from '@angular/common';
-import {AnimaleDisponibile, DettaglioOrdineRequest, OrderType, OrdineCreateRequest} from '../../model/ordine.model';
+import {
+  AnimaleDisponibile,
+  DettaglioOrdineRequest,
+  DettaglioOrdineResponse,
+  InfoOrdineResponse,
+  OrderType,
+  OrdineCreateRequest
+} from '../../model/ordine.model';
 import {ClientsService} from '../../services/clients.service';
 import {LocaliService} from '../../services/locali.service';
 import {debounceTime, distinctUntilChanged, of, Subscription, switchMap} from 'rxjs';
@@ -12,6 +19,7 @@ import {HttpResponse} from '@angular/common/http';
 import {SearchClientsResponse} from '../../model/search-clients-response.data';
 import {LottiService} from '../../services/lotti.service';
 import {OrdiniService} from '../../services/ordini.service';
+import {ClientModel} from '../../model/client.model';
 
 @Component({
   selector: 'app-registrazione-vendita',
@@ -103,6 +111,7 @@ export class RegistrazioneVenditaComponent implements OnInit {
 
   newRigaAnimale(): FormGroup {
     return this.fb.group({
+      id: [null], // usato solo in edit
       localeId: [null, Validators.required],
       animaleId: [null, Validators.required],
       dataDiNascita: [null, Validators.required],
@@ -292,8 +301,11 @@ export class RegistrazioneVenditaComponent implements OnInit {
 
     const payload = this.buildOrdineCreateRequest(orderType);
 
-    this.ordineService.createOrdine(payload)
-      .subscribe({
+    const $call = this.isEditMode && this.ordineId
+      ? this.ordineService.updateOrdine(payload, this.ordineId)
+      : this.ordineService.createOrdine(payload);
+
+    $call.subscribe({
         next: (res) => {
           this.router.navigate(['/']);
         },
@@ -319,7 +331,7 @@ export class RegistrazioneVenditaComponent implements OnInit {
     const dettagli: DettaglioOrdineRequest[] = this.dettagliAnimali.controls.map(ctrl => {
       const g = ctrl as FormGroup;
       return {
-        id: null,
+        id: g.get('id')?.value ?? null,
         idLotto: g.get('idLotto')?.value,
         quantita: g.get('quantita')?.value,
         peso: g.get('peso')?.value,
@@ -447,9 +459,100 @@ export class RegistrazioneVenditaComponent implements OnInit {
   }
 
   private loadOrdine(id: number): void {
-    this.ordineService.getOrdineById(id).subscribe((ordine) => {
+    this.ordineService.getOrdineById(id).subscribe({
+      next: (response) => {
+        // testata
+        const ordine = response.body as InfoOrdineResponse;
+        this.form.patchValue({
+          data: ordine.data,
+          idCliente: ordine.idCliente,
+          noteOrdine: ordine.noteOrdine || '',
+          // le noteScatole/noteMangime del BE le mostriamo
+          noteScatole: ordine.noteScatole || '',
+          noteMangime: ordine.noteMangime || ''
+        });
 
+        this.clientService.findClientById(ordine.idCliente).subscribe({
+          next: (res) => {
+            const c = res.body as ClientModel;
+            this.clienti = [{
+              id: c.id!, nome: c.nome, cognome: c.cognome, indirizzo: c.indirizzo,
+              provincia: c.provincia, comune: c.comune, codiceIdentificativoAsl: c.codiceIdentificativoAsl
+            }];
+          },
+          error: (err) => {
+            // gestione errore (es. cliente non trovato, ma non dovrebbe succedere)
+          }
+        })
+
+        // totali
+        this.totaleAnimali.update(() => ordine.totaleAnimali);
+        this.totaleMangime.update(() => ordine.totaleMangime);
+        this.totaleScatole.update(() => ordine.totaleScatole);
+        this.form.get('spesaMangime')?.setValue(ordine.totaleMangime);
+        this.form.get('spesaScatole')?.setValue(ordine.totaleScatole);
+
+        // righe animali
+        this.dettagliAnimali.clear();
+        ordine.dettagli.forEach(det => {
+          const fg = this.newRigaAnimale();
+
+          fg.patchValue({
+            localeId: det.idLocale,
+            dataDiNascita: det.dataDiNascita,
+            fornitoreId: det.idFornitore,
+            codiceProvenienza: det.codiceProvenienza,
+            tipoVendita: det.venditaType,
+            quantita: det.quantita,
+            peso: det.peso,
+            prezzoUnitario: det.prezzoUnitario,
+            note: det.note || ''
+          });
+
+          // forza validatori peso in base al tipo
+          if (det.venditaType === 'AL_KG') {
+            fg.get('peso')?.setValidators([Validators.required, Validators.min(0.01)]);
+          } else {
+            fg.get('peso')?.clearValidators();
+          }
+          fg.get('peso')?.updateValueAndValidity({emitEvent: false});
+
+          // calcolo totale riga
+          const totaleRiga =
+            det.venditaType === 'AL_KG'
+              ? (det.peso || 0) * det.prezzoUnitario
+              : det.quantita * det.prezzoUnitario;
+          fg.get('totaleRiga')?.setValue(totaleRiga, {emitEvent: false});
+          fg.get('id')?.setValue(det.id);
+          this.dettagliAnimali.push(fg);
+          this.loadAnimaliPerLocale(det.idLocale)
+          // carico elenco animali per quel locale e poi setto animaleId/idLotto
+          this.setAnimaleFromDettaglio(det.idLocale, det, fg);
+        });
+
+        // ricalcola totali complessivi nel caso serva
+        this.calcolaTotaleAnimali();
+        this.calcolaTotaleMangime();
+        this.calcolaTotaleScatole();
+      },
+      error: err => {
+        // gestione errore (es. redirect)
+      }
     });
   }
 
+  private setAnimaleFromDettaglio(
+    localeId: number,
+    det: DettaglioOrdineResponse,
+    fg: FormGroup
+  ): void {
+    const lista = this.animaliPerLocale[localeId] || [];
+    const found = lista.find(a => a.idLotto === det.idLotto && a.idAnimale === det.idAnimale);
+    if (found) {
+      fg.patchValue({
+        animaleId: found.idAnimale,
+        idLotto: found.idLotto,
+      }, {emitEvent: false});
+    }
+  }
 }

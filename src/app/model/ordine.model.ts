@@ -25,7 +25,9 @@ export interface InfoOrdineResponse {
   id: number;
   data: string; // 'YYYY-MM-DD'
   idCliente: number;
-  clienteInfo: string; // es. "Mario Rossi - Via Roma 123"
+  nomeCliente: string;
+  cognomeCliente: string;
+  indirizzoCliente: string;
   noteOrdine: string | null;
   noteScatole: string | null;
   noteMangime: string | null;

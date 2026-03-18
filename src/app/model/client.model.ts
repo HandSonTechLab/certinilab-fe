@@ -1,13 +1,14 @@
 export interface ClientModel {
-  nome: String;
-  cognome: String;
-  cellulare: String;
-  dataNascita?: Date;
-  codiceFiscale?: String;
-  indirizzo: String;
-  provincia: String;
-  comune: String;
-  codiceIdentificativoAsl: String;
+  id?: number | null;
+  nome: string;
+  cognome: string;
+  cellulare: string;
+  dataNascita?: string;
+  codiceFiscale?: string;
+  indirizzo: string;
+  provincia: string;
+  comune: string;
+  codiceIdentificativoAsl: string;
 }
 
 

@@ -115,6 +115,7 @@ export class CreateClientComponent implements OnInit, OnDestroy {
 
   private createClient() {
     const newClient: ClientModel = {
+      id: null,
       nome: this.clienteForm.get('nome')?.value,
       cognome: this.clienteForm.get('cognome')?.value,
       cellulare: this.clienteForm.get('cellulare')?.value,
