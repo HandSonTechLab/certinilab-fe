@@ -1,4 +1,4 @@
-import {Component, computed, inject, OnInit} from '@angular/core';
+import {Component, computed, inject, OnInit, signal} from '@angular/core';
 import {FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Locale} from '../../model/locale.model';
@@ -39,9 +39,9 @@ export class RegistrazioneVenditaComponent implements OnInit {
   ordineId?: number;
 
   // totali computati
-  totaleAnimali = computed(() => this.calcolaTotaleAnimali());
-  totaleMangime = computed(() => this.calcolaTotaleMangime());
-  totaleScatole = computed(() => this.calcolaTotaleScatole());
+  totaleAnimali = signal(0);
+  totaleMangime = signal(0);
+  totaleScatole = signal(0);
   totaleOrdine = computed(
     () =>
       this.totaleAnimali() +
@@ -132,6 +132,7 @@ export class RegistrazioneVenditaComponent implements OnInit {
   removeRigaAnimale(index: number): void {
     if (this.dettagliAnimali.length > 1) {
       this.dettagliAnimali.removeAt(index);
+      this.calcolaTotaleAnimali();
     }
   }
 
@@ -156,6 +157,8 @@ export class RegistrazioneVenditaComponent implements OnInit {
       group.get('idLotto')?.setValue(found.idLotto);
       group.get('dataDiNascita')?.setValue(found.dataDiNascita);
       group.get('codiceProvenienza')?.setValue(found.codiceProvenienza);
+      group.get('fornitoreId')?.setValue(found.fornitoreId);
+      group.get('prezzoUnitario')?.setValue(found.prezzoUnitario ? found.prezzoUnitario : null);
     }
 
   }
@@ -192,13 +195,15 @@ export class RegistrazioneVenditaComponent implements OnInit {
     }
 
     group.get('totaleRiga')?.setValue(totale, {emitEvent: false});
+    this.calcolaTotaleAnimali();
   }
 
-  private calcolaTotaleAnimali(): number {
-    return this.dettagliAnimali.controls.reduce((sum, ctrl) => {
+  private calcolaTotaleAnimali() {
+    const tot = this.dettagliAnimali.controls.reduce((sum, ctrl) => {
       const val = (ctrl as FormGroup).get('totaleRiga')?.value || 0;
       return sum + Number(val);
     }, 0);
+    this.totaleAnimali.update(() => tot);
   }
 
   // --- mangimi ---
@@ -218,6 +223,7 @@ export class RegistrazioneVenditaComponent implements OnInit {
 
   removeRigaMangime(index: number): void {
     this.mangimi.removeAt(index);
+    this.calcolaTotaleMangime();
   }
 
   onValoriMangimeChange(index: number): void {
@@ -226,13 +232,15 @@ export class RegistrazioneVenditaComponent implements OnInit {
     const kg = +group.get('kg')?.value || 0;
     const totale = prezzo * kg;
     group.get('totaleRiga')?.setValue(totale, {emitEvent: false});
+    this.calcolaTotaleMangime();
   }
 
-  private calcolaTotaleMangime(): number {
-    return this.mangimi.controls.reduce((sum, ctrl) => {
+  private calcolaTotaleMangime() {
+    const tot = this.mangimi.controls.reduce((sum, ctrl) => {
       const val = (ctrl as FormGroup).get('totaleRiga')?.value || 0;
       return sum + Number(val);
     }, 0);
+    this.totaleMangime.update(() => tot);
   }
 
   newRigaScatola(): FormGroup {
@@ -250,6 +258,7 @@ export class RegistrazioneVenditaComponent implements OnInit {
 
   removeRigaScatola(index: number): void {
     this.scatole.removeAt(index);
+    this.calcolaTotaleScatole();
   }
 
   onValoriScatolaChange(index: number): void {
@@ -258,13 +267,15 @@ export class RegistrazioneVenditaComponent implements OnInit {
     const quantita = +group.get('quantita')?.value || 0;
     const totale = prezzo * quantita;
     group.get('totaleRiga')?.setValue(totale, {emitEvent: false});
+    this.calcolaTotaleScatole();
   }
 
-  private calcolaTotaleScatole(): number {
-    return this.scatole.controls.reduce((sum, ctrl) => {
+  private calcolaTotaleScatole() {
+    const tot = this.scatole.controls.reduce((sum, ctrl) => {
       const val = (ctrl as FormGroup).get('totaleRiga')?.value || 0;
       return sum + Number(val);
     }, 0);
+    this.totaleScatole.update(() => tot);
   }
 
   // --- submit ---
@@ -418,7 +429,9 @@ export class RegistrazioneVenditaComponent implements OnInit {
             idAnimale: element.idAnimale,
             dataDiNascita: element.dataDiNascita,
             codiceProvenienza: element.codiceProvenienza,
-            descrizione: `${element.razza} ${element.colore}`
+            fornitoreId: element.fornitoreId,
+            descrizione: `${element.razza} ${element.colore}`,
+            prezzoUnitario: element.prezzoUnitario,
           }
           animaliDisponibili.push(animale);
         })

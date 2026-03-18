@@ -30,7 +30,9 @@ export interface AnimaleDisponibile {
   idAnimale: number;
   dataDiNascita: string; // 'YYYY-MM-DD'
   codiceProvenienza: string;
+  fornitoreId: number;
   descrizione: string; // es. "Galline rosse"
+  prezzoUnitario?: number;
 }
 
 export enum OrderType {

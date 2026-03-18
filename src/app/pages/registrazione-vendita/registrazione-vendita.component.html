@@ -185,6 +185,7 @@
                       formControlName="prezzoUnitario"
                       step="0.01"
                       (input)="onValoriRigaChange(i)"
+                      value="{{dettagliAnimali.at(i).get('prezzoUnitario')?.value}}"
                     />
                     <span class="input-group-text">
                         {{

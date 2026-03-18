@@ -17,6 +17,7 @@ export interface LottiLocaleDTO {
   razza: string;
   colore: string;
   codiceProvenienza: string;
+  fornitoreId: number;
   dataDiNascita: string;
   prezzoUnitario: number;
 }
