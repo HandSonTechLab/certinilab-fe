@@ -150,7 +150,7 @@ export class RegistrazioneVenditaComponent implements OnInit {
     group.patchValue({animaleId: null, idLotto: null, dataDiNascita: null, codiceProvenienza: null});
     const localeId = group.get('localeId')?.value;
     if (localeId) {
-      this.loadAnimaliPerLocale(localeId);
+      this.loadAnimaliPerLocale(localeId, null, null);
     }
   }
 
@@ -431,7 +431,7 @@ export class RegistrazioneVenditaComponent implements OnInit {
     })
   }
 
-  private loadAnimaliPerLocale(localeId: number): void {
+  private loadAnimaliPerLocale(localeId: number, det?: DettaglioOrdineResponse | null, fg?: FormGroup | null): void {
     const sub = this.lottiService.getLottiByLocaleId(localeId).subscribe({
       next: (response) => {
         const animaliDisponibili: AnimaleDisponibile[] = [];
@@ -448,6 +448,9 @@ export class RegistrazioneVenditaComponent implements OnInit {
           animaliDisponibili.push(animale);
         })
         this.animaliPerLocale[localeId] = animaliDisponibili;
+        if (det && fg) {
+          this.setAnimaleFromDettaglio(localeId, det, fg);
+        }
       },
       error: (err) => {
         this.subscriptions.push(sub);
@@ -525,9 +528,8 @@ export class RegistrazioneVenditaComponent implements OnInit {
           fg.get('totaleRiga')?.setValue(totaleRiga, {emitEvent: false});
           fg.get('id')?.setValue(det.id);
           this.dettagliAnimali.push(fg);
-          this.loadAnimaliPerLocale(det.idLocale)
           // carico elenco animali per quel locale e poi setto animaleId/idLotto
-          this.setAnimaleFromDettaglio(det.idLocale, det, fg);
+          this.loadAnimaliPerLocale(det.idLocale, det, fg);
         });
 
         // ricalcola totali complessivi nel caso serva
