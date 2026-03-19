@@ -25,7 +25,7 @@ export class OrdiniService extends BaseService {
   }
 
   updateOrdine(body: OrdineCreateRequest, orderId: number) {
-    return this.httpClient.put<any>(this.url, body, {observe: 'response'})
+    return this.httpClient.put<any>(this.url + '/' + orderId, body, {observe: 'response'})
       .pipe(catchError((error: HttpErrorResponse) => {
           console.log('an error occurred while updating ordine #{} -> {}', orderId, error);
           this.errorService.showError(CONSTANTS.update_order_request_error_message.concat(': error code ', error.status.toString()))
