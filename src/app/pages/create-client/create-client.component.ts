@@ -61,6 +61,7 @@ export class CreateClientComponent implements OnInit, OnDestroy {
       dataNascita: [{value: clientModel ? clientModel.dataNascita : '', disabled: disable}],
       codiceFiscale: [{value: clientModel ? clientModel.codiceFiscale : '', disabled: disable}],
       codiceIdentificativoAsl: [{value: clientModel ? clientModel.codiceIdentificativoAsl : '', disabled: disable}],
+      email: [{value: clientModel ? clientModel.email : '', disabled: disable}],
       indirizzo: [{value: clientModel ? clientModel.indirizzo : '', disabled: disable}, Validators.required],
       provincia: [{value: clientModel ? clientModel.provincia : '', disabled: disable}, Validators.required],
       comune: [{value: clientModel ? clientModel.comune : '', disabled: disable}, Validators.required],
@@ -99,6 +100,7 @@ export class CreateClientComponent implements OnInit, OnDestroy {
       provincia: this.clienteForm.get('provincia')?.value,
       comune: this.clienteForm.get('comune')?.value,
       codiceIdentificativoAsl: this.clienteForm.get('codiceIdentificativoAsl')?.value == "" ? null : this.clienteForm.get('codiceIdentificativoAsl')?.value,
+      email: this.clienteForm.get('email')?.value == "" ? null : this.clienteForm.get('email')?.value,
       dataNascita: this.clienteForm.get('dataNascita')?.value == "" ? null : this.clienteForm.get('dataNascita')?.value,
     }
 
@@ -124,6 +126,7 @@ export class CreateClientComponent implements OnInit, OnDestroy {
       provincia: this.clienteForm.get('provincia')?.value,
       comune: this.clienteForm.get('comune')?.value,
       codiceIdentificativoAsl: this.clienteForm.get('codiceIdentificativoAsl')?.value == "" ? null : this.clienteForm.get('codiceIdentificativoAsl')?.value,
+      email: this.clienteForm.get('email')?.value == "" ? null : this.clienteForm.get('email')?.value,
       dataNascita: this.clienteForm.get('dataNascita')?.value == "" ? null : this.clienteForm.get('dataNascita')?.value,
     };
 

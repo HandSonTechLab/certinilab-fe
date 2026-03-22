@@ -9,6 +9,7 @@ export interface ClientModel {
   provincia: string;
   comune: string;
   codiceIdentificativoAsl: string;
+  email?: string | null;
 }
 
 
