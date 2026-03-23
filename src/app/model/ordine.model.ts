@@ -72,3 +72,12 @@ export enum OrderType {
   VENDUTO = 'VENDUTO',
 }
 
+export interface InfoOrdine {
+  id: number;
+  data: string; // 'YYYY-MM-DD'
+  nomeCompletoCliente: string;
+  indirizzoCliente: string;
+  stato: OrderType;
+  totaleOrdine: number;
+}
+

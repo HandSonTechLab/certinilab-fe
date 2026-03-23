@@ -1,0 +1,59 @@
+<div class="container-fluid pb-5 d-flex flex-column">
+
+  <!-- TITOLO SEZIONE -->
+  <div class="row">
+    <div class="col-12">
+      <h2 class="page-title">Vendite</h2>
+    </div>
+  </div>
+
+  @if (orders?.length === 0 || !orders) {
+    <div class="col-12 text-center mt-5">
+      <div class="alert alert-light border">
+        Nessuna vendita presente. Clicca sul pulsante "+" in basso a destra per iniziare.
+      </div>
+    </div>
+  } @else {
+    <div class="row mt-1">
+      <div class="col-12">
+        <table class="table table-hover table-bordered">
+          <thead class="table-light">
+          <tr>
+            <th scope="col"><span class="fw-semibold">Data</span></th>
+            <th scope="col"><span class="fw-semibold">Cliente</span></th>
+            <th scope="col"><span class="fw-semibold">Indirizzo</span></th>
+            <th scope="col"><span class="fw-semibold">Stato</span></th>
+            <th scope="col"><span class="fw-semibold">Totale</span></th>
+            <th scope="col"></th>
+          </tr>
+          </thead>
+          <tbody>
+            @for (order of orders; track order.id) {
+              <tr>
+                <td>{{ order.data }}</td>
+                <td>{{ order.nomeCompletoCliente }}</td>
+                <td>{{ order.indirizzoCliente }}</td>
+                <td>{{ order.stato }}</td>
+                <td>{{ order.totaleOrdine }}</td>
+                <td>
+                  <i class="bi bi-pencil-square p-2 pointer"></i>
+                  <i class="bi bi-cloud-download p-2 pointer"></i>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+
+  <a
+    class="btn btn-primary rounded-circle shadow-lg fab"
+    aria-label="Crea nuova vendita"
+    data-bs-toggle="tooltip"
+    title="Crea nuova vendita"
+  >
+    <i class="bi bi-plus-lg"></i>
+  </a>
+
+</div>
