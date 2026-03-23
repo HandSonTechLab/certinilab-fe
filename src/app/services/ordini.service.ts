@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {BaseService} from './base-service';
-import {InfoOrdineResponse, OrdineCreateRequest} from '../model/ordine.model';
+import {InfoOrdine, InfoOrdineResponse, OrdineCreateRequest} from '../model/ordine.model';
 import {catchError, Observable, throwError} from 'rxjs';
 import {HttpErrorResponse, HttpResponse} from '@angular/common/http';
 import {CONSTANTS} from '../shared/constants';
@@ -38,6 +38,16 @@ export class OrdiniService extends BaseService {
     return this.httpClient.get<any>(this.url + '/' + orderId, {observe: 'response'})
       .pipe(catchError((error: HttpErrorResponse) => {
           console.log('an error occurred while getting ordine #{} -> {}', orderId, error);
+          this.errorService.showError(CONSTANTS.get_order_request_error_message.concat(': error code ', error.status.toString()))
+          return throwError(() => new Error(CONSTANTS.get_order_request_error_message));
+        })
+      );
+  }
+
+  getOrdini(): Observable<HttpResponse<InfoOrdine[]>> {
+    return this.httpClient.get<any>(this.url, {observe: 'response'})
+      .pipe(catchError((error: HttpErrorResponse) => {
+          console.log('an error occurred while getting orders', error);
           this.errorService.showError(CONSTANTS.get_order_request_error_message.concat(': error code ', error.status.toString()))
           return throwError(() => new Error(CONSTANTS.get_order_request_error_message));
         })

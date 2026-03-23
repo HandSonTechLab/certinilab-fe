@@ -2,12 +2,12 @@ import {Routes} from '@angular/router';
 import {ClientsComponent} from './pages/clients/clients.component';
 import {SuppliersComponent} from './pages/suppliers/suppliers.component';
 import {ReportComponent} from './pages/report/report.component';
-import {SaleComponent} from './pages/sale/sale.component';
 import {CreateClientComponent} from './pages/create-client/create-client.component';
 import {CreateSupplierComponent} from './pages/create-supplier/create-supplier.component';
 import {MagazzinoComponent} from './pages/magazzino/magazzino.component';
 import {GestioneLottiComponent} from './pages/gestione-lotti/gestione-lotti.component';
 import {RegistrazioneVenditaComponent} from './pages/registrazione-vendita/registrazione-vendita.component';
+import {VenditeComponent} from './pages/vendite/vendite.component';
 // import {MsalGuard} from '@azure/msal-angular';
 
 export const routes: Routes = [
@@ -47,14 +47,13 @@ export const routes: Routes = [
     //canActivate: [MsalGuard]
   },
   {
-    path: 'vendita-al-banco',
-    component: SaleComponent,
-    //canActivate: [MsalGuard]
-  },
-  {
     path: 'lotti',
     component: MagazzinoComponent,
     //canActivate: [MsalGuard]
+  },
+  {
+    path: 'vendite',
+    component: VenditeComponent
   },
   {
     path: 'gestione-vendite',
