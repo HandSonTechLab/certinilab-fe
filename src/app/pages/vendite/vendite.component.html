@@ -39,7 +39,7 @@
                 <td>{{ order.stato }}</td>
                 <td>{{ order.totaleOrdine }}</td>
                 <td>
-                  <i class="bi bi-pencil-square p-2 pointer"></i>
+                  <i class="bi bi-pencil-square p-2 pointer" (click)="downloadDocuments(order.id)"></i>
                   <i class="bi bi-cloud-download p-2 pointer"></i>
                 </td>
               </tr>

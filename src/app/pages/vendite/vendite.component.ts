@@ -3,6 +3,7 @@ import {InfoOrdine} from '../../model/ordine.model';
 import {OrdiniService} from '../../services/ordini.service';
 import {Subscription} from 'rxjs';
 import {Router} from '@angular/router';
+import {DocumentiService} from '../../services/documenti.service';
 
 declare var bootstrap: any;
 
@@ -17,6 +18,7 @@ export class VenditeComponent implements OnInit, OnDestroy {
   protected orders?: InfoOrdine[] | null;
   private subscriptions: Subscription[] = [];
   private orderService = inject(OrdiniService);
+  private documentiService = inject(DocumentiService);
 
   constructor(private router: Router) {
   }
@@ -47,6 +49,20 @@ export class VenditeComponent implements OnInit, OnDestroy {
       },
       complete: () => {
         this.subscriptions.push(subscription);
+      }
+    })
+  }
+
+  downloadDocuments(id: number) {
+    this.documentiService.getDocZipByOrdineId(id).subscribe({
+      next: (zipBlob) => {
+        const blob = new Blob([zipBlob], {type: 'application/zip'});
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `documenti-ordine-${id}.zip`; // nome file lato client
+        a.click();
+        window.URL.revokeObjectURL(url);
       }
     })
   }
