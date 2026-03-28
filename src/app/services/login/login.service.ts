@@ -28,10 +28,6 @@ export class LoginService {
     this.msalService.loginRedirect();
   }
 
-  getActiveAccount() {
-    return this.msalService.instance.getActiveAccount();
-  }
-
   // Gestisce il redirect dopo il login in Entra
   loginHandleRedirect() {
       this.msalService.initialize().subscribe(() => {

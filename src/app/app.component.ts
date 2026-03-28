@@ -5,11 +5,12 @@ import {ErrorService} from './shared/error.service';
 import {ErrorModalComponent} from './shared/modal/error-modal/error-modal.component';
 import {CONSTANTS} from './shared/constants';
 import {LoginService} from './services/login/login.service';
+import {NgIf} from '@angular/common';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [NavbarComponent, RouterOutlet, ErrorModalComponent],
+  imports: [NavbarComponent, RouterOutlet, ErrorModalComponent, NgIf],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -19,8 +20,11 @@ export class AppComponent implements OnInit {
   private loginService = inject(LoginService);
   error = this.errorService.error;
   protected readonly errorTitle = CONSTANTS.create_client_request_error_title;
+  protected isLoggedIn = false;
 
   ngOnInit(): void {
+    console.log('AppComponent initialized');
+    this.isLoggedIn = localStorage.getItem('msal.2.account.keys') !== null;
     // handle redirect dopo login in Entra ID
     this.loginService.loginHandleRedirect();
     // handle token expired
