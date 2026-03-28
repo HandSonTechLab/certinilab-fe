@@ -1,9 +1,8 @@
 import {ApplicationConfig} from '@angular/core';
 import {provideRouter} from '@angular/router';
-
 import {routes} from './app.routes';
-import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
-/*import {
+import {HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
+import {
   MSAL_GUARD_CONFIG,
   MSAL_INSTANCE,
   MSAL_INTERCEPTOR_CONFIG,
@@ -11,7 +10,8 @@ import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
   MsalGuard,
   MsalInterceptor,
   MsalService
-} from '@azure/msal-angular';*/
+} from '@azure/msal-angular';
+import {MSALGuardConfigFactory, MSALInstanceFactory, MSALInterceptorConfigFactory} from './auth-config';
 
 // dependency injection container
 export const appConfig: ApplicationConfig = {
@@ -19,7 +19,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(withInterceptorsFromDi()),
 
-    /*    // MSAL core
+    // MSAL core
         {
           provide: MSAL_INSTANCE,
           useFactory: MSALInstanceFactory
@@ -39,7 +39,7 @@ export const appConfig: ApplicationConfig = {
           provide: HTTP_INTERCEPTORS,
           useClass: MsalInterceptor,
           multi: true
-        }*/
+        }
   ],
 
 }

@@ -4,9 +4,9 @@ import {MsalGuardConfiguration, MsalInterceptorConfiguration} from '@azure/msal-
 export const msalConfig = {
   auth: {
     // ID dell'applicazione registrata in Azure AD e dice ad Entra ID qual è il client che sta chiedendo i token.
-    clientId: '36e90f61-63f5-46be-abc9-60edea3dba23',
+    clientId: '3341bcc2-589a-4911-bbea-c32fa387491d',
     // endpoint dell'external tenant e serve a MSAL per indirizzare l'utente alla login e da dove accettare i token.
-    authority: 'https://poultryfarmsaas.ciamlogin.com/ce8eef6a-5650-4ca9-89cd-92c5d99fb298',
+    authority: 'https://cloudsaasmanagement.ciamlogin.com/c7f158c6-9d4c-4789-ae4e-664fbdb8f405',
     // url di DEV utile per redirect dove Entra ID rimanda l'utente dopo la login. Questo URL deve essere registrato anche nell'APP Registration.
     redirectUri: 'http://localhost:4200',
     postLogoutRedirectUri: 'http://localhost:4200', // oppure una pagina libera da MsalGuard /welcome

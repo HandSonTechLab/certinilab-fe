@@ -22,9 +22,9 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     // handle redirect dopo login in Entra ID
-    //(this.loginService.loginHandleRedirect();
+    this.loginService.loginHandleRedirect();
     // handle token expired
-    //(this.loginService.tokenExpiredHandler()
+    this.loginService.tokenExpiredHandler()
   }
 
 }

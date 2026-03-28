@@ -8,56 +8,58 @@ import {MagazzinoComponent} from './pages/magazzino/magazzino.component';
 import {GestioneLottiComponent} from './pages/gestione-lotti/gestione-lotti.component';
 import {RegistrazioneVenditaComponent} from './pages/registrazione-vendita/registrazione-vendita.component';
 import {VenditeComponent} from './pages/vendite/vendite.component';
-// import {MsalGuard} from '@azure/msal-angular';
+import {MsalGuard} from '@azure/msal-angular';
 
 export const routes: Routes = [
   {
     path: '',
     component: MagazzinoComponent,
-    //canActivate: [MsalGuard]
+    canActivate: [MsalGuard]
   },
   {
     path: 'clienti',
     component: ClientsComponent,
-    //canActivate: [MsalGuard]
+    canActivate: [MsalGuard]
   },
   {
     path: 'nuovi-clienti',
     component: CreateClientComponent,
-    //canActivate: [MsalGuard]
+    canActivate: [MsalGuard]
   },
   {
     path: 'fornitori',
     component: SuppliersComponent,
-    //canActivate: [MsalGuard]
+    canActivate: [MsalGuard]
   },
   {
     path: 'nuovi-fornitori',
     component: CreateSupplierComponent,
-    //canActivate: [MsalGuard]
+    canActivate: [MsalGuard]
   },
   {
     path: 'gestione-lotti',
     component: GestioneLottiComponent,
-    //canActivate: [MsalGuard]
+    canActivate: [MsalGuard]
   },
   {
     path: 'report',
     component: ReportComponent,
-    //canActivate: [MsalGuard]
+    canActivate: [MsalGuard]
   },
   {
     path: 'lotti',
     component: MagazzinoComponent,
-    //canActivate: [MsalGuard]
+    canActivate: [MsalGuard]
   },
   {
     path: 'vendite',
-    component: VenditeComponent
+    component: VenditeComponent,
+    canActivate: [MsalGuard]
   },
   {
     path: 'gestione-vendite',
-    component: RegistrazioneVenditaComponent
+    component: RegistrazioneVenditaComponent,
+    canActivate: [MsalGuard]
   },
   {
     path: '**',

@@ -1,6 +1,14 @@
 import {Injectable} from '@angular/core';
-import {EventError, InteractionRequiredAuthError} from '@azure/msal-browser';
-import {Subject} from 'rxjs';
+import {
+  AuthenticationResult,
+  EventError,
+  EventMessage,
+  EventType,
+  InteractionRequiredAuthError
+} from '@azure/msal-browser';
+import {Subject, takeUntil} from 'rxjs';
+import {filter} from 'rxjs/operators';
+import {MsalBroadcastService, MsalService} from '@azure/msal-angular';
 
 @Injectable({
   providedIn: 'root'
@@ -8,8 +16,8 @@ import {Subject} from 'rxjs';
 export class LoginService {
   private destroying$ = new Subject<void>();
 
-  /*  constructor(private msalService: MsalService, private msalBroadcast: MsalBroadcastService) {
-    }*/
+  constructor(private msalService: MsalService, private msalBroadcast: MsalBroadcastService) {
+  }
 
   logout() {
     localStorage.clear();
@@ -17,11 +25,11 @@ export class LoginService {
   }
 
   login(): void {
-    //this.msalService.loginRedirect();
+    this.msalService.loginRedirect();
   }
 
   // Gestisce il redirect dopo il login in Entra
-  /*  loginHandleRedirect() {
+  loginHandleRedirect() {
       this.msalService.initialize().subscribe(() => {
         this.msalService.instance
           // handleRedirectPromise gestisce il flusso OAuth2/OIDC Authorization Code + PKCE
@@ -55,7 +63,7 @@ export class LoginService {
             this.login();
           }
         });
-    }*/
+    }
 
   isNecessaryToGetANewSilentToken(eventError: EventError): boolean {
     return this.isEventErrorInstanceOfInteractionAuthError(eventError) || this.isTheErrorMessageTypeOfInteractionRequired(eventError);
