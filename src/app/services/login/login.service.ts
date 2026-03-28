@@ -21,11 +21,15 @@ export class LoginService {
 
   logout() {
     localStorage.clear();
-    //this.msalService.logoutRedirect();
+    this.msalService.logoutRedirect();
   }
 
   login(): void {
     this.msalService.loginRedirect();
+  }
+
+  getActiveAccount() {
+    return this.msalService.instance.getActiveAccount();
   }
 
   // Gestisce il redirect dopo il login in Entra

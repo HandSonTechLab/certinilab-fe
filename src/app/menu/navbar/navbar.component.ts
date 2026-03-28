@@ -1,7 +1,7 @@
 import {Component, OnInit, signal} from '@angular/core';
 import {NavigationEnd, Router, RouterLink} from '@angular/router';
 import {MENU_ITEMS} from '../../menu-items';
-import {NgForOf} from '@angular/common';
+import {NgForOf, NgIf} from '@angular/common';
 import {filter} from 'rxjs/operators';
 import {FormsModule} from '@angular/forms';
 import {LoginService} from '../../services/login/login.service';
@@ -11,7 +11,8 @@ import {LoginService} from '../../services/login/login.service';
   imports: [
     RouterLink,
     NgForOf,
-    FormsModule
+    FormsModule,
+    NgIf
   ],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
@@ -22,6 +23,7 @@ export class NavbarComponent implements OnInit {
   }
   protected readonly menuItems = MENU_ITEMS;
   protected selectedItem = signal(this.menuItems[2]);
+  protected isLoggedIn = false;
 
   ngOnInit() {
     // Aggiorna stato all'avvio e ad ogni navigazione
@@ -37,6 +39,7 @@ export class NavbarComponent implements OnInit {
         })
         this.selectedItem.set(menuItem);
       });
+    this.isLoggedIn = localStorage.getItem('msal.2.account.keys') !== null;
   }
 
   logout() {

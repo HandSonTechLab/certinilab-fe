@@ -9,6 +9,7 @@ import {GestioneLottiComponent} from './pages/gestione-lotti/gestione-lotti.comp
 import {RegistrazioneVenditaComponent} from './pages/registrazione-vendita/registrazione-vendita.component';
 import {VenditeComponent} from './pages/vendite/vendite.component';
 import {MsalGuard} from '@azure/msal-angular';
+import {LogoutSuccessComponent} from './pages/logout-success/logout-success.component';
 
 export const routes: Routes = [
   {
@@ -60,6 +61,10 @@ export const routes: Routes = [
     path: 'gestione-vendite',
     component: RegistrazioneVenditaComponent,
     canActivate: [MsalGuard]
+  },
+  {
+    path: 'logout-success',
+    component: LogoutSuccessComponent,
   },
   {
     path: '**',
