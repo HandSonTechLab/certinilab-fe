@@ -1,6 +1,15 @@
 import {InteractionType, type IPublicClientApplication, LogLevel, PublicClientApplication} from '@azure/msal-browser';
 import {MsalGuardConfiguration, MsalInterceptorConfiguration} from '@azure/msal-angular';
 
+
+// L'APP_ID della app registration "poultryfarm-api" che creerai in Entra
+// Sostituisci con il valore reale dopo averla creata
+const API_APP_ID = '19c1ec73-39ac-4e18-aead-31ee6f3d3230';
+
+// L'URL base di APIM (lo conoscerai dopo aver creato l'istanza APIM)
+const APIM_BASE_URL = 'https://apim-poultryfarm.azure-api.net';
+
+
 export const msalConfig = {
   auth: {
     // ID dell'applicazione registrata in Azure AD e dice ad Entra ID qual è il client che sta chiedendo i token.
@@ -32,12 +41,12 @@ export const msalConfig = {
 
 // loginRequest è l'oggeto che descrive cosa chiedere a Entra ID durante la login
 // oggetto usato da MSALGuardConfigFactory
-// In questo caso stiamo chiedendo:
-// - openid: per ottenere un ID token che identifica l'utente
-// - profile: per ottenere informazioni di base sull'utente come nome e cognome nel token
-// - email: per ottenere l'email dell'utente inclusa nei claim del token
+// openid, profile, email → servono per l'ID token
+// api://<APP_ID>/user_impersonation → dice a Entra di emettere anche
+// un access token per poultryfarm-api, con aud = api://<APP_ID>
+
 export const loginRequest = {
-  scopes: ['openid', 'profile', 'email']
+  scopes: ['openid', 'profile', 'email', `api://${API_APP_ID}/user_impersonation`]
 };
 
 // MSAL instance
@@ -59,8 +68,11 @@ export function MSALInterceptorConfigFactory(): MsalInterceptorConfiguration {
   return {
     // Se per ottenere un token per una certa API manca il consenso, allora MSAL deve fare redirect per chiedere il consenso all'utente
     interactionType: InteractionType.Redirect,
-    // mappa URL -> SCOPEs, usata da MSAL per capire quali scope chiedere a Entra ID quando intercetta una chiamata HTTP verso un certo URL
+    // Dice a MsalInterceptor: "ogni volta che Angular fa una chiamata HTTP
+    // verso un URL che inizia con APIM_BASE_URL, allega automaticamente
+    // l'access token con lo scope user_impersonation nell'header Authorization"
     protectedResourceMap: new Map<string, string[]>([
+      [APIM_BASE_URL, [`api://${API_APP_ID}/user_impersonation`]]
     ])
   };
 }
