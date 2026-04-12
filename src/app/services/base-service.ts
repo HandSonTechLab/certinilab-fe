@@ -3,8 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {ErrorService} from '../shared/error.service';
 
 export class BaseService {
-  protected basePath = '/api/v1';
-  protected url = `http://localhost:8080${this.basePath}`;
+  protected url = `https://apim-poultryfarm.azure-api.net`;
   protected httpClient = inject(HttpClient);
   protected errorService = inject(ErrorService);
 

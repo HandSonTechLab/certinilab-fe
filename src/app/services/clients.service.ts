@@ -15,7 +15,7 @@ import {BaseService} from './base-service';
 export class ClientsService extends BaseService {
 
   constructor() {
-    super("clienti");
+    super("cliente/api/v1/clienti");
   }
 
   createClient(client: ClientModel): Observable<HttpResponse<ClientModel>> {
