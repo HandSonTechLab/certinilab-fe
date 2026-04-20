@@ -13,7 +13,7 @@ import {Fornitore} from '../model/fornitore.model';
 export class SupplierService extends BaseService {
 
   constructor() {
-    super("fornitori");
+    super("fornitore", "fornitori");
   }
 
   createSupplier(supplierModel: SupplierModel): Observable<HttpResponse<SupplierModel>> {

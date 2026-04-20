@@ -11,7 +11,7 @@ import {CONSTANTS} from '../shared/constants';
 export class AnimaliService extends BaseService {
 
   constructor() {
-    super("animali");
+    super("lotto", "animali");
   }
 
   getAnimali(): Observable<HttpResponse<Animale[]>> {

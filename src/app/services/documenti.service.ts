@@ -10,7 +10,7 @@ import {CONSTANTS} from '../shared/constants';
 export class DocumentiService extends BaseService {
 
   constructor() {
-    super("documenti");
+    super("documento", "documenti");
   }
 
   getDocZipByOrdineId(orderId: number): Observable<Blob> {

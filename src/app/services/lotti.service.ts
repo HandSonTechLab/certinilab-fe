@@ -15,7 +15,7 @@ export class LottiService extends BaseService {
   private http = inject(HttpClient);
 
   public constructor() {
-    super('lotti');
+    super('lotto', 'lotti');
   }
 
   /**

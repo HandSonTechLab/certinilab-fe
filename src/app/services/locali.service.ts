@@ -11,7 +11,7 @@ import {CONSTANTS} from '../shared/constants';
 export class LocaliService extends BaseService {
 
   constructor() {
-    super("locali");
+    super("lotto", "locali");
   }
 
   getLocali(): Observable<HttpResponse<Locale[]>> {

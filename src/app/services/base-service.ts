@@ -4,10 +4,11 @@ import {ErrorService} from '../shared/error.service';
 
 export class BaseService {
   protected url = `https://apim-poultryfarm.azure-api.net`;
+  protected basePath = `api/v1`;
   protected httpClient = inject(HttpClient);
   protected errorService = inject(ErrorService);
 
-  constructor(resourceUrl: string) {
-    this.url = `${this.url}/${resourceUrl}`;
+  constructor(apimSuffic: string, resourceUrl: string) {
+    this.url = `${this.url}/${apimSuffic}/${this.basePath}/${resourceUrl}`;
   }
 }

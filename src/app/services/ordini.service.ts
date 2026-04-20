@@ -11,7 +11,7 @@ import {CONSTANTS} from '../shared/constants';
 export class OrdiniService extends BaseService {
 
   constructor() {
-    super("ordini");
+    super("ordine", "ordini");
   }
 
   createOrdine(body: OrdineCreateRequest) {
