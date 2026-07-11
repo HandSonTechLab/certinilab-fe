@@ -40,6 +40,7 @@ export class RegistrazioneVenditaComponent implements OnInit {
   clienteSearch = new FormControl('');
   clienti: ClientDtoModel[] = [];
   locali: Locale[] = [];
+  protected readonly defaultPriceForBox: number = 0.50; // prezzo scatole di default, modificabile dall'utente
   animaliPerLocale: Record<number, AnimaleDisponibile[]> = {};
 
   form!: FormGroup;
@@ -217,10 +218,17 @@ export class RegistrazioneVenditaComponent implements OnInit {
 
   // --- mangimi ---
 
+  // opzioni predefinite per il combo Descrizione mangime, con relativo prezzo/kg di default
+  protected readonly MANGIME_OPTIONS: { descrizione: string; prezzoAlKg: number }[] = [
+    {descrizione: 'Mangime ovaiole', prezzoAlKg: 0.67},
+    {descrizione: 'Mangime 2 periodo polli', prezzoAlKg: 0.70},
+  ];
+
   newRigaMangime(): FormGroup {
+    const defaultMangime = this.MANGIME_OPTIONS[0];
     return this.fb.group({
-      descrizione: [''],
-      prezzoAlKg: [null, [Validators.required, Validators.min(0.01)]],
+      descrizione: [defaultMangime.descrizione],
+      prezzoAlKg: [defaultMangime.prezzoAlKg, [Validators.required, Validators.min(0.01)]],
       kg: [null, [Validators.required, Validators.min(0.01)]],
       totaleRiga: [{value: 0, disabled: true}],
     });
@@ -233,6 +241,16 @@ export class RegistrazioneVenditaComponent implements OnInit {
   removeRigaMangime(index: number): void {
     this.mangimi.removeAt(index);
     this.calcolaTotaleMangime();
+  }
+
+  onMangimeDescrizioneChange(index: number): void {
+    const group = this.mangimi.at(index) as FormGroup;
+    const descrizione = group.get('descrizione')?.value;
+    const selected = this.MANGIME_OPTIONS.find(opt => opt.descrizione === descrizione);
+    if (selected) {
+      group.get('prezzoAlKg')?.setValue(selected.prezzoAlKg);
+    }
+    this.onValoriMangimeChange(index);
   }
 
   onValoriMangimeChange(index: number): void {

@@ -134,7 +134,6 @@ export class MagazzinoComponent implements OnInit {
       }
     });*/
 
-
   dashboard: Signal<HttpResponse<LocaleDashboard>> = toSignal(this.service.getDashboardData(), {
     initialValue: EMPTY_DASHBOARD
   })!;
