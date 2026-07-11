@@ -8,59 +8,71 @@ import {MagazzinoComponent} from './pages/magazzino/magazzino.component';
 import {GestioneLottiComponent} from './pages/gestione-lotti/gestione-lotti.component';
 import {RegistrazioneVenditaComponent} from './pages/registrazione-vendita/registrazione-vendita.component';
 import {VenditeComponent} from './pages/vendite/vendite.component';
-import {MsalGuard} from '@azure/msal-angular';
+// TODO(msal-disabled): MSAL/Entra ID authentication is temporarily disabled. Uncomment this
+// import and every `canActivate: [MsalGuard]` line below to restore route protection.
+// import {MsalGuard} from '@azure/msal-angular';
 import {LogoutSuccessComponent} from './pages/logout-success/logout-success.component';
 
 export const routes: Routes = [
   {
     path: '',
     component: MagazzinoComponent,
-    canActivate: [MsalGuard]
+    // TODO(msal-disabled): route guard disabled, see above.
+    // canActivate: [MsalGuard]
   },
   {
     path: 'clienti',
     component: ClientsComponent,
-    canActivate: [MsalGuard]
+    // TODO(msal-disabled): route guard disabled, see above.
+    // canActivate: [MsalGuard]
   },
   {
     path: 'nuovi-clienti',
     component: CreateClientComponent,
-    canActivate: [MsalGuard]
+    // TODO(msal-disabled): route guard disabled, see above.
+    // canActivate: [MsalGuard]
   },
   {
     path: 'fornitori',
     component: SuppliersComponent,
-    canActivate: [MsalGuard]
+    // TODO(msal-disabled): route guard disabled, see above.
+    // canActivate: [MsalGuard]
   },
   {
     path: 'nuovi-fornitori',
     component: CreateSupplierComponent,
-    canActivate: [MsalGuard]
+    // TODO(msal-disabled): route guard disabled, see above.
+    // canActivate: [MsalGuard]
   },
   {
     path: 'gestione-lotti',
     component: GestioneLottiComponent,
-    canActivate: [MsalGuard]
+    // TODO(msal-disabled): route guard disabled, see above.
+    // canActivate: [MsalGuard]
   },
   {
     path: 'report',
     component: ReportComponent,
-    canActivate: [MsalGuard]
+    // TODO(msal-disabled): route guard disabled, see above.
+    // canActivate: [MsalGuard]
   },
   {
     path: 'lotti',
     component: MagazzinoComponent,
-    canActivate: [MsalGuard]
+    // TODO(msal-disabled): route guard disabled, see above.
+    // canActivate: [MsalGuard]
   },
   {
     path: 'vendite',
     component: VenditeComponent,
-    canActivate: [MsalGuard]
+    // TODO(msal-disabled): route guard disabled, see above.
+    // canActivate: [MsalGuard]
   },
   {
     path: 'gestione-vendite',
     component: RegistrazioneVenditaComponent,
-    canActivate: [MsalGuard]
+    // TODO(msal-disabled): route guard disabled, see above.
+    // canActivate: [MsalGuard]
   },
   {
     path: 'logout-success',

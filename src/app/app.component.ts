@@ -24,11 +24,17 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     console.log('AppComponent initialized');
-    this.isLoggedIn = localStorage.getItem('msal.2.account.keys') !== null;
-    // handle redirect dopo login in Entra ID
-    this.loginService.loginHandleRedirect();
-    // handle token expired
-    this.loginService.tokenExpiredHandler()
+    // TODO(msal-disabled): MSAL/Entra ID authentication is temporarily disabled.
+    // Original MSAL-account check disabled; hardcoded to true so the navbar/app remain
+    // usable while auth is off. Restore the line below (and remove the hardcode) to
+    // re-enable login-gated visibility.
+    // this.isLoggedIn = localStorage.getItem('msal.2.account.keys') !== null;
+    this.isLoggedIn = true;
+    // TODO(msal-disabled): restore these calls to re-enable MSAL redirect/token handling.
+    // // handle redirect dopo login in Entra ID
+    // this.loginService.loginHandleRedirect();
+    // // handle token expired
+    // this.loginService.tokenExpiredHandler()
   }
 
 }

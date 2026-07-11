@@ -1,3 +1,9 @@
+// TODO(msal-disabled): MSAL/Entra ID authentication is temporarily disabled project-wide.
+// This entire file's contents have been commented out because it is only consumed by
+// app.config.ts, where the MSAL providers that reference these factories are also disabled.
+// To restore authentication, uncomment this file and the corresponding block in app.config.ts.
+
+/*
 import {InteractionType, type IPublicClientApplication, LogLevel, PublicClientApplication} from '@azure/msal-browser';
 import {MsalGuardConfiguration, MsalInterceptorConfiguration} from '@azure/msal-angular';
 
@@ -64,3 +70,4 @@ export function MSALInterceptorConfigFactory(): MsalInterceptorConfiguration {
     ])
   };
 }
+*/

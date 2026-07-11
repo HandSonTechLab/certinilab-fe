@@ -39,7 +39,12 @@ export class NavbarComponent implements OnInit {
         })
         this.selectedItem.set(menuItem);
       });
-    this.isLoggedIn = localStorage.getItem('msal.2.account.keys') !== null;
+    // TODO(msal-disabled): MSAL/Entra ID authentication is temporarily disabled.
+    // Original MSAL-account check disabled; hardcoded to true so the logout control
+    // remains visible/consistent while auth is off. Restore the line below (and remove
+    // the hardcode) to re-enable login-gated visibility.
+    // this.isLoggedIn = localStorage.getItem('msal.2.account.keys') !== null;
+    this.isLoggedIn = true;
   }
 
   logout() {
