@@ -273,7 +273,7 @@ export class RegistrazioneVenditaComponent implements OnInit {
   newRigaScatola(): FormGroup {
     return this.fb.group({
       descrizione: [''],
-      prezzoUnitario: [null, [Validators.required, Validators.min(0.01)]],
+      prezzoUnitario: [this.defaultPriceForBox, [Validators.required, Validators.min(0.01)]],
       quantita: [null, [Validators.required, Validators.min(1)]],
       totaleRiga: [{value: 0, disabled: true}],
     });
