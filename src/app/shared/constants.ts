@@ -38,4 +38,8 @@ export const CONSTANTS = {
   get_order_request_error_message: 'Impossibile recuperare  l\'ordine richiesto',
   create_order_success: 'Ordine creato con successo',
   update_order_success: 'Ordine aggiornato con successo',
+
+  // report
+  report_giornaliero_request_error_message: 'Recupero report giornaliero fallito!',
+  report_mensile_request_error_message: 'Recupero report mensile fallito!',
 }

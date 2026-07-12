@@ -1,7 +1,164 @@
-<div class="container-fluid custom-margin-top">
-  <div class="row">
-    <div class="col-12">
-      <p>Lavori in corso: report</p>
+<div class="container-fluid p-4 bg-light">
+
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="page-title mb-0">Report Vendite</h2>
+      <span class="text-muted">Analizza le vendite giornaliere e mensili</span>
     </div>
   </div>
+
+  <!-- FILTRI -->
+  <div class="card border-0 shadow-sm mb-4">
+    <div class="card-body p-4">
+      <div class="row g-3 align-items-end">
+        <div class="col-12 col-md-auto">
+          <label class="form-label d-block">Periodo</label>
+          <div class="btn-group" role="group" aria-label="Tipo di periodo">
+            <button type="button" class="btn"
+                    [class.btn-primary]="tipoPeriodo() === 'giornaliero'"
+                    [class.btn-outline-primary]="tipoPeriodo() !== 'giornaliero'"
+                    (click)="selezionaTipo('giornaliero')">
+              Giornaliero
+            </button>
+            <button type="button" class="btn"
+                    [class.btn-primary]="tipoPeriodo() === 'mensile'"
+                    [class.btn-outline-primary]="tipoPeriodo() !== 'mensile'"
+                    (click)="selezionaTipo('mensile')">
+              Mensile
+            </button>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-auto">
+          @if (tipoPeriodo() === 'giornaliero') {
+            <label class="form-label" for="reportData">Data</label>
+            <input id="reportData" type="date" class="form-control"
+                   [value]="data()"
+                   (change)="onDataChange($any($event.target).value)">
+          } @else {
+            <label class="form-label" for="reportMese">Mese</label>
+            <input id="reportMese" type="month" class="form-control"
+                   [value]="mese()"
+                   (change)="onMeseChange($any($event.target).value)">
+          }
+        </div>
+
+        <div class="col-12 col-md-auto">
+          <button type="button" class="btn btn-primary px-4" (click)="generaReport()" [disabled]="loading()">
+            Genera Report
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOADING -->
+  @if (loading()) {
+    <div class="text-center p-5">
+      <div class="spinner-border text-primary" role="status"></div>
+    </div>
+  } @else if (!report()) {
+    @if (hasSearched()) {
+      <div class="text-center p-5">
+        <i class="bi bi-clipboard2-x display-4 text-muted"></i>
+        <p class="text-muted mt-3 mb-0">Impossibile recuperare il report per il periodo selezionato.</p>
+      </div>
+    }
+  } @else if (report()!.numeroOrdini === 0) {
+    <div class="text-center p-5">
+      <i class="bi bi-clipboard2-data display-4 text-muted"></i>
+      <p class="text-muted mt-3 mb-0">Nessuna vendita registrata per il periodo selezionato.</p>
+    </div>
+  } @else {
+    <!-- KPI -->
+    <div class="row mb-4 g-4">
+      <div class="col-12 col-sm-6 col-lg-3">
+        <div class="card border-0 shadow-sm overflow-hidden h-100">
+          <div class="card-body p-4 bg-white border-start border-5 border-primary">
+            <h6 class="text-muted text-uppercase fw-bold mb-1">Totale vendite</h6>
+            <h2 class="display-6 fw-bold mb-0 text-primary">{{ report()!.totaleVendite | number:'1.2-2' }} €</h2>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-sm-6 col-lg-3">
+        <div class="card border-0 shadow-sm overflow-hidden h-100">
+          <div class="card-body p-4 bg-white border-start border-5 border-success">
+            <h6 class="text-muted text-uppercase fw-bold mb-1">Ordini venduti</h6>
+            <h2 class="display-6 fw-bold mb-0 text-success">{{ report()!.numeroOrdini }}</h2>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-sm-6 col-lg-3">
+        <div class="card border-0 shadow-sm overflow-hidden h-100">
+          <div class="card-body p-4 bg-white border-start border-5 border-warning">
+            <h6 class="text-muted text-uppercase fw-bold mb-1">Animali venduti</h6>
+            <h2 class="display-6 fw-bold mb-0 text-warning">{{ report()!.capiVenduti }}</h2>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-sm-6 col-lg-3">
+        <div class="card border-0 shadow-sm overflow-hidden h-100">
+          <div class="card-body p-4 bg-white border-start border-5 border-info">
+            <h6 class="text-muted text-uppercase fw-bold mb-1">Scontrino medio</h6>
+            <h2 class="display-6 fw-bold mb-0 text-info">{{ report()!.scontrinoMedio | number:'1.2-2' }} €</h2>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RICAVO PER CATEGORIA -->
+    <div class="card border-0 shadow-sm mb-4">
+      <div class="card-header bg-white fw-semibold">Vendita per categoria</div>
+      <div class="card-body p-4">
+        @for (voce of report()!.ricavoPerCategoria; track voce.categoria) {
+          <div class="mb-3">
+            <div class="d-flex justify-content-between mb-1">
+              <span class="fw-semibold">{{ categoriaLabels[voce.categoria] }}</span>
+              <span class="text-muted">{{ voce.ricavo | number:'1.2-2' }} € ({{ voce.percentuale | number:'1.0-0' }}
+                %)</span>
+            </div>
+            <div class="progress" style="height: 18px; border-radius: 8px;">
+              <div class="progress-bar" [style.width.%]="voce.percentuale"></div>
+            </div>
+          </div>
+        } @empty {
+          <p class="text-muted mb-0">Nessun dato di categoria disponibile.</p>
+        }
+      </div>
+    </div>
+
+    <!-- DETTAGLIO RAZZE (ANIMALI) -->
+    <div class="card border-0 shadow-sm mb-4">
+      <div class="card-header bg-white fw-semibold">Vendite per razza</div>
+      <div class="table-responsive">
+        <table class="table table-hover mb-0 align-middle">
+          <thead>
+          <tr>
+            <th>Razza</th>
+            <th class="text-end">Quantità</th>
+            <th class="text-end">Vendita</th>
+            <th class="text-end">% sul totale animali</th>
+          </tr>
+          </thead>
+          <tbody>
+            @for (razza of report()!.dettaglioRazze; track razza.razza) {
+              <tr>
+                <td>{{ razza.razza }}</td>
+                <td class="text-end">{{ razza.capiVenduti }}</td>
+                <td class="text-end">{{ razza.ricavo | number:'1.2-2' }} €</td>
+                <td class="text-end">{{ razza.percentuale | number:'1.0-0' }}%</td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="4" class="text-center text-muted py-4">Nessuna vendita di animali nel periodo
+                  selezionato.
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+
 </div>
