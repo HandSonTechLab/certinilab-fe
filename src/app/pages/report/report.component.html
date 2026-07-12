@@ -96,6 +96,14 @@
           </div>
         </div>
       </div>
+    <div class="col-12 col-sm-6 col-lg-3">
+      <div class="card border-0 shadow-sm overflow-hidden h-100">
+        <div class="card-body p-4 bg-white border-start border-5 border-danger">
+          <h6 class="text-muted text-uppercase fw-bold mb-1">Animali morti</h6>
+          <h2 class="display-6 fw-bold mb-0 text-danger">{{ report()!.capiMorti }}</h2>
+          </div>
+        </div>
+      </div>
       <div class="col-12 col-sm-6 col-lg-3">
         <div class="card border-0 shadow-sm overflow-hidden h-100">
           <div class="card-body p-4 bg-white border-start border-5 border-info">
@@ -151,6 +159,35 @@
             } @empty {
               <tr>
                 <td colspan="4" class="text-center text-muted py-4">Nessuna vendita di animali nel periodo
+                  selezionato.
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+  </div>
+
+    <!-- DETTAGLIO RAZZE MORTI (ANIMALI) -->
+    <div class="card border-0 shadow-sm mb-4">
+      <div class="card-header bg-white fw-semibold">Animali morti per razza</div>
+      <div class="table-responsive">
+        <table class="table table-hover mb-0 align-middle">
+          <thead>
+          <tr>
+            <th>Razza</th>
+            <th class="text-end">Animali morti</th>
+          </tr>
+          </thead>
+          <tbody>
+            @for (razza of report()!.dettaglioRazzeMorti; track razza.razza) {
+              <tr>
+                <td>{{ razza.razza }}</td>
+                <td class="text-end">{{ razza.capiMorti }}</td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="2" class="text-center text-muted py-4">Nessun decesso registrato nel periodo
                   selezionato.
                 </td>
               </tr>
