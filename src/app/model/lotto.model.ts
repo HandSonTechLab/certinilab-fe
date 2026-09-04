@@ -20,4 +20,5 @@ export interface LottiLocaleDTO {
   fornitoreId: number;
   dataDiNascita: string;
   prezzoUnitario: number;
+  quantita: number; // quantità di animali attualmente disponibili nel lotto
 }

@@ -121,6 +121,7 @@ export class RegistrazioneVenditaComponent implements OnInit {
       idLotto: [null, Validators.required], // valorizzato quando scegli animale
       tipoVendita: ['AL_KG', Validators.required], // AL_KG | PER_UNITA
       quantita: [1, [Validators.required, Validators.min(1)]],
+      quantitaDisponibile: [{value: null, disabled: true}], // quantità disponibile nel lotto (solo per validazione/UI)
       peso: [null], // validato dinamicamente
       prezzoUnitario: [null, [Validators.required, Validators.min(0.01)]],
       totaleRiga: [{value: 0, disabled: true}],
@@ -169,8 +170,27 @@ export class RegistrazioneVenditaComponent implements OnInit {
       group.get('codiceProvenienza')?.setValue(found.codiceProvenienza);
       group.get('fornitoreId')?.setValue(found.fornitoreId);
       group.get('prezzoUnitario')?.setValue(found.prezzoUnitario ? found.prezzoUnitario : null);
+      this.applyQuantitaValidators(group, found.quantita);
     }
 
+  }
+
+  /**
+   * Applica i validatori sulla quantità in base alla quantità disponibile nel lotto
+   * (campo `quantita` restituito dalla GET /lotti/locale/{localeId}).
+   * La quantità richiesta non può superare quella disponibile.
+   */
+  private applyQuantitaValidators(group: FormGroup, quantitaDisponibile: number | null | undefined): void {
+    group.get('quantitaDisponibile')?.setValue(quantitaDisponibile ?? null, {emitEvent: false});
+
+    const validators = [Validators.required, Validators.min(1)];
+    if (quantitaDisponibile != null) {
+      validators.push(Validators.max(quantitaDisponibile));
+    }
+
+    const quantitaCtrl = group.get('quantita');
+    quantitaCtrl?.setValidators(validators);
+    quantitaCtrl?.updateValueAndValidity();
   }
 
   onTipoVenditaChange(index: number): void {
@@ -462,6 +482,7 @@ export class RegistrazioneVenditaComponent implements OnInit {
             fornitoreId: element.fornitoreId,
             descrizione: `${element.razza} ${element.colore}`,
             prezzoUnitario: element.prezzoUnitario,
+            quantita: element.quantita,
           }
           animaliDisponibili.push(animale);
         })
@@ -573,6 +594,7 @@ export class RegistrazioneVenditaComponent implements OnInit {
         animaleId: found.idAnimale,
         idLotto: found.idLotto,
       }, {emitEvent: false});
+      this.applyQuantitaValidators(fg, found.quantita);
     }
   }
 }

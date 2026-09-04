@@ -162,8 +162,22 @@
                     class="form-control form-control-sm"
                     formControlName="quantita"
                     min="1"
+                    [max]="dettagliAnimali.at(i).get('quantitaDisponibile')?.value"
                     (input)="onValoriRigaChange(i)"
+                    [class.is-invalid]="dettagliAnimali.at(i).get('quantita')?.invalid && dettagliAnimali.at(i).get('quantita')?.touched"
                   />
+                  <div
+                    *ngIf="dettagliAnimali.at(i).get('quantita')?.errors?.['max'] && dettagliAnimali.at(i).get('quantita')?.touched"
+                    class="text-danger small mt-1"
+                  >
+                    Max {{ dettagliAnimali.at(i).get('quantita')?.errors?.['max']?.max }} disponibili
+                  </div>
+                  <div
+                    *ngIf="dettagliAnimali.at(i).get('quantita')?.errors?.['min'] && dettagliAnimali.at(i).get('quantita')?.touched"
+                    class="text-danger small mt-1"
+                  >
+                    Quantità minima 1
+                  </div>
                 </td>
 
                 <td style="min-width: 90px;">
@@ -429,14 +443,14 @@
       <button type="button" class="btn btn-outline-secondary" (click)="onAnnulla()">
         Annulla
       </button>
-      <button
-        *ngIf="!isEditMode"
-        type="button"
-        class="btn btn-primary"
-        (click)="handleOrdine(OrderType.CONFERMATO)"
-      >
-        Prenota
-      </button>
+      <!--      <button
+              *ngIf="!isEditMode"
+              type="button"
+              class="btn btn-primary"
+              (click)="handleOrdine(OrderType.CONFERMATO)"
+            >
+              Prenota
+            </button>-->
       <button
         *ngIf="!isEditMode"
         type="button"

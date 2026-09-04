@@ -65,6 +65,7 @@ export interface AnimaleDisponibile {
   fornitoreId: number;
   descrizione: string; // es. "Galline rosse"
   prezzoUnitario?: number;
+  quantita: number; // quantità disponibile nel lotto
 }
 
 export enum OrderType {
