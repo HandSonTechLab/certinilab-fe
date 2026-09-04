@@ -95,6 +95,78 @@ describe('RegistrazioneVenditaComponent', () => {
     expect(quantitaCtrl?.errors?.['min']).toBeTruthy();
   });
 
+  describe('arrotondamento totali a 2 decimali', () => {
+    it('should round the animal row total and the animals total to 2 decimals (PER_UNITA)', () => {
+      const group = component.dettagliAnimali.at(0) as FormGroup;
+      group.get('tipoVendita')?.setValue('PER_UNITA');
+      group.get('quantita')?.setValue(3);
+      group.get('prezzoUnitario')?.setValue(0.1); // 0.1 * 3 = 0.30000000000000004
+      component.onValoriRigaChange(0);
+
+      expect(group.get('totaleRiga')?.value).toBe(0.3);
+      expect(component.totaleAnimali()).toBe(0.3);
+    });
+
+    it('should round the animal row total to 2 decimals (AL_KG)', () => {
+      const group = component.dettagliAnimali.at(0) as FormGroup;
+      group.get('tipoVendita')?.setValue('AL_KG');
+      group.get('peso')?.setValue(1.111);
+      group.get('prezzoUnitario')?.setValue(3); // 1.111 * 3 = 3.333 -> 3.33
+      component.onValoriRigaChange(0);
+
+      expect(group.get('totaleRiga')?.value).toBe(3.33);
+      expect(component.totaleAnimali()).toBe(3.33);
+    });
+
+    it('should round the mangime row total and the mangime total to 2 decimals', () => {
+      component.addRigaMangime();
+      const group = component.mangimi.at(0) as FormGroup;
+      group.get('prezzoAlKg')?.setValue(0.1);
+      group.get('kg')?.setValue(3); // 0.1 * 3 = 0.30000000000000004
+      component.onValoriMangimeChange(0);
+
+      expect(group.get('totaleRiga')?.value).toBe(0.3);
+      expect(component.totaleMangime()).toBe(0.3);
+    });
+
+    it('should round the scatola row total and the scatole total to 2 decimals', () => {
+      component.addRigaScatola();
+      const group = component.scatole.at(0) as FormGroup;
+      group.get('prezzoUnitario')?.setValue(0.1);
+      group.get('quantita')?.setValue(3); // 0.1 * 3 = 0.30000000000000004
+      component.onValoriScatolaChange(0);
+
+      expect(group.get('totaleRiga')?.value).toBe(0.3);
+      expect(component.totaleScatole()).toBe(0.3);
+    });
+
+    it('should round the overall order total to 2 decimals', () => {
+      // animali
+      const animale = component.dettagliAnimali.at(0) as FormGroup;
+      animale.get('tipoVendita')?.setValue('PER_UNITA');
+      animale.get('quantita')?.setValue(3);
+      animale.get('prezzoUnitario')?.setValue(0.1);
+      component.onValoriRigaChange(0);
+
+      // mangime
+      component.addRigaMangime();
+      const mangime = component.mangimi.at(0) as FormGroup;
+      mangime.get('prezzoAlKg')?.setValue(0.1);
+      mangime.get('kg')?.setValue(3);
+      component.onValoriMangimeChange(0);
+
+      // scatole
+      component.addRigaScatola();
+      const scatola = component.scatole.at(0) as FormGroup;
+      scatola.get('prezzoUnitario')?.setValue(0.1);
+      scatola.get('quantita')?.setValue(3);
+      component.onValoriScatolaChange(0);
+
+      // 0.3 + 0.3 + 0.3 = 0.8999999999999999 -> 0.9
+      expect(component.totaleOrdine()).toBe(0.9);
+    });
+  });
+
   it('should re-evaluate the max validation against the newly selected animal', () => {
     const group = selezionaAnimale(10);
     const quantitaCtrl = group.get('quantita');

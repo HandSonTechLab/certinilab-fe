@@ -53,10 +53,17 @@ export class RegistrazioneVenditaComponent implements OnInit {
   totaleScatole = signal(0);
   totaleOrdine = computed(
     () =>
-      this.totaleAnimali() +
-      this.totaleMangime() +
-      this.totaleScatole()
+      this.round2(
+        this.totaleAnimali() +
+        this.totaleMangime() +
+        this.totaleScatole()
+      )
   );
+
+  /** Arrotonda un valore a esattamente 2 cifre decimali. */
+  private round2(value: number): number {
+    return Math.round((Number(value) + Number.EPSILON) * 100) / 100;
+  }
 
   ngOnInit(): void {
     this.initForm();
@@ -224,7 +231,7 @@ export class RegistrazioneVenditaComponent implements OnInit {
       totale = quantita * prezzo;
     }
 
-    group.get('totaleRiga')?.setValue(totale, {emitEvent: false});
+    group.get('totaleRiga')?.setValue(this.round2(totale), {emitEvent: false});
     this.calcolaTotaleAnimali();
   }
 
@@ -233,7 +240,7 @@ export class RegistrazioneVenditaComponent implements OnInit {
       const val = (ctrl as FormGroup).get('totaleRiga')?.value || 0;
       return sum + Number(val);
     }, 0);
-    this.totaleAnimali.update(() => tot);
+    this.totaleAnimali.update(() => this.round2(tot));
   }
 
   // --- mangimi ---
@@ -278,7 +285,7 @@ export class RegistrazioneVenditaComponent implements OnInit {
     const prezzo = +group.get('prezzoAlKg')?.value || 0;
     const kg = +group.get('kg')?.value || 0;
     const totale = prezzo * kg;
-    group.get('totaleRiga')?.setValue(totale, {emitEvent: false});
+    group.get('totaleRiga')?.setValue(this.round2(totale), {emitEvent: false});
     this.calcolaTotaleMangime();
   }
 
@@ -287,7 +294,7 @@ export class RegistrazioneVenditaComponent implements OnInit {
       const val = (ctrl as FormGroup).get('totaleRiga')?.value || 0;
       return sum + Number(val);
     }, 0);
-    this.totaleMangime.update(() => tot);
+    this.totaleMangime.update(() => this.round2(tot));
   }
 
   newRigaScatola(): FormGroup {
@@ -313,7 +320,7 @@ export class RegistrazioneVenditaComponent implements OnInit {
     const prezzo = +group.get('prezzoUnitario')?.value || 0;
     const quantita = +group.get('quantita')?.value || 0;
     const totale = prezzo * quantita;
-    group.get('totaleRiga')?.setValue(totale, {emitEvent: false});
+    group.get('totaleRiga')?.setValue(this.round2(totale), {emitEvent: false});
     this.calcolaTotaleScatole();
   }
 
@@ -322,7 +329,7 @@ export class RegistrazioneVenditaComponent implements OnInit {
       const val = (ctrl as FormGroup).get('totaleRiga')?.value || 0;
       return sum + Number(val);
     }, 0);
-    this.totaleScatole.update(() => tot);
+    this.totaleScatole.update(() => this.round2(tot));
   }
 
   // --- submit ---
@@ -357,11 +364,11 @@ export class RegistrazioneVenditaComponent implements OnInit {
     const raw = this.form.getRawValue();
 
     // calcoli totali da FormArray
-    const spesaMangime = this.mangimi.controls.reduce((sum, ctrl) =>
-      sum + Number((ctrl as FormGroup).get('totaleRiga')?.value || 0), 0);
+    const spesaMangime = this.round2(this.mangimi.controls.reduce((sum, ctrl) =>
+      sum + Number((ctrl as FormGroup).get('totaleRiga')?.value || 0), 0));
 
-    const spesaScatole = this.scatole.controls.reduce((sum, ctrl) =>
-      sum + Number((ctrl as FormGroup).get('totaleRiga')?.value || 0), 0);
+    const spesaScatole = this.round2(this.scatole.controls.reduce((sum, ctrl) =>
+      sum + Number((ctrl as FormGroup).get('totaleRiga')?.value || 0), 0));
 
     const noteMangime = this.buildNoteMangime();
     const noteScatole = this.buildNoteScatole();
@@ -528,11 +535,11 @@ export class RegistrazioneVenditaComponent implements OnInit {
         })
 
         // totali
-        this.totaleAnimali.update(() => ordine.totaleAnimali);
-        this.totaleMangime.update(() => ordine.totaleMangime);
-        this.totaleScatole.update(() => ordine.totaleScatole);
-        this.form.get('spesaMangime')?.setValue(ordine.totaleMangime);
-        this.form.get('spesaScatole')?.setValue(ordine.totaleScatole);
+        this.totaleAnimali.update(() => this.round2(ordine.totaleAnimali));
+        this.totaleMangime.update(() => this.round2(ordine.totaleMangime));
+        this.totaleScatole.update(() => this.round2(ordine.totaleScatole));
+        this.form.get('spesaMangime')?.setValue(this.round2(ordine.totaleMangime));
+        this.form.get('spesaScatole')?.setValue(this.round2(ordine.totaleScatole));
 
         // righe animali
         this.dettagliAnimali.clear();
@@ -560,10 +567,11 @@ export class RegistrazioneVenditaComponent implements OnInit {
           fg.get('peso')?.updateValueAndValidity({emitEvent: false});
 
           // calcolo totale riga
-          const totaleRiga =
+          const totaleRiga = this.round2(
             det.venditaType === 'AL_KG'
               ? (det.peso || 0) * det.prezzoUnitario
-              : det.quantita * det.prezzoUnitario;
+              : det.quantita * det.prezzoUnitario
+          );
           fg.get('totaleRiga')?.setValue(totaleRiga, {emitEvent: false});
           fg.get('id')?.setValue(det.id);
           this.dettagliAnimali.push(fg);
