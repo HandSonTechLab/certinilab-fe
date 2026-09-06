@@ -41,6 +41,7 @@
                 <td>
                   <i class="bi bi-pencil-square p-2 pointer" (click)="downloadDocuments(order.id)"></i>
                   <i class="bi bi-cloud-download p-2 pointer"></i>
+                  <i class="bi bi-pencil p-2 pointer" title="Modifica Modello 4" (click)="openModello4Modal(order)"></i>
                 </td>
               </tr>
             }
@@ -60,4 +61,100 @@
     <i class="bi bi-plus-lg"></i>
   </a>
 
+</div>
+
+<!-- Modal Modifica Modello 4 -->
+<div class="modal fade" id="modello4Modal" tabindex="-1" aria-labelledby="modello4ModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form [formGroup]="modello4Form">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="modello4ModalLabel">Modifica Modello 4</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+
+          <!-- CLIENTE -->
+          <div class="card mb-3">
+            <div class="card-header fw-semibold">Cliente</div>
+            <div class="card-body row g-3">
+              <div class="col-12 col-md-3">
+                <label class="form-label">Data</label>
+                <input type="date" class="form-control" formControlName="data"/>
+              </div>
+              <div class="col-12 col-md-9">
+                <label class="form-label">Nome e cognome del cliente</label>
+                <input type="text" class="form-control" formControlName="nomeCognomeCliente"/>
+              </div>
+              <div class="col-12 col-md-4">
+                <label class="form-label">Indirizzo</label>
+                <input type="text" class="form-control" formControlName="indirizzoCliente"/>
+              </div>
+              <div class="col-12 col-md-4">
+                <label class="form-label">Comune</label>
+                <input type="text" class="form-control" formControlName="comuneCliente"/>
+              </div>
+              <div class="col-12 col-md-4">
+                <label class="form-label">Provincia</label>
+                <input type="text" class="form-control" formControlName="provinciaCliente"/>
+              </div>
+            </div>
+          </div>
+
+          <!-- DETTAGLIO MODELLO 4 -->
+          <div class="card mb-3">
+            <div class="card-header fw-semibold">Dettaglio Modello 4</div>
+            <div class="card-body p-0">
+              <div class="table-responsive">
+                <table class="table table-sm align-middle mb-0">
+                  <thead class="table-light">
+                  <tr>
+                    <th>Specie</th>
+                    <th>Quantità</th>
+                    <th>Contenitori</th>
+                    <th>Codici aziendali di provenienza</th>
+                  </tr>
+                  </thead>
+                  <tbody formArrayName="dettagli">
+                    @for (r of modello4Dettagli.controls; track r; let i = $index) {
+                      <tr [formGroupName]="i">
+                        <td style="min-width: 160px;">
+                          <select class="form-select form-select-sm" formControlName="specie">
+                            <option [ngValue]="null">Seleziona specie...</option>
+                            @for (a of animali; track a.id) {
+                              <option [ngValue]="a.razza">{{ a.razza }}</option>
+                            }
+                          </select>
+                        </td>
+                        <td style="min-width: 100px;">
+                          <input type="number" class="form-control form-control-sm" formControlName="quantita" min="1"/>
+                        </td>
+                        <td style="min-width: 100px;">
+                          <input type="number" class="form-control form-control-sm" formControlName="contenitori"
+                                 min="0"/>
+                        </td>
+                        <td style="min-width: 180px;">
+                          <select class="form-select form-select-sm" formControlName="codiceProvenienza">
+                            <option [ngValue]="null">Seleziona codice...</option>
+                            @for (f of fornitori; track f.id) {
+                              <option [ngValue]="f.codiceProvenienza">{{ f.codiceProvenienza }}</option>
+                            }
+                          </select>
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
+          <button type="button" class="btn btn-primary" (click)="salvaModello4()">Salva</button>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
