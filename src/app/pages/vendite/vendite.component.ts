@@ -212,6 +212,7 @@ export class VenditeComponent implements OnInit, OnDestroy {
       idOrdine: this.modello4OrderId,
       data: raw.data,
       nomeCliente: raw.nomeCognomeCliente,
+      cognomeCliente: raw.cognomeCliente,
       indirizzoCliente: raw.indirizzoCliente,
       comuneCliente: raw.comuneCliente,
       provinciaCliente: raw.provinciaCliente,
