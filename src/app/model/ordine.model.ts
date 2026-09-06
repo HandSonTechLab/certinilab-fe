@@ -6,10 +6,18 @@ export interface OrdineCreateRequest {
   noteScatole: string | null;
   noteMangime: string | null;
   stato: OrderType;
+  orderType: 'macellato' | 'al_dettaglio';
   spesaScatole: number;
   spesaMangime: number;
   dettagli: DettaglioOrdineRequest[];
 }
+
+// risposta della creazione ordine: ordine creato + documenti PDF generati (base64), presenti solo per orderType 'al_dettaglio'
+export interface OrdineCreateResponse extends InfoOrdineResponse {
+  modello04: string | null;
+  schedaVaccinazione: string | null;
+}
+
 export interface DettaglioOrdineRequest {
   id: number | null;
   idLotto: number;

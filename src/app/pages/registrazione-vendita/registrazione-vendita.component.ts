@@ -9,7 +9,8 @@ import {
   DettaglioOrdineResponse,
   InfoOrdineResponse,
   OrderType,
-  OrdineCreateRequest
+  OrdineCreateRequest,
+  OrdineCreateResponse
 } from '../../model/ordine.model';
 import {ClientsService} from '../../services/clients.service';
 import {LocaliService} from '../../services/locali.service';
@@ -345,6 +346,7 @@ export class RegistrazioneVenditaComponent implements OnInit {
     }
 
     const payload = this.buildOrdineCreateRequest(orderType);
+    const isCreate = !(this.isEditMode && this.ordineId);
 
     const $call = this.isEditMode && this.ordineId
       ? this.ordineService.updateOrdine(payload, this.ordineId)
@@ -352,12 +354,34 @@ export class RegistrazioneVenditaComponent implements OnInit {
 
     $call.subscribe({
         next: (res) => {
+          if (isCreate && payload.orderType === 'al_dettaglio') {
+            const body = res.body as OrdineCreateResponse;
+            if (body?.modello04) {
+              this.openPdfInNewTab(body.modello04);
+            }
+            if (body?.schedaVaccinazione) {
+              this.openPdfInNewTab(body.schedaVaccinazione);
+            }
+          }
           this.router.navigate(['/']);
         },
         error: (err) => {
           // gestione errore (alert ecc.)
         }
       });
+  }
+
+  /** Decodifica un PDF base64 e lo apre in una nuova scheda del browser. */
+  private openPdfInNewTab(base64Pdf: string): void {
+    const byteCharacters = atob(base64Pdf);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const blob = new Blob([new Uint8Array(byteNumbers)], {type: 'application/pdf'});
+    const url = window.URL.createObjectURL(blob);
+    window.open(url, '_blank');
+    setTimeout(() => window.URL.revokeObjectURL(url), 60000);
   }
 
   private buildOrdineCreateRequest(orderType: OrderType): OrdineCreateRequest {
@@ -393,6 +417,7 @@ export class RegistrazioneVenditaComponent implements OnInit {
       noteScatole,
       noteMangime,
       stato: orderType,
+      orderType: 'al_dettaglio',
       spesaScatole,
       spesaMangime,
       dettagli,

@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {BaseService} from './base-service';
-import {InfoOrdine, InfoOrdineResponse, OrdineCreateRequest} from '../model/ordine.model';
+import {InfoOrdine, InfoOrdineResponse, OrdineCreateRequest, OrdineCreateResponse} from '../model/ordine.model';
 import {catchError, Observable, throwError} from 'rxjs';
 import {HttpErrorResponse, HttpResponse} from '@angular/common/http';
 import {CONSTANTS} from '../shared/constants';
@@ -14,8 +14,8 @@ export class OrdiniService extends BaseService {
     super("ordini");
   }
 
-  createOrdine(body: OrdineCreateRequest) {
-    return this.httpClient.post<any>(this.url, body, {observe: 'response'})
+  createOrdine(body: OrdineCreateRequest): Observable<HttpResponse<OrdineCreateResponse>> {
+    return this.httpClient.post<OrdineCreateResponse>(this.url, body, {observe: 'response'})
       .pipe(catchError((error: HttpErrorResponse) => {
         console.log('an error occurred creating ordine -> {}', error);
           this.errorService.showError(CONSTANTS.create_order_request_error_message.concat(': error code ', error.status.toString()))
