@@ -363,10 +363,12 @@ export class RegistrazioneVenditaComponent implements OnInit {
               this.openPdfInNewTab(body.schedaVaccinazione);
             }
           }
-          this.router.navigate(['/']);
         },
         error: (err) => {
           // gestione errore (alert ecc.)
+        },
+      complete: () => {
+        this.router.navigate(['/']);
         }
       });
   }
