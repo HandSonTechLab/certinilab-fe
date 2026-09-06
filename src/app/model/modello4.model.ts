@@ -1,6 +1,6 @@
 // modelli usati per la modifica del Modello 4 associato ad un ordine
 export interface Modello4DettaglioRequest {
-  id: number; // id del dettaglio ordine di tipo modello4
+  id: number;
   specie: string;
   quantita: number;
   contenitori: string | null;
@@ -10,7 +10,8 @@ export interface Modello4DettaglioRequest {
 export interface Modello4UpdateRequest {
   idOrdine: number;
   data: string; // 'YYYY-MM-DD'
-  nomeCognomeCliente: string;
+  nomeCliente: string;
+  cognomeCliente: string;
   indirizzoCliente: string;
   comuneCliente: string;
   provinciaCliente: string;

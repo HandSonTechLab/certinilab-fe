@@ -211,7 +211,7 @@ export class VenditeComponent implements OnInit, OnDestroy {
     const payload: Modello4UpdateRequest = {
       idOrdine: this.modello4OrderId,
       data: raw.data,
-      nomeCognomeCliente: raw.nomeCognomeCliente,
+      nomeCliente: raw.nomeCognomeCliente,
       indirizzoCliente: raw.indirizzoCliente,
       comuneCliente: raw.comuneCliente,
       provinciaCliente: raw.provinciaCliente,
