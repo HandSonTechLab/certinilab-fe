@@ -167,8 +167,11 @@ export class MagazzinoComponent implements OnInit {
   }
 
   getColorClassBg(razza: string): string {
-    if (razza.toLowerCase().includes('rossa')) return 'bg-danger';
-    if (razza.toLowerCase().includes('gialla')) return 'bg-warning';
+    if (razza.toLowerCase().includes('Rosso'.toLowerCase())) return 'bg-danger';
+    if (razza.toLowerCase().includes('Giallo'.toLowerCase())) return 'bg-warning';
+    if (razza.toLowerCase().includes('Grigio'.toLowerCase())) return 'bg-dark';
+    if (razza.toLowerCase().includes('Bianco'.toLowerCase())) return 'bg-white';
+    if (razza.toLowerCase().includes('Nero'.toLowerCase())) return 'bg-black';
     return 'bg-primary';
   }
 

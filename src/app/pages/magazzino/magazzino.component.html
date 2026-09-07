@@ -84,7 +84,7 @@
                 @for (lotto of locale.lotti; track lotto.id) {
                   <div class="progress-bar"
                        [style.width.%]="(lotto.quantitaCorrente / locale.quantitaIniziale) * 100"
-                       [ngClass]="getColorClass(lotto.colore)"
+                       [ngClass]="getColorClass(lotto.razza)"
                        title="{{ lotto.razza }} {{ lotto.quantitaCorrente }}">
                   </div>
                 }
