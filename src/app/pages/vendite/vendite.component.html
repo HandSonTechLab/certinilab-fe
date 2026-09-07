@@ -39,7 +39,7 @@
                 <td>{{ order.stato }}</td>
                 <td>{{ order.totaleOrdine }}</td>
                 <td>
-                  <i class="bi bi-pencil-square p-2 pointer" (click)="viewClient(client.id, 'update')"></i>
+                  <i class="bi bi-pencil-square p-2 pointer" (click)="handleVendita($event, order.id)"></i>
                   <i class="bi bi-pencil p-2 pointer" title="Modifica Modello 4" (click)="openModello4Modal(order)"></i>
                   <i class="bi bi-file-earmark-pdf p-2 pointer" title="Visualizza Modello 4"
                      (click)="visualizzaModello4(order.id)"></i>
@@ -57,7 +57,7 @@
     aria-label="Crea nuova vendita"
     data-bs-toggle="tooltip"
     title="Crea nuova vendita"
-    (click)="newVendita($event)"
+    (click)="handleVendita($event)"
   >
     <i class="bi bi-plus-lg"></i>
   </a>

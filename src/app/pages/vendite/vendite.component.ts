@@ -114,11 +114,16 @@ export class VenditeComponent implements OnInit, OnDestroy {
     })
   }
 
-  newVendita(event: MouseEvent) {
-    const target = event.currentTarget as HTMLElement;
-    const tooltipInstance = bootstrap.Tooltip.getInstance(target);
-    tooltipInstance?.hide();  // chiude il tooltip
-    this.router.navigate(['/gestione-vendite'], {state: {userId: null, activeMode: 'create'}});
+  handleVendita(event: MouseEvent, orderId?: number) {
+
+    if (orderId) {
+      this.router.navigate(['/gestione-vendite'], {queryParams: {id: orderId}});
+    } else {
+      const target = event.currentTarget as HTMLElement;
+      const tooltipInstance = bootstrap.Tooltip.getInstance(target);
+      tooltipInstance?.hide();  // chiude il tooltip
+      this.router.navigate(['/gestione-vendite']);
+    }
   }
 
   // --- Modifica Modello 4 ---
