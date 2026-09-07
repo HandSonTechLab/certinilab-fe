@@ -13,12 +13,12 @@ export class DocumentiService extends BaseService {
     super("documenti");
   }
 
-  getDocZipByOrdineId(orderId: number): Observable<Blob> {
-    return this.httpClient.get<Blob>(this.url + '/' + orderId)
+  generateModello4Pdf(orderId: number): Observable<Blob> {
+    return this.httpClient.get(this.url + '/modello4/' + orderId, {responseType: 'blob'})
       .pipe(catchError((error: HttpErrorResponse) => {
-          console.log('an error occurred while getting ordine #{} -> {}', orderId, error);
-          this.errorService.showError(CONSTANTS.get_order_request_error_message.concat(': error code ', error.status.toString()))
-          return throwError(() => new Error(CONSTANTS.get_order_request_error_message));
+        console.log('an error occurred while generating modello4 pdf for ordine #{} -> {}', orderId, error);
+        this.errorService.showError(CONSTANTS.generate_modello4_pdf_request_error_message.concat(': error code ', error.status.toString()))
+        return throwError(() => new Error(CONSTANTS.generate_modello4_pdf_request_error_message));
         })
       );
   }

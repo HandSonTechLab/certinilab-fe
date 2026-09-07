@@ -103,22 +103,8 @@ export class VenditeComponent implements OnInit, OnDestroy {
     });
   }
 
-  downloadDocuments(id: number) {
-    this.documentiService.getDocZipByOrdineId(id).subscribe({
-      next: (zipBlob) => {
-        const blob = new Blob([zipBlob], {type: 'application/zip'});
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `documenti-ordine-${id}.zip`; // nome file lato client
-        a.click();
-        window.URL.revokeObjectURL(url);
-      }
-    })
-  }
-
   visualizzaModello4(id: number) {
-    this.modello4Service.generateModello4Pdf(id).subscribe({
+    this.documentiService.generateModello4Pdf(id).subscribe({
       next: (pdfBlob) => {
         const blob = new Blob([pdfBlob], {type: 'application/pdf'});
         const url = window.URL.createObjectURL(blob);

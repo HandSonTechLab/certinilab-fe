@@ -39,8 +39,7 @@
                 <td>{{ order.stato }}</td>
                 <td>{{ order.totaleOrdine }}</td>
                 <td>
-                  <i class="bi bi-pencil-square p-2 pointer" (click)="downloadDocuments(order.id)"></i>
-                  <i class="bi bi-cloud-download p-2 pointer"></i>
+                  <i class="bi bi-pencil-square p-2 pointer" (click)="viewClient(client.id, 'update')"></i>
                   <i class="bi bi-pencil p-2 pointer" title="Modifica Modello 4" (click)="openModello4Modal(order)"></i>
                   <i class="bi bi-file-earmark-pdf p-2 pointer" title="Visualizza Modello 4"
                      (click)="visualizzaModello4(order.id)"></i>
