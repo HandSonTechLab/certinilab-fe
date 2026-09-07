@@ -7,6 +7,8 @@ import {Router} from '@angular/router';
 import {DocumentiService} from '../../services/documenti.service';
 import {Modello4Service} from '../../services/modello4.service';
 import {Modello4Response, Modello4RigaResponse, Modello4UpdateRequest} from '../../model/modello4.model';
+import {NotificationModel} from '../../model/notification.model';
+import {CONSTANTS} from '../../shared/constants';
 
 declare var bootstrap: any;
 
@@ -19,6 +21,8 @@ declare var bootstrap: any;
 export class VenditeComponent implements OnInit, OnDestroy {
 
   protected orders?: InfoOrdine[] | null;
+  protected notification?: NotificationModel;
+  protected showNotifications: boolean = false;
   modello4Form!: FormGroup;
   private modello4OrderId?: number;
 
@@ -170,6 +174,8 @@ export class VenditeComponent implements OnInit, OnDestroy {
 
     const subscription = this.modello4Service.updateModello4(this.modello4OrderId, payload).subscribe({
       next: () => {
+        this.showNotifications = true;
+        this.notification = {title: CONSTANTS.update_modello4_success};
         const modalEl = document.getElementById('modello4Modal');
         const modal = bootstrap.Modal.getInstance(modalEl);
         modal?.hide();

@@ -6,6 +6,7 @@ import {VenditeComponent} from './vendite.component';
 import {Modello4Response} from '../../model/modello4.model';
 import {InfoOrdine, OrderType} from '../../model/ordine.model';
 import {ErrorService} from '../../shared/error.service';
+import {CONSTANTS} from '../../shared/constants';
 
 describe('VenditeComponent', () => {
   let component: VenditeComponent;
@@ -151,6 +152,10 @@ describe('VenditeComponent', () => {
 
       // al termine con successo la tabella ordini viene ricaricata
       httpMock.expectOne('http://localhost:8080/api/v1/ordini').flush([]);
+
+      fixture.detectChanges();
+      const alert = (fixture.nativeElement as HTMLElement).querySelector('.alert-success');
+      expect(alert?.textContent).toContain(CONSTANTS.update_modello4_success);
     });
 
     it('should not call the API when the form is invalid', () => {
@@ -161,9 +166,12 @@ describe('VenditeComponent', () => {
 
       expect(component.modello4Form.invalid).toBeTrue();
       httpMock.expectNone(matchModello4Request);
+
+      fixture.detectChanges();
+      expect((fixture.nativeElement as HTMLElement).querySelector('.alert-success')).toBeNull();
     });
 
-    it('should surface an error via the ErrorService when the PUT request fails', () => {
+    it('should surface an error via the ErrorService when the PUT request fails, without showing the success notification', () => {
       openAndLoadModal();
 
       component.salvaModello4();
@@ -172,6 +180,9 @@ describe('VenditeComponent', () => {
         .flush('boom', {status: 400, statusText: 'Bad Request'});
 
       expect(errorService.error()).toContain('Aggiornamento Modello 4 fallito');
+
+      fixture.detectChanges();
+      expect((fixture.nativeElement as HTMLElement).querySelector('.alert-success')).toBeNull();
     });
   });
 });
