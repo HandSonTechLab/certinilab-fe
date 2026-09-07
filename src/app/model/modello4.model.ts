@@ -1,19 +1,37 @@
-// modelli usati per la modifica del Modello 4 associato ad un ordine
-export interface Modello4DettaglioRequest {
+// modelli usati per la consultazione e la modifica del Modello 4 associato ad un ordine
+
+export interface Modello4RigaResponse {
   id: number;
   specie: string;
-  quantita: number;
   contenitori: string | null;
-  codiceProvenienza: string;
+  quantita: number;
+  codiciDiProvenienza: string;
+}
+
+export interface Modello4Response {
+  dataDocumento: string; // 'YYYY-MM-DD'
+  clienteNome: string;
+  clienteCognome: string;
+  clienteIndirizzo: string;
+  clienteComune: string;
+  clienteProvincia: string;
+  righe: Modello4RigaResponse[];
+}
+
+export interface Modello4RigaRequest {
+  id: number;
+  specie: string;
+  contenitori: string | null;
+  quantita: number;
+  codiciDiProvenienza: string;
 }
 
 export interface Modello4UpdateRequest {
-  idOrdine: number;
-  data: string; // 'YYYY-MM-DD'
-  nomeCliente: string;
-  cognomeCliente: string;
-  indirizzoCliente: string;
-  comuneCliente: string;
-  provinciaCliente: string;
-  dettagli: Modello4DettaglioRequest[];
+  dataDocumento: string; // 'YYYY-MM-DD'
+  clienteNome: string;
+  clienteCognome: string;
+  clienteIndirizzo: string;
+  clienteComune: string;
+  clienteProvincia: string;
+  righe: Modello4RigaRequest[];
 }

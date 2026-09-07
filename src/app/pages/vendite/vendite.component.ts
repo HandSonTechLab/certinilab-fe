@@ -1,18 +1,12 @@
 import {Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {DettaglioOrdineResponse, InfoOrdine, InfoOrdineResponse} from '../../model/ordine.model';
+import {InfoOrdine} from '../../model/ordine.model';
 import {OrdiniService} from '../../services/ordini.service';
 import {Subscription} from 'rxjs';
 import {Router} from '@angular/router';
 import {DocumentiService} from '../../services/documenti.service';
-import {ClientsService} from '../../services/clients.service';
-import {AnimaliService} from '../../services/animali.service';
-import {SupplierService} from '../../services/supplier.service';
 import {Modello4Service} from '../../services/modello4.service';
-import {ClientModel} from '../../model/client.model';
-import {Animale} from '../../model/animale.model';
-import {Fornitore} from '../../model/fornitore.model';
-import {Modello4UpdateRequest} from '../../model/modello4.model';
+import {Modello4Response, Modello4RigaResponse, Modello4UpdateRequest} from '../../model/modello4.model';
 
 declare var bootstrap: any;
 
@@ -25,17 +19,12 @@ declare var bootstrap: any;
 export class VenditeComponent implements OnInit, OnDestroy {
 
   protected orders?: InfoOrdine[] | null;
-  protected animali: Animale[] = [];
-  protected fornitori: Fornitore[] = [];
-  protected modello4Form!: FormGroup;
+  modello4Form!: FormGroup;
   private modello4OrderId?: number;
 
   private subscriptions: Subscription[] = [];
   private orderService = inject(OrdiniService);
   private documentiService = inject(DocumentiService);
-  private clientService = inject(ClientsService);
-  private animaliService = inject(AnimaliService);
-  private supplierService = inject(SupplierService);
   private modello4Service = inject(Modello4Service);
   private fb = inject(FormBuilder);
 
@@ -49,8 +38,6 @@ export class VenditeComponent implements OnInit, OnDestroy {
     }));
     this.initModello4Form();
     this.getOrders();
-    this.loadAnimali();
-    this.loadFornitori();
   }
 
   ngOnDestroy(): void {
@@ -73,34 +60,6 @@ export class VenditeComponent implements OnInit, OnDestroy {
         this.subscriptions.push(subscription);
       }
     })
-  }
-
-  private loadAnimali(): void {
-    const subscription = this.animaliService.getAnimali().subscribe({
-      next: (response) => {
-        this.animali = response.body || [];
-      },
-      error: (error) => {
-        this.subscriptions.push(subscription);
-      },
-      complete: () => {
-        this.subscriptions.push(subscription);
-      }
-    });
-  }
-
-  private loadFornitori(): void {
-    const subscription = this.supplierService.recuperaFornitoriPerDropdown().subscribe({
-      next: (response) => {
-        this.fornitori = response.body || [];
-      },
-      error: (error) => {
-        this.subscriptions.push(subscription);
-      },
-      complete: () => {
-        this.subscriptions.push(subscription);
-      }
-    });
   }
 
   visualizzaModello4(id: number) {
@@ -130,50 +89,38 @@ export class VenditeComponent implements OnInit, OnDestroy {
 
   private initModello4Form(): void {
     this.modello4Form = this.fb.group({
-      data: ['', Validators.required],
-      nomeCognomeCliente: ['', Validators.required],
-      indirizzoCliente: ['', Validators.required],
-      comuneCliente: ['', Validators.required],
-      provinciaCliente: ['', Validators.required],
-      dettagli: this.fb.array([]),
+      dataDocumento: ['', Validators.required],
+      clienteNome: ['', Validators.required],
+      clienteCognome: ['', Validators.required],
+      clienteIndirizzo: ['', Validators.required],
+      clienteComune: ['', Validators.required],
+      clienteProvincia: ['', Validators.required],
+      righe: this.fb.array([]),
     });
   }
 
-  get modello4Dettagli(): FormArray {
-    return this.modello4Form.get('dettagli') as FormArray;
+  get modello4Righe(): FormArray {
+    return this.modello4Form.get('righe') as FormArray;
   }
 
-  private newModello4DettaglioRow(det: DettaglioOrdineResponse): FormGroup {
-    const specieMatch = this.animali.find(a => det.descrizioneAnimale?.startsWith(a.razza));
+  private newModello4RigaRow(riga: Modello4RigaResponse): FormGroup {
     return this.fb.group({
-      id: [det.id],
-      specie: [specieMatch?.razza || null, Validators.required],
-      quantita: [det.quantita, [Validators.required, Validators.min(1)]],
-      contenitori: [null, [Validators.required, Validators.min(0)]],
-      codiceProvenienza: [det.codiceProvenienza || null, Validators.required],
+      id: [riga.id],
+      specie: [riga.specie, Validators.required],
+      contenitori: [riga.contenitori],
+      quantita: [riga.quantita, [Validators.required, Validators.min(1)]],
+      codiciDiProvenienza: [riga.codiciDiProvenienza, Validators.required],
     });
   }
 
   openModello4Modal(order: InfoOrdine): void {
     this.modello4OrderId = order.id;
 
-    const subscription = this.orderService.getOrdineById(order.id).subscribe({
+    const subscription = this.modello4Service.getModello4(order.id).subscribe({
       next: (response) => {
-        const ordine = response.body as InfoOrdineResponse;
-
-        const clientSubscription = this.clientService.findClientById(ordine.idCliente).subscribe({
-          next: (clientResponse) => {
-            const cliente = clientResponse.body as ClientModel;
-            this.populateModello4Form(ordine, cliente);
-            this.showModello4Modal();
-          },
-          error: (error) => {
-            this.subscriptions.push(clientSubscription);
-          },
-          complete: () => {
-            this.subscriptions.push(clientSubscription);
-          }
-        });
+        const modello4 = response.body as Modello4Response;
+        this.populateModello4Form(modello4);
+        this.showModello4Modal();
       },
       error: (error) => {
         this.subscriptions.push(subscription);
@@ -184,17 +131,18 @@ export class VenditeComponent implements OnInit, OnDestroy {
     });
   }
 
-  private populateModello4Form(ordine: InfoOrdineResponse, cliente: ClientModel): void {
+  private populateModello4Form(modello4: Modello4Response): void {
     this.modello4Form.patchValue({
-      data: ordine.data,
-      nomeCognomeCliente: `${ordine.nomeCliente} ${ordine.cognomeCliente}`,
-      indirizzoCliente: ordine.indirizzoCliente,
-      comuneCliente: cliente.comune,
-      provinciaCliente: cliente.provincia,
+      dataDocumento: modello4.dataDocumento,
+      clienteNome: modello4.clienteNome,
+      clienteCognome: modello4.clienteCognome,
+      clienteIndirizzo: modello4.clienteIndirizzo,
+      clienteComune: modello4.clienteComune,
+      clienteProvincia: modello4.clienteProvincia,
     });
 
-    this.modello4Dettagli.clear();
-    ordine.dettagli.forEach(det => this.modello4Dettagli.push(this.newModello4DettaglioRow(det)));
+    this.modello4Righe.clear();
+    modello4.righe.forEach(riga => this.modello4Righe.push(this.newModello4RigaRow(riga)));
   }
 
   private showModello4Modal(): void {
@@ -211,14 +159,13 @@ export class VenditeComponent implements OnInit, OnDestroy {
 
     const raw = this.modello4Form.getRawValue();
     const payload: Modello4UpdateRequest = {
-      idOrdine: this.modello4OrderId,
-      data: raw.data,
-      nomeCliente: raw.nomeCognomeCliente,
-      cognomeCliente: raw.cognomeCliente,
-      indirizzoCliente: raw.indirizzoCliente,
-      comuneCliente: raw.comuneCliente,
-      provinciaCliente: raw.provinciaCliente,
-      dettagli: raw.dettagli,
+      dataDocumento: raw.dataDocumento,
+      clienteNome: raw.clienteNome,
+      clienteCognome: raw.clienteCognome,
+      clienteIndirizzo: raw.clienteIndirizzo,
+      clienteComune: raw.clienteComune,
+      clienteProvincia: raw.clienteProvincia,
+      righe: raw.righe,
     };
 
     const subscription = this.modello4Service.updateModello4(this.modello4OrderId, payload).subscribe({

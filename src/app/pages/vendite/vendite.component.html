@@ -81,27 +81,27 @@
             <div class="card-body row g-3">
               <div class="col-12 col-md-3">
                 <label class="form-label">Data</label>
-                <input type="date" class="form-control" formControlName="data"/>
+                <input type="date" class="form-control" formControlName="dataDocumento"/>
               </div>
               <div class="col-12 col-md-9">
                 <label class="form-label">Nome del cliente</label>
-                <input type="text" class="form-control" formControlName="nomeCliente"/>
+                <input type="text" class="form-control" formControlName="clienteNome"/>
               </div>
               <div class="col-12 col-md-9">
                 <label class="form-label">Cognome del cliente</label>
-                <input type="text" class="form-control" formControlName="cognomeCliente"/>
+                <input type="text" class="form-control" formControlName="clienteCognome"/>
               </div>
               <div class="col-12 col-md-4">
                 <label class="form-label">Indirizzo</label>
-                <input type="text" class="form-control" formControlName="indirizzoCliente"/>
+                <input type="text" class="form-control" formControlName="clienteIndirizzo"/>
               </div>
               <div class="col-12 col-md-4">
                 <label class="form-label">Comune</label>
-                <input type="text" class="form-control" formControlName="comuneCliente"/>
+                <input type="text" class="form-control" formControlName="clienteComune"/>
               </div>
               <div class="col-12 col-md-4">
                 <label class="form-label">Provincia</label>
-                <input type="text" class="form-control" formControlName="provinciaCliente"/>
+                <input type="text" class="form-control" formControlName="clienteProvincia"/>
               </div>
             </div>
           </div>
@@ -120,31 +120,21 @@
                     <th>Codici aziendali di provenienza</th>
                   </tr>
                   </thead>
-                  <tbody formArrayName="dettagli">
-                    @for (r of modello4Dettagli.controls; track r; let i = $index) {
+                  <tbody formArrayName="righe">
+                    @for (r of modello4Righe.controls; track r; let i = $index) {
                       <tr [formGroupName]="i">
                         <td style="min-width: 160px;">
-                          <select class="form-select form-select-sm" formControlName="specie">
-                            <option [ngValue]="null">Seleziona specie...</option>
-                            @for (a of animali; track a.id) {
-                              <option [ngValue]="a.razza">{{ a.razza }}</option>
-                            }
-                          </select>
+                          <input type="text" class="form-control form-control-sm" formControlName="specie"/>
                         </td>
                         <td style="min-width: 100px;">
                           <input type="number" class="form-control form-control-sm" formControlName="quantita" min="1"/>
                         </td>
                         <td style="min-width: 100px;">
-                          <input type="number" class="form-control form-control-sm" formControlName="contenitori"
-                                 min="0"/>
+                          <input type="text" class="form-control form-control-sm" formControlName="contenitori"/>
                         </td>
                         <td style="min-width: 180px;">
-                          <select class="form-select form-select-sm" formControlName="codiceProvenienza">
-                            <option [ngValue]="null">Seleziona codice...</option>
-                            @for (f of fornitori; track f.id) {
-                              <option [ngValue]="f.codiceProvenienza">{{ f.codiceProvenienza }}</option>
-                            }
-                          </select>
+                          <input type="text" class="form-control form-control-sm"
+                                 formControlName="codiciDiProvenienza"/>
                         </td>
                       </tr>
                     }

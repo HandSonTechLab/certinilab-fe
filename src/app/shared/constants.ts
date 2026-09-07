@@ -38,6 +38,7 @@ export const CONSTANTS = {
   get_order_request_error_message: 'Impossibile recuperare  l\'ordine richiesto',
   create_order_success: 'Ordine creato con successo',
   update_order_success: 'Ordine aggiornato con successo',
+  get_modello4_request_error_message: 'Recupero Modello 4 fallito',
   update_modello4_request_error_message: 'Aggiornamento Modello 4 fallito',
   update_modello4_success: 'Modello 4 aggiornato con successo',
   generate_modello4_pdf_request_error_message: 'Generazione PDF Modello 4 fallita',
