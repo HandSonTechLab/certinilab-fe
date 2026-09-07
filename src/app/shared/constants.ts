@@ -40,6 +40,7 @@ export const CONSTANTS = {
   update_order_success: 'Ordine aggiornato con successo',
   update_modello4_request_error_message: 'Aggiornamento Modello 4 fallito',
   update_modello4_success: 'Modello 4 aggiornato con successo',
+  generate_modello4_pdf_request_error_message: 'Generazione PDF Modello 4 fallita',
 
   // report
   report_giornaliero_request_error_message: 'Recupero report giornaliero fallito!',

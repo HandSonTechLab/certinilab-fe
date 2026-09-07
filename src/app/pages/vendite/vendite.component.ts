@@ -117,6 +117,17 @@ export class VenditeComponent implements OnInit, OnDestroy {
     })
   }
 
+  visualizzaModello4(id: number) {
+    this.modello4Service.generateModello4Pdf(id).subscribe({
+      next: (pdfBlob) => {
+        const blob = new Blob([pdfBlob], {type: 'application/pdf'});
+        const url = window.URL.createObjectURL(blob);
+        window.open(url, '_blank');
+        setTimeout(() => window.URL.revokeObjectURL(url), 60000);
+      }
+    })
+  }
+
   newVendita(event: MouseEvent) {
     const target = event.currentTarget as HTMLElement;
     const tooltipInstance = bootstrap.Tooltip.getInstance(target);

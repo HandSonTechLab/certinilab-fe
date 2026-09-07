@@ -24,4 +24,15 @@ export class Modello4Service extends BaseService {
         })
       );
   }
+
+  // TODO: endpoint placeholder, il backend non lo espone ancora - allineare il path quando sarà disponibile
+  generateModello4Pdf(orderId: number): Observable<Blob> {
+    return this.httpClient.get(this.url + '/' + orderId + '/modello4/pdf', {responseType: 'blob'})
+      .pipe(catchError((error: HttpErrorResponse) => {
+          console.log('an error occurred while generating modello4 pdf for ordine #{} -> {}', orderId, error);
+          this.errorService.showError(CONSTANTS.generate_modello4_pdf_request_error_message.concat(': error code ', error.status.toString()))
+          return throwError(() => new Error(CONSTANTS.generate_modello4_pdf_request_error_message));
+        })
+      );
+  }
 }
