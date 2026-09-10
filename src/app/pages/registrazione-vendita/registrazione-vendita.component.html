@@ -423,6 +423,32 @@
             <div class="col-6 text-end">{{ totaleScatole() | number:'1.2-2' }} €</div>
           </div>
           <hr/>
+          <div class="row mb-2 align-items-start">
+            <div class="col-6 col-form-label">Sconto €</div>
+            <div class="col-6">
+              <input
+                type="number"
+                class="form-control form-control-sm text-end"
+                formControlName="sconto"
+                step="0.01"
+                min="0.01"
+                (input)="onScontoChange()"
+                [class.is-invalid]="form.get('sconto')?.invalid && form.get('sconto')?.touched"
+              />
+              <div
+                *ngIf="form.get('sconto')?.errors?.['min'] && form.get('sconto')?.touched"
+                class="text-danger small mt-1"
+              >
+                Lo sconto deve essere maggiore di 0
+              </div>
+              <div
+                *ngIf="form.get('sconto')?.errors?.['max'] && form.get('sconto')?.touched"
+                class="text-danger small mt-1"
+              >
+                Lo sconto non può superare {{ form.get('sconto')?.errors?.['max']?.max | number:'1.2-2' }} €
+              </div>
+            </div>
+          </div>
           <div class="row mb-3">
             <div class="col-6 fw-semibold">Totale ordine</div>
             <div class="col-6 text-end fw-semibold">
@@ -457,7 +483,7 @@
         class="btn btn-success"
         (click)="handleOrdine(OrderType.VENDUTO)"
       >
-        Vendi
+        Conferma
       </button>
       <button
         *ngIf="isEditMode"

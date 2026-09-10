@@ -1,5 +1,14 @@
 import {Component, computed, inject, OnInit, signal} from '@angular/core';
-import {FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {
+  AbstractControl,
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators
+} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Locale} from '../../model/locale.model';
 import {CommonModule} from '@angular/common';
@@ -52,7 +61,10 @@ export class RegistrazioneVenditaComponent implements OnInit {
   totaleAnimali = signal(0);
   totaleMangime = signal(0);
   totaleScatole = signal(0);
-  totaleOrdine = computed(
+  sconto = signal(0);
+
+  /** Somma di animali, mangime e scatole, prima dell'applicazione dello sconto. */
+  private subtotaleOrdine = computed(
     () =>
       this.round2(
         this.totaleAnimali() +
@@ -60,6 +72,20 @@ export class RegistrazioneVenditaComponent implements OnInit {
         this.totaleScatole()
       )
   );
+
+  totaleOrdine = computed(
+    () => this.round2(this.subtotaleOrdine() - this.sconto())
+  );
+
+  /** Lo sconto non può superare il totale dell'ordine prima dello sconto stesso. */
+  private scontoMaxValidator = (control: AbstractControl): ValidationErrors | null => {
+    const value = control.value;
+    if (value === null || value === '' || value === undefined) {
+      return null;
+    }
+    const max = this.subtotaleOrdine();
+    return Number(value) > max ? {max: {max}} : null;
+  };
 
   /** Arrotonda un valore a esattamente 2 cifre decimali. */
   private round2(value: number): number {
@@ -86,6 +112,7 @@ export class RegistrazioneVenditaComponent implements OnInit {
       data: [this.today(), Validators.required],
       idCliente: [null, Validators.required],
       noteOrdine: [''],
+      sconto: [null, [Validators.min(0.01), this.scontoMaxValidator]],
 
       // internamente calcolati
       spesaScatole: [{value: 0, disabled: true}],
@@ -242,6 +269,17 @@ export class RegistrazioneVenditaComponent implements OnInit {
       return sum + Number(val);
     }, 0);
     this.totaleAnimali.update(() => this.round2(tot));
+    this.revalidateSconto();
+  }
+
+  onScontoChange(): void {
+    const value = +this.form.get('sconto')?.value || 0;
+    this.sconto.update(() => value);
+  }
+
+  /** Rivaluta lo sconto contro il nuovo subtotale, ogni volta che animali/mangime/scatole cambiano. */
+  private revalidateSconto(): void {
+    this.form?.get('sconto')?.updateValueAndValidity({emitEvent: false});
   }
 
   // --- mangimi ---
@@ -296,6 +334,7 @@ export class RegistrazioneVenditaComponent implements OnInit {
       return sum + Number(val);
     }, 0);
     this.totaleMangime.update(() => this.round2(tot));
+    this.revalidateSconto();
   }
 
   newRigaScatola(): FormGroup {
@@ -331,6 +370,7 @@ export class RegistrazioneVenditaComponent implements OnInit {
       return sum + Number(val);
     }, 0);
     this.totaleScatole.update(() => this.round2(tot));
+    this.revalidateSconto();
   }
 
   // --- submit ---
@@ -396,6 +436,8 @@ export class RegistrazioneVenditaComponent implements OnInit {
     const spesaScatole = this.round2(this.scatole.controls.reduce((sum, ctrl) =>
       sum + Number((ctrl as FormGroup).get('totaleRiga')?.value || 0), 0));
 
+    const sconto = this.round2(Number(raw.sconto) || 0);
+
     const noteMangime = this.buildNoteMangime();
     const noteScatole = this.buildNoteScatole();
 
@@ -422,6 +464,7 @@ export class RegistrazioneVenditaComponent implements OnInit {
       orderType: 'al_dettaglio',
       spesaScatole,
       spesaMangime,
+      sconto,
       dettagli,
     } as OrdineCreateRequest;
   }
@@ -602,8 +645,10 @@ export class RegistrazioneVenditaComponent implements OnInit {
           noteOrdine: ordine.noteOrdine || '',
           // le noteScatole/noteMangime del BE le mostriamo
           noteScatole: ordine.noteScatole || '',
-          noteMangime: ordine.noteMangime || ''
+          noteMangime: ordine.noteMangime || '',
+          sconto: ordine.sconto && ordine.sconto > 0 ? ordine.sconto : null,
         });
+        this.onScontoChange();
 
         this.clientService.findClientById(ordine.idCliente).subscribe({
           next: (res) => {

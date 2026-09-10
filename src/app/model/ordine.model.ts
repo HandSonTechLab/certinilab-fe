@@ -9,6 +9,7 @@ export interface OrdineCreateRequest {
   orderType: 'macellato' | 'al_dettaglio';
   spesaScatole: number;
   spesaMangime: number;
+  sconto: number;
   dettagli: DettaglioOrdineRequest[];
 }
 
@@ -44,6 +45,7 @@ export interface InfoOrdineResponse {
   totaleMangime: number;
   totaleAnimali: number;
   totaleOrdine: number;
+  sconto: number | null;
   dettagli: DettaglioOrdineResponse[];
 }
 

@@ -200,6 +200,144 @@ describe('RegistrazioneVenditaComponent', () => {
     expect(quantitaCtrl?.valid).toBeFalse();
     expect(quantitaCtrl?.errors?.['max'].max).toBe(5);
   });
+
+  describe('sconto ordine', () => {
+    /** Imposta una riga animale con un totale noto, cosi' da avere un totale ordine di riferimento. */
+    function impostaTotaleOrdine(totale: number): void {
+      const animale = component.dettagliAnimali.at(0) as FormGroup;
+      animale.get('tipoVendita')?.setValue('PER_UNITA');
+      animale.get('quantita')?.setValue(1);
+      animale.get('prezzoUnitario')?.setValue(totale);
+      component.onValoriRigaChange(0);
+    }
+
+    function setSconto(value: number | null): void {
+      component.form.get('sconto')?.setValue(value);
+      component.onScontoChange();
+    }
+
+    it('should render the "Sconto €" input in the order summary', () => {
+      const compiled: HTMLElement = fixture.nativeElement;
+      const label = Array.from(compiled.querySelectorAll('label, div'))
+        .find(el => el.textContent?.trim() === 'Sconto €');
+      const input = compiled.querySelector('input[formcontrolname="sconto"]');
+
+      expect(label).toBeTruthy();
+      expect(input).toBeTruthy();
+    });
+
+    it('should have no discount and an unchanged total by default', () => {
+      impostaTotaleOrdine(100);
+      expect(component.form.get('sconto')?.value).toBeNull();
+      expect(component.totaleOrdine()).toBe(100);
+    });
+
+    it('should accept a positive decimal discount and subtract it from the total', () => {
+      impostaTotaleOrdine(100);
+      setSconto(10.5);
+
+      expect(component.form.get('sconto')?.valid).toBeTrue();
+      expect(component.totaleOrdine()).toBe(89.5);
+    });
+
+    it('should reject a zero discount', () => {
+      impostaTotaleOrdine(100);
+      setSconto(0);
+
+      expect(component.form.get('sconto')?.invalid).toBeTrue();
+      expect(component.form.get('sconto')?.errors?.['min']).toBeTruthy();
+    });
+
+    it('should reject a negative discount', () => {
+      impostaTotaleOrdine(100);
+      setSconto(-5);
+
+      expect(component.form.get('sconto')?.invalid).toBeTrue();
+      expect(component.form.get('sconto')?.errors?.['min']).toBeTruthy();
+    });
+
+    it('should reject a discount greater than the overall order total', () => {
+      impostaTotaleOrdine(100);
+      setSconto(150);
+
+      expect(component.form.get('sconto')?.invalid).toBeTrue();
+      expect(component.form.get('sconto')?.errors?.['max']).toBeTruthy();
+      expect(component.form.get('sconto')?.errors?.['max'].max).toBe(100);
+    });
+
+    it('should accept a discount equal to the overall order total', () => {
+      impostaTotaleOrdine(100);
+      setSconto(100);
+
+      expect(component.form.get('sconto')?.valid).toBeTrue();
+      expect(component.totaleOrdine()).toBe(0);
+    });
+
+    it('should not compound the discount across multiple changes', () => {
+      impostaTotaleOrdine(100);
+
+      setSconto(10);
+      expect(component.totaleOrdine()).toBe(90);
+
+      setSconto(20);
+      expect(component.totaleOrdine()).toBe(80);
+
+      setSconto(5);
+      expect(component.totaleOrdine()).toBe(95);
+    });
+
+    it('should restore the full total when the discount is cleared', () => {
+      impostaTotaleOrdine(100);
+
+      setSconto(30);
+      expect(component.totaleOrdine()).toBe(70);
+
+      setSconto(null);
+      expect(component.form.get('sconto')?.valid).toBeTrue();
+      expect(component.totaleOrdine()).toBe(100);
+    });
+
+    it('should re-validate the max bound when the order total changes after the discount was set', () => {
+      impostaTotaleOrdine(100);
+      setSconto(80);
+      expect(component.form.get('sconto')?.valid).toBeTrue();
+
+      // il subtotale scende sotto lo sconto gia' impostato
+      impostaTotaleOrdine(50);
+
+      expect(component.form.get('sconto')?.invalid).toBeTrue();
+      expect(component.form.get('sconto')?.errors?.['max'].max).toBe(50);
+    });
+
+    it('should include sconto in buildOrdineCreateRequest when creating an order', () => {
+      impostaTotaleOrdine(100);
+      setSconto(15);
+      component.isEditMode = false;
+
+      const payload = (component as any).buildOrdineCreateRequest(OrderType.VENDUTO);
+
+      expect(payload.sconto).toBe(15);
+    });
+
+    it('should include sconto in buildOrdineCreateRequest when updating an order', () => {
+      impostaTotaleOrdine(100);
+      setSconto(25);
+      component.isEditMode = true;
+      component.ordineId = 42;
+
+      const payload = (component as any).buildOrdineCreateRequest(OrderType.VENDUTO);
+
+      expect(payload.sconto).toBe(25);
+    });
+
+    it('should default sconto to 0 in buildOrdineCreateRequest when no discount is entered', () => {
+      impostaTotaleOrdine(100);
+
+      const payload = (component as any).buildOrdineCreateRequest(OrderType.VENDUTO);
+
+      expect(payload.sconto).toBe(0);
+    });
+  });
 });
 
 describe('RegistrazioneVenditaComponent - loadOrdine (modalità aggiornamento)', () => {
@@ -240,6 +378,7 @@ describe('RegistrazioneVenditaComponent - loadOrdine (modalità aggiornamento)',
       totaleMangime: 0,
       totaleAnimali: 20,
       totaleOrdine: 20,
+      sconto: null,
       dettagli: [dettaglio],
       ...overrides,
     };
@@ -335,5 +474,32 @@ describe('RegistrazioneVenditaComponent - loadOrdine (modalità aggiornamento)',
 
     expect(component.mangimi.length).toBe(0);
     expect(component.scatole.length).toBe(0);
+  });
+
+  it("should pre-fill the sconto field with the order's existing discount and recompute the total", () => {
+    const ordine = buildOrdine({sconto: 5});
+
+    caricaOrdine(ordine);
+
+    expect(component.form.get('sconto')?.value).toBe(5);
+    expect(component.totaleOrdine()).toBe(15);
+  });
+
+  it('should leave the sconto field empty when the loaded order has no discount', () => {
+    const ordine = buildOrdine({sconto: null});
+
+    caricaOrdine(ordine);
+
+    expect(component.form.get('sconto')?.value).toBeNull();
+    expect(component.totaleOrdine()).toBe(20);
+  });
+
+  it('should leave the sconto field empty when the loaded order discount is zero', () => {
+    const ordine = buildOrdine({sconto: 0});
+
+    caricaOrdine(ordine);
+
+    expect(component.form.get('sconto')?.value).toBeNull();
+    expect(component.totaleOrdine()).toBe(20);
   });
 });
