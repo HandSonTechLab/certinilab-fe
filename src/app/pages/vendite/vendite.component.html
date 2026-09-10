@@ -18,46 +18,53 @@
     </div>
   </div>
 
-  @if (orders?.length === 0 || !orders) {
+  @if (loading) {
     <div class="col-12 text-center mt-5">
-      <div class="alert alert-light border">
-        Nessuna vendita presente. Clicca sul pulsante "+" in basso a destra per iniziare.
-      </div>
+      <div class="spinner-border" role="status"></div>
     </div>
   } @else {
-    <div class="row mt-1">
-      <div class="col-12">
-        <table class="table table-hover table-bordered">
-          <thead class="table-light">
-          <tr>
-            <th scope="col"><span class="fw-semibold">Data</span></th>
-            <th scope="col"><span class="fw-semibold">Cliente</span></th>
-            <th scope="col"><span class="fw-semibold">Indirizzo</span></th>
-            <th scope="col"><span class="fw-semibold">Stato</span></th>
-            <th scope="col"><span class="fw-semibold">Totale</span></th>
-            <th scope="col"></th>
-          </tr>
-          </thead>
-          <tbody>
-            @for (order of orders; track order.id) {
-              <tr>
-                <td>{{ order.data }}</td>
-                <td>{{ order.nomeCompletoCliente }}</td>
-                <td>{{ order.indirizzoCliente }}</td>
-                <td>{{ order.stato }}</td>
-                <td>{{ order.totaleOrdine }}</td>
-                <td>
-                  <i class="bi bi-pencil-square p-2 pointer" (click)="handleVendita($event, order.id)"></i>
-                  <i class="bi bi-pencil p-2 pointer" title="Modifica Modello 4" (click)="openModello4Modal(order)"></i>
-                  <i class="bi bi-file-earmark-pdf p-2 pointer" title="Visualizza Modello 4"
-                     (click)="visualizzaModello4(order.id)"></i>
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
+    @if (orders?.length === 0 || !orders) {
+      <div class="col-12 text-center mt-5">
+        <div class="alert alert-light border">
+          Nessuna vendita presente. Clicca sul pulsante "+" in basso a destra per iniziare.
+        </div>
       </div>
-    </div>
+    } @else {
+      <div class="row mt-1">
+        <div class="col-12">
+          <table class="table table-hover table-bordered">
+            <thead class="table-light">
+            <tr>
+              <th scope="col"><span class="fw-semibold">Data</span></th>
+              <th scope="col"><span class="fw-semibold">Cliente</span></th>
+              <th scope="col"><span class="fw-semibold">Indirizzo</span></th>
+              <th scope="col"><span class="fw-semibold">Stato</span></th>
+              <th scope="col"><span class="fw-semibold">Totale</span></th>
+              <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+              @for (order of orders; track order.id) {
+                <tr>
+                  <td>{{ order.data }}</td>
+                  <td>{{ order.nomeCompletoCliente }}</td>
+                  <td>{{ order.indirizzoCliente }}</td>
+                  <td>{{ order.stato }}</td>
+                  <td>{{ order.totaleOrdine }}</td>
+                  <td>
+                    <i class="bi bi-pencil-square p-2 pointer" (click)="handleVendita($event, order.id)"></i>
+                    <i class="bi bi-pencil p-2 pointer" title="Modifica Modello 4"
+                       (click)="openModello4Modal(order)"></i>
+                    <i class="bi bi-file-earmark-pdf p-2 pointer" title="Visualizza Modello 4"
+                       (click)="visualizzaModello4(order.id)"></i>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    }
   }
 
   <a

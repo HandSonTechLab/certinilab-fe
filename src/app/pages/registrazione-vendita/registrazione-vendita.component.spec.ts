@@ -1,12 +1,12 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {provideHttpClient} from '@angular/common/http';
-import {provideHttpClientTesting} from '@angular/common/http/testing';
+import {HttpTestingController, provideHttpClientTesting} from '@angular/common/http/testing';
 import {ActivatedRoute, convertToParamMap} from '@angular/router';
 import {FormGroup} from '@angular/forms';
 import {of} from 'rxjs';
 
 import {RegistrazioneVenditaComponent} from './registrazione-vendita.component';
-import {AnimaleDisponibile} from '../../model/ordine.model';
+import {AnimaleDisponibile, DettaglioOrdineResponse, InfoOrdineResponse, OrderType} from '../../model/ordine.model';
 
 describe('RegistrazioneVenditaComponent', () => {
   let component: RegistrazioneVenditaComponent;
@@ -29,6 +29,12 @@ describe('RegistrazioneVenditaComponent', () => {
     fixture = TestBed.createComponent(RegistrazioneVenditaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+  });
+
+  it('should leave mangimi and scatole empty for a new order (not in update mode)', () => {
+    expect(component.isEditMode).toBeFalse();
+    expect(component.mangimi.length).toBe(0);
+    expect(component.scatole.length).toBe(0);
   });
 
   it('should create', () => {
@@ -193,5 +199,141 @@ describe('RegistrazioneVenditaComponent', () => {
     expect(group.get('quantitaDisponibile')?.value).toBe(5);
     expect(quantitaCtrl?.valid).toBeFalse();
     expect(quantitaCtrl?.errors?.['max'].max).toBe(5);
+  });
+});
+
+describe('RegistrazioneVenditaComponent - loadOrdine (modalità aggiornamento)', () => {
+  let component: RegistrazioneVenditaComponent;
+  let fixture: ComponentFixture<RegistrazioneVenditaComponent>;
+  let httpMock: HttpTestingController;
+
+  const dettaglio: DettaglioOrdineResponse = {
+    id: 1,
+    idLotto: 10,
+    idLocale: 5,
+    nomeLocale: 'Locale 1',
+    idAnimale: 20,
+    idFornitore: 30,
+    dataDiNascita: '2025-01-01',
+    codiceProvenienza: 'ABC123',
+    descrizioneAnimale: 'Gallina Rossa',
+    quantita: 5,
+    peso: 10,
+    prezzoUnitario: 2,
+    note: null,
+    venditaType: 'AL_KG',
+  };
+
+  function buildOrdine(overrides: Partial<InfoOrdineResponse>): InfoOrdineResponse {
+    return {
+      id: 99,
+      data: '2026-01-15',
+      idCliente: 1,
+      nomeCliente: 'Mario',
+      cognomeCliente: 'Rossi',
+      indirizzoCliente: 'Via Roma 1',
+      noteOrdine: null,
+      noteScatole: null,
+      noteMangime: null,
+      stato: OrderType.CONFERMATO,
+      totaleScatole: 0,
+      totaleMangime: 0,
+      totaleAnimali: 20,
+      totaleOrdine: 20,
+      dettagli: [dettaglio],
+      ...overrides,
+    };
+  }
+
+  /** Avvia il componente in modalità aggiornamento e soddisfa tutte le chiamate HTTP innescate da loadOrdine. */
+  function caricaOrdine(ordine: InfoOrdineResponse): void {
+    fixture.detectChanges(); // ngOnInit -> loadLocali + loadOrdine
+
+    httpMock.expectOne('http://localhost:8080/api/v1/locali').flush([]);
+
+    httpMock.expectOne(`http://localhost:8080/api/v1/ordini/${ordine.id}`).flush(ordine);
+
+    httpMock.expectOne(`http://localhost:8080/api/v1/clienti/${ordine.idCliente}`).flush({
+      id: ordine.idCliente,
+      nome: 'Mario',
+      cognome: 'Rossi',
+      cellulare: '123456789',
+      indirizzo: 'Via Roma 1',
+      provincia: 'FI',
+      comune: 'Firenze',
+      codiceIdentificativoAsl: 'ASL1',
+    });
+
+    ordine.dettagli.forEach(det => {
+      httpMock.expectOne(`http://localhost:8080/api/v1/lotti/locale/${det.idLocale}`).flush([]);
+    });
+  }
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [RegistrazioneVenditaComponent],
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        {
+          provide: ActivatedRoute,
+          useValue: {queryParamMap: of(convertToParamMap({id: '99'}))},
+        },
+      ],
+    })
+      .compileComponents();
+
+    fixture = TestBed.createComponent(RegistrazioneVenditaComponent);
+    component = fixture.componentInstance;
+    httpMock = TestBed.inject(HttpTestingController);
+  });
+
+  afterEach(() => {
+    httpMock.verify();
+  });
+
+  it('should parse multiple mangime records from noteMangime and populate every row', () => {
+    const ordine = buildOrdine({
+      noteMangime: 'Mangime 2 periodo polli: 0.7 €/kg x 6 kg = 4.2 € | Mangime ovaiole: 0.67 €/kg x 7.5 kg = 5.03 € | Mangime 2 periodo polli: 0.7 €/kg x 2 kg = 1.4 €',
+    });
+
+    caricaOrdine(ordine);
+
+    expect(component.isEditMode).toBeTrue();
+    expect(component.mangimi.length).toBe(3);
+    expect(component.mangimi.at(0).getRawValue()).toEqual(jasmine.objectContaining({
+      descrizione: 'Mangime 2 periodo polli', prezzoAlKg: 0.7, kg: 6,
+    }));
+    expect(component.mangimi.at(1).getRawValue()).toEqual(jasmine.objectContaining({
+      descrizione: 'Mangime ovaiole', prezzoAlKg: 0.67, kg: 7.5,
+    }));
+    expect(component.mangimi.at(2).getRawValue()).toEqual(jasmine.objectContaining({
+      descrizione: 'Mangime 2 periodo polli', prezzoAlKg: 0.7, kg: 2,
+    }));
+  });
+
+  it('should parse multiple scatole records from noteScatole and populate every row', () => {
+    const ordine = buildOrdine({
+      noteScatole: '2: 0.6 € x 10 = 6 € | 1: 0.5 € x 5 = 2.5 €',
+    });
+
+    caricaOrdine(ordine);
+
+    expect(component.scatole.length).toBe(2);
+    expect(component.scatole.at(0).getRawValue()).toEqual(jasmine.objectContaining({
+      descrizione: '2', prezzoUnitario: 0.6, quantita: 10,
+    }));
+    expect(component.scatole.at(1).getRawValue()).toEqual(jasmine.objectContaining({
+      descrizione: '1', prezzoUnitario: 0.5, quantita: 5,
+    }));
+  });
+
+  it('should leave mangimi and scatole empty when the backend note strings are null or blank', () => {
+    const ordine = buildOrdine({noteMangime: null, noteScatole: ''});
+
+    caricaOrdine(ordine);
+
+    expect(component.mangimi.length).toBe(0);
+    expect(component.scatole.length).toBe(0);
   });
 });

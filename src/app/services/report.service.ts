@@ -1,11 +1,14 @@
 import {HttpClient, HttpErrorResponse, HttpResponse} from '@angular/common/http';
 import {inject, Injectable} from '@angular/core';
-import {catchError, delay, Observable, of, throwError} from 'rxjs';
+import {catchError, delay, map, Observable, of, throwError} from 'rxjs';
 import {BaseService} from './base-service';
 import {CONSTANTS} from '../shared/constants';
 import {ReportVenditeDTO} from '../model/report-vendite.model';
+import {ReportRequest, ReportType} from '../model/report-request.model';
+import {ReportResponse} from '../model/report-response.model';
 import {USE_MOCK_REPORT_DATA} from './report-mock.config';
 import {buildMockReportGiornaliero, buildMockReportMensile} from './report-mock-data';
+import {mapReportResponseToDTO} from './report-mapper';
 
 @Injectable({
   providedIn: 'root' // Rende il service disponibile in tutta l'app (Singleton)
@@ -19,32 +22,39 @@ export class ReportService extends BaseService {
   }
 
   /**
-   * GET: Recupera il report vendite giornaliero per una data specifica
+   * POST: Genera il report vendite giornaliero per una data specifica
    */
   getReportGiornaliero(data: string): Observable<HttpResponse<ReportVenditeDTO>> {
+    const request: ReportRequest = {tipo: ReportType.GIORNALIERO, data};
     return this.fetch(
       () => buildMockReportGiornaliero(data),
-      () => this.http.get<ReportVenditeDTO>(`${this.url}/giornaliero`, {observe: 'response', params: {data}}).pipe(
-        catchError((error: HttpErrorResponse) => {
-          console.log('an error occurred when getting report giornaliero -> {}', error);
-          this.errorService.showError(CONSTANTS.report_giornaliero_request_error_message.concat(': error code ', error.status.toString()))
-          return throwError(() => new Error(CONSTANTS.report_giornaliero_request_error_message));
-        })),
+      () => this.generaReport(request, CONSTANTS.report_giornaliero_request_error_message),
     );
   }
 
   /**
-   * GET: Recupera il report vendite mensile per un mese specifico (formato YYYY-MM)
+   * POST: Genera il report vendite mensile per un mese specifico (formato YYYY-MM)
    */
   getReportMensile(mese: string): Observable<HttpResponse<ReportVenditeDTO>> {
+    const [anno, meseNumero] = mese.split('-').map(Number);
+    const request: ReportRequest = {tipo: ReportType.MENSILE, mese: meseNumero, anno};
     return this.fetch(
       () => buildMockReportMensile(mese),
-      () => this.http.get<ReportVenditeDTO>(`${this.url}/mensile`, {observe: 'response', params: {mese}}).pipe(
-        catchError((error: HttpErrorResponse) => {
-          console.log('an error occurred when getting report mensile -> {}', error);
-          this.errorService.showError(CONSTANTS.report_mensile_request_error_message.concat(': error code ', error.status.toString()))
-          return throwError(() => new Error(CONSTANTS.report_mensile_request_error_message));
-        })),
+      () => this.generaReport(request, CONSTANTS.report_mensile_request_error_message),
+    );
+  }
+
+  private generaReport(request: ReportRequest, errorMessage: string): Observable<HttpResponse<ReportVenditeDTO>> {
+    return this.http.post<ReportResponse>(this.url, request, {observe: 'response'}).pipe(
+      map(response => new HttpResponse<ReportVenditeDTO>({
+        body: response.body ? mapReportResponseToDTO(response.body) : null,
+        status: response.status,
+      })),
+      catchError((error: HttpErrorResponse) => {
+        console.log('an error occurred when generating report -> {}', error);
+        this.errorService.showError(errorMessage.concat(': error code ', error.status.toString()))
+        return throwError(() => new Error(errorMessage));
+      }),
     );
   }
 

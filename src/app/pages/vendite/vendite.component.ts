@@ -19,8 +19,8 @@ declare var bootstrap: any;
   styleUrl: './vendite.component.css'
 })
 export class VenditeComponent implements OnInit, OnDestroy {
-
-  protected orders?: InfoOrdine[] | null;
+  loading = false;
+  protected orders: InfoOrdine[] | null = null;
   protected notification?: NotificationModel;
   protected showNotifications: boolean = false;
   modello4Form!: FormGroup;
@@ -53,12 +53,15 @@ export class VenditeComponent implements OnInit, OnDestroy {
   }
 
   private getOrders() {
+    this.loading = true;
     const subscription = this.orderService.getOrdini().subscribe({
       next: (response) => {
         this.orders = response.body;
+        this.loading = false;
       },
       error: (error) => {
         this.subscriptions.push(subscription);
+        this.loading = false;
       },
       complete: () => {
         this.subscriptions.push(subscription);

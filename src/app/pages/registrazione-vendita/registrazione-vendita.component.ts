@@ -459,6 +459,63 @@ export class RegistrazioneVenditaComponent implements OnInit {
     return parts.join(' | ');
   }
 
+  /**
+   * Popola le righe mangime a partire dalla stringa "descrizione: prezzo €/kg x kg kg = totale €"
+   * restituita dal backend, con più record separati da "|" (formato speculare a buildNoteMangime).
+   */
+  private parseNoteMangime(noteMangime: string | null | undefined): void {
+    this.mangimi.clear();
+    this.splitNoteRecords(noteMangime).forEach(record => {
+      const match = record.match(/^(.+?):\s*([\d.,]+)\s*€\/kg\s*x\s*([\d.,]+)\s*kg\s*=/);
+      if (!match) {
+        return;
+      }
+      const fg = this.newRigaMangime();
+      fg.patchValue({
+        descrizione: match[1].trim(),
+        prezzoAlKg: this.parseDecimal(match[2]),
+        kg: this.parseDecimal(match[3]),
+      });
+      this.mangimi.push(fg);
+      this.onValoriMangimeChange(this.mangimi.length - 1);
+    });
+  }
+
+  /**
+   * Popola le righe scatole a partire dalla stringa "descrizione: prezzo € x quantita = totale €"
+   * restituita dal backend, con più record separati da "|" (formato speculare a buildNoteScatole).
+   */
+  private parseNoteScatole(noteScatole: string | null | undefined): void {
+    this.scatole.clear();
+    this.splitNoteRecords(noteScatole).forEach(record => {
+      const match = record.match(/^(.+?):\s*([\d.,]+)\s*€\s*x\s*([\d.,]+)\s*=/);
+      if (!match) {
+        return;
+      }
+      const fg = this.newRigaScatola();
+      fg.patchValue({
+        descrizione: match[1].trim(),
+        prezzoUnitario: this.parseDecimal(match[2]),
+        quantita: this.parseDecimal(match[3]),
+      });
+      this.scatole.push(fg);
+      this.onValoriScatolaChange(this.scatole.length - 1);
+    });
+  }
+
+  private splitNoteRecords(note: string | null | undefined): string[] {
+    if (!note) {
+      return [];
+    }
+    return note.split('|')
+      .map(record => record.trim())
+      .filter(record => record.length > 0);
+  }
+
+  private parseDecimal(value: string): number {
+    return Number(value.trim().replace(',', '.'));
+  }
+
   private loadClienti(): void {
     this.clienteSearch.valueChanges.pipe(
       debounceTime(300),
@@ -605,6 +662,10 @@ export class RegistrazioneVenditaComponent implements OnInit {
           // carico elenco animali per quel locale e poi setto animaleId/idLotto
           this.loadAnimaliPerLocale(det.idLocale, det, fg);
         });
+
+        // righe mangime e scatole: il backend le restituisce come testo libero "record1 | record2 | ..."
+        this.parseNoteMangime(ordine.noteMangime);
+        this.parseNoteScatole(ordine.noteScatole);
 
         // ricalcola totali complessivi nel caso serva
         this.calcolaTotaleAnimali();

@@ -28,43 +28,53 @@
     </app-search-filter>
   </div>
 
-  @if (clients?.length === 0 || !clients) {
+
+  @if (loading) {
     <div class="col-12 text-center mt-5">
-      <div class="alert alert-light border">
-        Nessun cliente presente. Clicca sul pulsante "+" in basso a destra per iniziare.
-      </div>
+      <div class="spinner-border" role="status"></div>
     </div>
   } @else {
-    <div class="row mt-1">
-      <div class="col-12">
-        <table class="table table-hover table-bordered">
-          <thead class="table-light">
-          <tr>
-            <th scope="col"><span class="fw-semibold">Nome</span></th>
-            <th scope="col"><span class="fw-semibold">Cognome</span></th>
-            <th scope="col"><span class="fw-semibold">Indirizzo</span></th>
-            <th scope="col"></th>
-          </tr>
-          </thead>
-          <tbody>
-            @for (client of clients; track client.id) {
-              <tr>
-                <td>{{client.nome}}</td>
-                <td>{{client.cognome}}</td>
-                <td>{{client.indirizzo}}</td>
-                <td>
-                  <i class="bi bi-pencil-square p-2 pointer" (click)="viewClient(client.id, 'update')"></i>
-                  <!-- trigger modal to delete user -->
-                  <i class="bi bi-trash3 p-2 pointer" style="color: red" data-bs-toggle="modal" data-bs-target="#deleteModal" (click)="showModalEvent(client)"></i>
-                  <i class="bi bi-eye p-2 pointer" style="color: #0d6efd" (click)="viewClient(client.id, 'view')"></i>
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
+    @if (clients?.length === 0 || !clients) {
+      <div class="col-12 text-center mt-5">
+        <div class="alert alert-light border">
+          Nessun cliente presente. Clicca sul pulsante "+" in basso a destra per iniziare.
+        </div>
       </div>
-    </div>
+    } @else {
+      <div class="row mt-1">
+        <div class="col-12">
+          <table class="table table-hover table-bordered">
+            <thead class="table-light">
+            <tr>
+              <th scope="col"><span class="fw-semibold">Nome</span></th>
+              <th scope="col"><span class="fw-semibold">Cognome</span></th>
+              <th scope="col"><span class="fw-semibold">Indirizzo</span></th>
+              <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+              @for (client of clients; track client.id) {
+                <tr>
+                  <td>{{ client.nome }}</td>
+                  <td>{{ client.cognome }}</td>
+                  <td>{{ client.indirizzo }}</td>
+                  <td>
+                    <i class="bi bi-pencil-square p-2 pointer" (click)="viewClient(client.id, 'update')"></i>
+                    <!-- trigger modal to delete user -->
+                    <i class="bi bi-trash3 p-2 pointer" style="color: red" data-bs-toggle="modal"
+                       data-bs-target="#deleteModal" (click)="showModalEvent(client)"></i>
+                    <i class="bi bi-eye p-2 pointer" style="color: #0d6efd" (click)="viewClient(client.id, 'view')"></i>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    }
   }
+
+
   @if (isPagesExist()) {
     <div class="row d-flex justify-content-end">
       <nav style="width: auto">

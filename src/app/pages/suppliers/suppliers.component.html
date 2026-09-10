@@ -15,44 +15,50 @@
     <h2 class="page-title">Fornitori</h2>
   </div>
 
-  @if (suppliers?.length === 0 || !suppliers) {
+  @if (loading) {
     <div class="col-12 text-center mt-5">
-      <div class="alert alert-light border">
-        Nessun fornitore presente. Clicca sul pulsante "+" in basso a destra per iniziare.
-      </div>
+      <div class="spinner-border" role="status"></div>
     </div>
   } @else {
-    <div class="row mt-1">
-      <div class="col-12">
+    @if (suppliers?.length === 0 || !suppliers) {
+      <div class="col-12 text-center mt-5">
+        <div class="alert alert-light border">
+          Nessun fornitore presente. Clicca sul pulsante "+" in basso a destra per iniziare.
+        </div>
+      </div>
+    } @else {
+      <div class="row mt-1">
+        <div class="col-12">
           <table class="table table-hover table-bordered">
-              <thead class="table-light">
-          <tr>
+            <thead class="table-light">
+            <tr>
               <th scope="col"><span class="fw-semibold">Codice Provenienza</span></th>
               <th scope="col"><span class="fw-semibold">Partita IVA</span></th>
               <th scope="col"><span class="fw-semibold">Telefono</span></th>
               <th scope="col"><span class="fw-semibold">Indirizzo</span></th>
               <th scope="col"></th>
-          </tr>
-          </thead>
-          <tbody>
-            @for (supplier of suppliers; track supplier.codiceProvenienza) {
-              <tr>
-                <td>{{ supplier.codiceProvenienza }}</td>
-                <td>{{ supplier.partitaIva }}</td>
-                <td>{{ supplier.telefono }}</td>
-                <td>{{ supplier.indirizzo }}</td>
-                <td>
-                  <i class="bi bi-pencil-square p-2 pointer"
-                     (click)="viewSupplier($event, 'update', supplier.id)"></i>
-                  <i class="bi bi-eye p-2 pointer" style="color: #0d6efd"
-                     (click)="viewSupplier( $event, 'view', supplier.id)"></i>
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
+            </tr>
+            </thead>
+            <tbody>
+              @for (supplier of suppliers; track supplier.codiceProvenienza) {
+                <tr>
+                  <td>{{ supplier.codiceProvenienza }}</td>
+                  <td>{{ supplier.partitaIva }}</td>
+                  <td>{{ supplier.telefono }}</td>
+                  <td>{{ supplier.indirizzo }}</td>
+                  <td>
+                    <i class="bi bi-pencil-square p-2 pointer"
+                       (click)="viewSupplier($event, 'update', supplier.id)"></i>
+                    <i class="bi bi-eye p-2 pointer" style="color: #0d6efd"
+                       (click)="viewSupplier( $event, 'view', supplier.id)"></i>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
+    }
   }
 
   @if (isPagesExist()) {

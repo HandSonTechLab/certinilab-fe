@@ -14,6 +14,7 @@ declare var bootstrap: any;
   styleUrl: './suppliers.component.css'
 })
 export class SuppliersComponent implements OnInit, OnDestroy {
+  loading = false;
   protected notification?: NotificationModel;
   protected showNotifications: boolean = false;
   private supplierService = inject(SupplierService);
@@ -116,13 +117,16 @@ export class SuppliersComponent implements OnInit, OnDestroy {
   }
 
   private getSuppliers(pageNumber: number, pageSize: number) {
+    this.loading = true;
     const subscription = this.supplierService.findSuppliersPaginated(pageNumber, pageSize).subscribe({
       next: (response) => {
         this.suppliers = response.body?.supplierEntities;
         this.pageInfo = response.body?.pageInfo;
+        this.loading = false;
       },
       error: (error) => {
         this.subscriptions.push(subscription);
+        this.loading = false;
       },
       complete: () => {
         this.subscriptions.push(subscription);

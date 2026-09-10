@@ -22,11 +22,12 @@ declare var bootstrap: any;
 })
 export class ClientsComponent implements OnInit , OnDestroy {
 
+  loading = false;
   protected notification?: NotificationModel;
   protected showNotifications: boolean = false;
   private clientService = inject(ClientsService);
   private subscriptions: Subscription[] = [];
-  protected clients?: ClientDtoModel[] | null;
+  protected clients: ClientDtoModel[] | null | undefined = null;
   protected pageInfo?: PageInfoModel | undefined;
   private defaultPageSize = 10;
   private defaultPageNumber = 0;
@@ -157,13 +158,16 @@ export class ClientsComponent implements OnInit , OnDestroy {
   }
 
   private searchClients(searchData: SearchData, pageNumber: number, pageSize: number) {
+    this.loading = true;
     const subscription = this.clientService.searchClients(searchData, pageNumber, pageSize).subscribe({
       next: (response) => {
         this.clients = response.body?.searchClientsDtoList;
         this.pageInfo = response.body?.pageInfo;
+        this.loading = false;
       },
       error: (error) => {
         this.subscriptions.push(subscription);
+        this.loading = false;
       },
       complete: () => {
         this.subscriptions.push(subscription);
