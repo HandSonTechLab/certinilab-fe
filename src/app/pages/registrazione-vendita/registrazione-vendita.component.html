@@ -84,7 +84,7 @@
                 <th>Codice Provenienza</th>
                 <th>Tipo</th>
                 <th>Quantità</th>
-                <th>Peso (kg)</th>
+                <!--                <th>Peso (kg)</th>-->
                 <th>Prezzo</th>
                 <th>Totale</th>
                 <th></th>
@@ -151,7 +151,7 @@
                     formControlName="tipoVendita"
                     (change)="onTipoVenditaChange(i)"
                   >
-                    <option value="AL_KG">Al kg</option>
+                    <!--                <option value="AL_KG">Al kg</option>-->
                     <option value="PER_UNITA">Per unità</option>
                   </select>
                 </td>
@@ -180,16 +180,16 @@
                   </div>
                 </td>
 
-                <td style="min-width: 90px;">
-                  <input
-                    type="number"
-                    class="form-control form-control-sm"
-                    formControlName="peso"
-                    step="0.01"
-                    (input)="onValoriRigaChange(i)"
-                    [disabled]="dettagliAnimali.at(i).get('tipoVendita')?.value !== 'AL_KG'"
-                  />
-                </td>
+                <!--                <td style="min-width: 90px;">-->
+                <!--                  <input-->
+                <!--                    type="number"-->
+                <!--                    class="form-control form-control-sm"-->
+                <!--                    formControlName="peso"-->
+                <!--                    step="0.01"-->
+                <!--                    (input)="onValoriRigaChange(i)"-->
+                <!--                    [disabled]="dettagliAnimali.at(i).get('tipoVendita')?.value !== 'AL_KG'"-->
+                <!--                  />-->
+                <!--                </td>-->
 
                 <td style="min-width: 110px;">
                   <div class="input-group input-group-sm">
